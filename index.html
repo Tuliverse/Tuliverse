@@ -20,11 +20,12 @@
 
     /* Player Window */
     #player-modal { display: none; background: #14141d; margin: 20px 5%; border-radius: 8px; overflow: hidden; border: 1px solid #333; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-    .player-header { padding: 12px 20px; background: #1c1c28; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a3a; }
+    .player-header { padding: 12px 20px; background: #1c1c28; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a3a; flex-wrap: wrap; gap: 10px; }
     .player-header h3 { color: #e50914; font-size: 1.1rem; }
-    .server-btn { background: #2a2a38; color: #fff; border: 1px solid #444; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; margin-left: 5px; }
+    .servers-wrapper { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+    .server-btn { background: #2a2a38; color: #fff; border: 1px solid #444; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
     .server-btn.active { background: #e50914; border-color: #e50914; }
-    .close-btn { background: #333; color: #fff; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
+    .close-btn { background: #333; color: #fff; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; margin-left: 10px; }
     .iframe-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; background: #000; }
     .iframe-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
@@ -36,7 +37,6 @@
     .movie-card { background: #181824; border-radius: 8px; overflow: hidden; cursor: pointer; transition: transform 0.25s, box-shadow 0.25s; position: relative; border: 1px solid #252535; }
     .movie-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.7); border-color: #e50914; }
     
-    /* Movie Picture / Poster Settings */
     .poster-wrapper { position: relative; width: 100%; height: 240px; background: #222; }
     .poster-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .badge { position: absolute; top: 8px; right: 8px; background: rgba(229, 9, 20, 0.9); color: #fff; padding: 2px 6px; border-radius: 3px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; }
@@ -54,27 +54,31 @@
   <header>
     <div class="logo" onclick="loadCategory('all', 'Trending Movies & Shows')">TuliVerse</div>
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Search Movies, Web Series...">
+      <input type="text" id="searchInput" placeholder="Search Movies, Series...">
       <button onclick="searchMovies()">Search</button>
     </div>
   </header>
 
   <nav class="nav-categories">
     <button class="cat-btn active" onclick="loadCategory('all', 'Trending All', this)">Home</button>
-    <button class="cat-btn" onclick="loadCategory('hindi', 'Hindi Dubbed', this)">Hindi Dubbed</button>
-    <button class="cat-btn" onclick="loadCategory('south', 'South Hindi Dubbed', this)">South Hindi</button>
-    <button class="cat-btn" onclick="loadCategory('series', 'Web Series & OTT', this)">Web Series</button>
-    <button class="cat-btn" onclick="loadCategory('hollywood', 'Hollywood Movies', this)">Hollywood</button>
+    <button class="cat-btn" onclick="loadCategory('hindi', 'Hindi Movies', this)">Hindi</button>
+    <button class="cat-btn" onclick="loadCategory('south', 'South Movies', this)">South</button>
+    <button class="cat-btn" onclick="loadCategory('series', 'Web Series', this)">Web Series</button>
+    <button class="cat-btn" onclick="loadCategory('hollywood', 'Hollywood', this)">Hollywood</button>
   </nav>
 
-  <!-- Embedded Video Player -->
+  <!-- Video Player Section -->
   <div id="player-modal">
     <div class="player-header">
       <h3 id="playing-title">Playing Movie</h3>
-      <div>
-        <span>Server: </span>
+      <div class="servers-wrapper">
+        <span style="font-size: 0.85rem; color:#aaa;">Server:</span>
         <button class="server-btn active" onclick="switchServer(1)">Server 1</button>
         <button class="server-btn" onclick="switchServer(2)">Server 2</button>
+        <button class="server-btn" onclick="switchServer(3)">Server 3</button>
+        <button class="server-btn" onclick="switchServer(4)">Server 4</button>
+        <button class="server-btn" onclick="switchServer(5)">Server 5</button>
+        <button class="server-btn" onclick="switchServer(6)">Server 6</button>
         <button class="close-btn" onclick="closePlayer()">✕</button>
       </div>
     </div>
@@ -85,21 +89,26 @@
 
   <main>
     <h2 class="section-title" id="section-head">Trending Movies & Shows</h2>
-    <div class="movie-grid" id="movie-grid">
-      <!-- Movies with pictures will be injected here -->
-    </div>
+    <div class="movie-grid" id="movie-grid"></div>
   </main>
 
   <footer>
-    &copy; 2026 TuliVerse | Hosted on GitHub Pages | All Rights Reserved
+    &copy; 2026 TuliVerse | Powered by GitHub Pages
   </footer>
 
   <script>
-    const API_KEY = '8265a9448600cc09c51def07d382d9fc'; // Public TMDB Key
+    const API_KEY = '8265a9448600cc09c51def07d382d9fc'; 
     const IMG_BASE = 'https://image.tmdb.org/t/p/w500';
     
     let currentTmdbId = '';
     let currentMediaType = 'movie';
+
+    const fallbackMovies = [
+      { id: 533535, title: "Deadpool & Wolverine", poster_path: "/8cdWjvZ21B3f38mK12C33UGB4z2.jpg", media_type: "movie", release_date: "2024", vote_average: 7.8 },
+      { id: 1022789, title: "Inside Out 2", poster_path: "/vpnVM9B6NMmQpLUIWF3A92S3S35.jpg", media_type: "movie", release_date: "2024", vote_average: 7.6 },
+      { id: 519182, title: "Despicable Me 4", poster_path: "/w12iB13MGB0p3U3B00C4jS1m.jpg", media_type: "movie", release_date: "2024", vote_average: 7.1 },
+      { id: 634649, title: "Spider-Man: No Way Home", poster_path: "/1g0dhY249A0.jpg", media_type: "movie", release_date: "2021", vote_average: 8.0 }
+    ];
 
     const movieGrid = document.getElementById('movie-grid');
     const playerModal = document.getElementById('player-modal');
@@ -107,7 +116,6 @@
     const playingTitle = document.getElementById('playing-title');
     const sectionHead = document.getElementById('section-head');
 
-    // Load Trending on Start
     document.addEventListener('DOMContentLoaded', () => {
       loadCategory('all', 'Trending Movies & Shows');
     });
@@ -116,32 +124,34 @@
       try {
         movieGrid.innerHTML = '<p style="color:#aaa;">Loading content...</p>';
         const res = await fetch(endpoint);
+        if(!res.ok) throw new Error("API Network issue");
         const data = await res.json();
-        renderCards(data.results);
+        
+        if (data.results && data.results.length > 0) {
+          renderCards(data.results);
+        } else {
+          renderCards(fallbackMovies);
+        }
       } catch (err) {
-        movieGrid.innerHTML = '<p style="color:#e50914;">Failed to load movies. Please try again later.</p>';
+        renderCards(fallbackMovies);
       }
     }
 
     function renderCards(movies) {
       movieGrid.innerHTML = '';
-      if(!movies || movies.length === 0) {
-        movieGrid.innerHTML = '<p style="color:#aaa;">No content found.</p>';
-        return;
-      }
 
       movies.forEach(item => {
-        const title = item.title || item.name;
+        const title = item.title || item.name || "Movie";
         const poster = item.poster_path ? (IMG_BASE + item.poster_path) : 'https://via.placeholder.com/500x750?text=No+Poster';
         const type = item.media_type || (item.first_air_date ? 'tv' : 'movie');
-        const year = (item.release_date || item.first_air_date || '2026').substring(0, 4);
+        const year = (item.release_date || item.first_air_date || '2024').substring(0, 4);
         const rating = item.vote_average ? item.vote_average.toFixed(1) : '7.5';
 
         const card = document.createElement('div');
         card.className = 'movie-card';
         card.innerHTML = `
           <div class="poster-wrapper">
-            <img src="${poster}" alt="${title}" loading="lazy">
+            <img src="${poster}" alt="${title}" loading="lazy" onerror="this.src='https://via.placeholder.com/500x750?text=Movie+Poster'">
             <span class="badge">${type === 'tv' ? 'Series' : 'Movie'}</span>
             <span class="rating">★ ${rating}</span>
           </div>
@@ -179,7 +189,7 @@
     async function searchMovies() {
       const query = document.getElementById('searchInput').value.trim();
       if (!query) return;
-      sectionHead.innerText = `Search Results for: "${query}"`;
+      sectionHead.innerText = `Search Results: "${query}"`;
       const url = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}`;
       fetchMovies(url);
     }
@@ -194,15 +204,24 @@
       playerModal.scrollIntoView({ behavior: 'smooth' });
     }
 
+    // MULTI SERVER SWITCHER (6 SERVERS)
     function switchServer(serverNum) {
       document.querySelectorAll('.server-btn').forEach((b, i) => {
         b.classList.toggle('active', i === (serverNum - 1));
       });
 
       if (serverNum === 1) {
-        videoFrame.src = `https://vidsrc.to/embed/${currentMediaType}/${currentTmdbId}`;
+        videoFrame.src = `https://vidsrc.cc/v2/embed/${currentMediaType}/${currentTmdbId}`;
       } else if (serverNum === 2) {
+        videoFrame.src = `https://vidsrc.to/embed/${currentMediaType}/${currentTmdbId}`;
+      } else if (serverNum === 3) {
         videoFrame.src = `https://multiembed.mov/?video_id=${currentTmdbId}&tmdb=1`;
+      } else if (serverNum === 4) {
+        videoFrame.src = `https://vidsrc.me/embed/${currentMediaType}?tmdb=${currentTmdbId}`;
+      } else if (serverNum === 5) {
+        videoFrame.src = `https://vidsrc.icu/embed/${currentMediaType}/${currentTmdbId}`;
+      } else if (serverNum === 6) {
+        videoFrame.src = `https://2embed.cc/embed/${currentTmdbId}`;
       }
     }
 
