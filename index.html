@@ -6,7 +6,7 @@
     <meta name="referrer" content="no-referrer">
     
     <!-- GOOGLE SITE VERIFICATION META TAG -->
-    <meta name="google-site-verification" content="google245f19f59d08c608" />
+    <meta name="google-site-verification" content="google245f19f59d08c608" />[cite: 5]
 
     <!-- GOOGLE SEARCH ENGINE OPTIMIZATION (SEO) META TAGS -->
     <title>Tuliverse - Stream Free Movies & Web Series Online</title>
@@ -544,7 +544,7 @@
                 </div>
 
                 <div class="iframe-container">
-                    <iframe id="videoFrame" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+                    <iframe id="videoFrame" src="" allowfullscreen></iframe>
                 </div>
 
                 <div class="episodes-section" id="episodesSection">
@@ -879,6 +879,13 @@
 
             statusBadge.style.color = '#fbbf24';
             statusBadge.innerText = `Connecting Server ${currentServerIndex + 1}...`;
+
+            // Server 3 (VidCore) chara Baki Server 1 o 2 te Sandbox soriya dewa hoyeche
+            if (serverName === 'vidcore') {
+                videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
+            } else {
+                videoFrame.removeAttribute('sandbox');
+            }
 
             let srcUrl = '';
 
