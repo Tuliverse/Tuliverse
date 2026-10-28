@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer">
-    <title>Tuliverse - Multi-Audio & Dubbed Fast Stream</title>
+    <title>Tuliverse - Stream Movies & Series</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: #0b0f19; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -377,13 +377,11 @@
                     <span class="close-btn" onclick="closePlayer()">&times;</span>
                 </div>
 
-                <!-- Servers Bar -->
+                <!-- Clean Top 3 Fast Servers Bar -->
                 <div class="server-top-bar">
-                    <button class="srv-btn active" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ VidCore</button>
-                    <button class="srv-btn" id="btn-vidsrc_me" onclick="userSelectServer('vidsrc_me')">⚡ VidSrc.me</button>
-                    <button class="srv-btn" id="btn-superembed" onclick="userSelectServer('superembed')">⚡ SuperEmbed</button>
-                    <button class="srv-btn" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ 2Embed</button>
-                    <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ MultiEmbed</button>
+                    <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 1 (2Embed Fast)</button>
+                    <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server 2 (MultiEmbed VIP)</button>
+                    <button class="srv-btn" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ Server 3 (VidCore HD)</button>
                     <span class="status-badge" id="statusBadge">Connecting...</span>
                 </div>
 
@@ -436,7 +434,8 @@
         let currentMediaType = 'movie';
         let currentAudioLang = 'all';
         
-        const serverList = ['vidcore', 'vidsrc_me', 'superembed', '2embed', 'multiembed'];
+        // Final Top 3 Fast Servers List
+        const serverList = ['2embed', 'multiembed', 'vidcore'];
         let currentServerIndex = 0;
         let fallbackTimer = null;
         
@@ -649,28 +648,20 @@
             let langParam = currentAudioLang !== 'all' ? `&lang=${currentAudioLang}` : '';
 
             if (currentMediaType === 'tv') {
-                if (serverName === 'vidcore') {
-                    srcUrl = `https://vidcore.org/embed/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
-                } else if (serverName === 'vidsrc_me') {
-                    srcUrl = `https://vidsrc.me/embed/tv?tmdb=${currentMediaId}&season=${currentSeason}&episode=${currentEpisode}`;
-                } else if (serverName === 'superembed') {
-                    srcUrl = `https://superembed.stream/embedtv.php?tmdb=${currentMediaId}&s=${currentSeason}&e=${currentEpisode}`;
-                } else if (serverName === '2embed') {
+                if (serverName === '2embed') {
                     srcUrl = `https://www.2embed.cc/embedtv/${currentMediaId}&s=${currentSeason}&e=${currentEpisode}${langParam}`;
                 } else if (serverName === 'multiembed') {
                     srcUrl = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1&s=${currentSeason}&e=${currentEpisode}`;
+                } else if (serverName === 'vidcore') {
+                    srcUrl = `https://vidcore.org/embed/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
                 }
             } else {
-                if (serverName === 'vidcore') {
-                    srcUrl = `https://vidcore.org/embed/movie/${currentMediaId}`;
-                } else if (serverName === 'vidsrc_me') {
-                    srcUrl = `https://vidsrc.me/embed/movie?tmdb=${currentMediaId}`;
-                } else if (serverName === 'superembed') {
-                    srcUrl = `https://superembed.stream/embed.php?tmdb=${currentMediaId}`;
-                } else if (serverName === '2embed') {
+                if (serverName === '2embed') {
                     srcUrl = `https://www.2embed.cc/embed/${currentMediaId}${langParam ? '?' + langParam.replace('&', '') : ''}`;
                 } else if (serverName === 'multiembed') {
                     srcUrl = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1`;
+                } else if (serverName === 'vidcore') {
+                    srcUrl = `https://vidcore.org/embed/movie/${currentMediaId}`;
                 }
             }
 
