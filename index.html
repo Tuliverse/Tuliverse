@@ -329,11 +329,11 @@
                     <span class="close-btn" onclick="closePlayer()">&times;</span>
                 </div>
 
-                <!-- Verified Working Stream Servers -->
+                <!-- 2Embed Primary Server Integration -->
                 <div class="server-top-bar">
-                    <button class="srv-btn active" onclick="changeServer('2embed', this)">⚡ Server 1 (2Embed Main)</button>
-                    <button class="srv-btn" onclick="changeServer('vidsrc_pm', this)">⚡ Server 2 (VidSrc PM)</button>
-                    <button class="srv-btn" onclick="changeServer('embedsu', this)">⚡ Server 3 (EmbedSu HD)</button>
+                    <button class="srv-btn active" onclick="changeServer('2embed_cc', this)">⚡ Server 1 (2Embed Main)</button>
+                    <button class="srv-btn" onclick="changeServer('2embed_skin', this)">⚡ Server 2 (2Embed Skin)</button>
+                    <button class="srv-btn" onclick="changeServer('vidsrc_cc', this)">⚡ Server 3 (VidSrc Fast)</button>
                 </div>
 
                 <!-- Video Player Frame -->
@@ -369,7 +369,7 @@
         let currentYear = '';
         let currentMediaId = null;
         let currentMediaType = 'movie';
-        let currentServer = '2embed';
+        let currentServer = '2embed_cc';
         let currentEpisode = 1;
 
         const fetchOptions = {
@@ -479,7 +479,7 @@
             currentEpisode = 1;
             playerMediaTitle.innerText = title ? `${title}` : "Watch Online";
             
-            currentServer = '2embed';
+            currentServer = '2embed_cc';
             document.querySelectorAll('.srv-btn').forEach(b => b.classList.remove('active'));
             document.querySelector('.srv-btn').classList.add('active');
 
@@ -522,21 +522,22 @@
         }
 
         function loadVideoSource() {
+            // 2Embed Standard Routing
             if (currentMediaType === 'tv') {
-                if (currentServer === '2embed') {
+                if (currentServer === '2embed_cc') {
                     videoFrame.src = `https://www.2embed.cc/embedtv/${currentMediaId}&s=1&e=${currentEpisode}`;
-                } else if (currentServer === 'vidsrc_pm') {
-                    videoFrame.src = `https://vidsrc.pm/embed/tv/${currentMediaId}/1/${currentEpisode}`;
-                } else if (currentServer === 'embedsu') {
-                    videoFrame.src = `https://embed.su/embed/tv/${currentMediaId}/1/${currentEpisode}`;
+                } else if (currentServer === '2embed_skin') {
+                    videoFrame.src = `https://www.2embed.skin/embedtv/${currentMediaId}&s=1&e=${currentEpisode}`;
+                } else if (currentServer === 'vidsrc_cc') {
+                    videoFrame.src = `https://vidsrc.cc/v2/embed/tv/${currentMediaId}/1/${currentEpisode}`;
                 }
             } else {
-                if (currentServer === '2embed') {
+                if (currentServer === '2embed_cc') {
                     videoFrame.src = `https://www.2embed.cc/embed/${currentMediaId}`;
-                } else if (currentServer === 'vidsrc_pm') {
-                    videoFrame.src = `https://vidsrc.pm/embed/movie/${currentMediaId}`;
-                } else if (currentServer === 'embedsu') {
-                    videoFrame.src = `https://embed.su/embed/movie/${currentMediaId}`;
+                } else if (currentServer === '2embed_skin') {
+                    videoFrame.src = `https://www.2embed.skin/embed/${currentMediaId}`;
+                } else if (currentServer === 'vidsrc_cc') {
+                    videoFrame.src = `https://vidsrc.cc/v2/embed/movie/${currentMediaId}`;
                 }
             }
         }
