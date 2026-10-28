@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tuliverse - Stream Movies & Series</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #0b0f19; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px 5%; 
+            background: #111827; 
+            border-bottom: 1px solid #1f2937;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo { font-size: 24px; font-weight: 800; color: #e11d48; letter-spacing: 1px; }
+        .search-box input { 
+            padding: 10px 16px; 
+            border-radius: 20px; 
+            border: 1px solid #374151; 
+            background: #1f2937;
+            color: #fff;
+            outline: none; 
+            width: 220px;
+            transition: width 0.3s;
+        }
+        .search-box input:focus { width: 300px; border-color: #e11d48; }
+
+        .container { padding: 30px 5%; }
+        h2 { font-size: 20px; margin-bottom: 20px; color: #f3f4f6; }
+        
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); 
+            gap: 20px; 
+        }
+
+        .card { 
+            background: #1f2937; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            cursor: pointer; 
+            transition: transform 0.2s, box-shadow 0.2s; 
+            position: relative;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .card img { width: 100%; height: 250px; object-fit: cover; display: block; }
+        .card-info { padding: 12px; }
+        .card-title { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #f9fafb; }
+        .card-rating { font-size: 12px; color: #fbbf24; margin-top: 4px; }
+
+        /* Video Player Modal */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.95); 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 1000; 
+        }
+        .modal-content { 
+            position: relative; 
+            width: 90%; 
+            max-width: 900px; 
+            background: #000; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 0 30px rgba(225, 29, 72, 0.3);
+        }
+        .close-btn { 
+            position: absolute; 
+            top: 10px; 
+            right: 15px; 
+            color: #fff; 
+            font-size: 30px; 
+            cursor: pointer; 
+            z-index: 1001; 
+            font-weight: bold;
+        }
+        iframe { width: 100%; height: 500px; border: none; display: block; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">TULIVERSE</div>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search movie..." onkeyup="searchMovie()">
+        </div>
+    </header>
+
+    <div class="container">
+        <h2>Trending Movies</h2>
+        <div class="grid" id="movieGrid"></div>
+    </div>
+
+    <!-- Embedded Player -->
+    <div class="modal" id="playerModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closePlayer()">&times;</span>
+            <iframe id="videoFrame" src="" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = 'e64b892cb94d9ddd0616e9998422ed9a';
+        const API_URL = `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`;
+        const SEARCH_URL = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=`;
+        const IMG_PATH = 'https://image.tmdb.org/t/p/w500';
+
+        const movieGrid = document.getElementById('movieGrid');
+        const playerModal = document.getElementById('playerModal');
+        const videoFrame = document.getElementById('videoFrame');
+
+        async function getMovies(url) {
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                showMovies(data.results);
+            } catch (error) {
+                console.error("Error fetching data: ", error);
+            }
+        }
+
+        function showMovies(movies) {
+            movieGrid.innerHTML = '';
+            movies.forEach(movie => {
+                const { id, title, poster_path, vote_average } = movie;
+                if(!poster_path) return;
+                
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.innerHTML = `
+                    <img src="${IMG_PATH + poster_path}" alt="${title}">
+                    <div class="card-info">
+                        <div class="card-title">${title}</div>
+                        <div class="card-rating">⭐ ${vote_average ? vote_average.toFixed(1) : 'N/A'}</div>
+                    </div>
+                `;
+                card.onclick = () => playMovie(id);
+                movieGrid.appendChild(card);
+            });
+        }
+
+        // Automatic stream server URL
+        function playMovie(movieId) {
+            videoFrame.src = `https://vidsrc.to/embed/movie/${movieId}`;
+            playerModal.style.display = 'flex';
+        }
+
+        function closePlayer() {
+            playerModal.style.display = 'none';
+            videoFrame.src = '';
+        }
+
+        function searchMovie() {
+            const query = document.getElementById('searchInput').value.trim();
+            if(query.length > 2) {
+                getMovies(SEARCH_URL + encodeURIComponent(query));
+            } else if(query.length === 0) {
+                getMovies(API_URL);
+            }
+        }
+
+        getMovies(API_URL);
+    </script>
+</body>
+</html>
