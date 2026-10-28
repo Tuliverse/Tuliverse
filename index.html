@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tuliverse - Stream Movies, Web Series & Live Streams</title>
+    <title>Tuliverse - Fast Streaming with Year Filter</title>
+    <script>
+        // Prevent Pop-up Ads and External Redirects
+        window.open = function() { return null; };
+    </script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: #0b0f19; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* Header & Navigation Bar */
         header { 
             background: #111827; 
             border-bottom: 1px solid #1f2937;
@@ -38,40 +41,44 @@
         }
         .search-box input:focus { border-color: #e11d48; }
 
-        /* Category Filter Buttons Horizontal Scroll */
-        .categories {
+        /* Category & Year Bar */
+        .filters-container {
             display: flex;
+            flex-direction: column;
             gap: 8px;
+        }
+        .categories, .years {
+            display: flex;
+            gap: 6px;
             overflow-x: auto;
             white-space: nowrap;
-            padding-bottom: 5px;
-            scrollbar-width: none; /* Firefox */
+            padding-bottom: 4px;
+            scrollbar-width: none;
         }
-        .categories::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+        .categories::-webkit-scrollbar, .years::-webkit-scrollbar { display: none; }
         
-        .cat-btn {
+        .cat-btn, .year-btn {
             background: #1f2937;
             color: #d1d5db;
             border: 1px solid #374151;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
             cursor: pointer;
             transition: all 0.2s;
         }
-        .cat-btn.active, .cat-btn:hover {
+        .cat-btn.active, .year-btn.active, .cat-btn:hover, .year-btn:hover {
             background: #e11d48;
             color: #fff;
             border-color: #e11d48;
         }
 
-        /* Mobile Column Grid Layout */
         .container { padding: 12px 2%; }
         h2 { font-size: 16px; margin-bottom: 12px; color: #f3f4f6; padding-left: 4px; }
         
         .grid { 
             display: grid; 
-            grid-template-columns: repeat(3, 1fr); /* Default 3 Columns for Mobile */
+            grid-template-columns: repeat(3, 1fr); 
             gap: 8px; 
         }
 
@@ -89,7 +96,6 @@
             .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
         }
 
-        /* Card Component Setup */
         .card { 
             background: #1f2937; 
             border-radius: 6px; 
@@ -129,6 +135,26 @@
         .card-title { font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #f9fafb; }
         .card-rating { font-size: 10px; color: #fbbf24; margin-top: 2px; }
 
+        /* Pagination Buttons */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 25px 0 10px 0;
+        }
+        .page-btn {
+            background: #1f2937;
+            color: #fff;
+            border: 1px solid #374151;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .page-btn:hover { background: #e11d48; border-color: #e11d48; }
+        .page-info { font-size: 13px; font-weight: bold; color: #e11d48; }
+
         /* Video Player Modal */
         .modal { 
             display: none; 
@@ -163,6 +189,23 @@
             border-radius: 50%;
             padding: 0 8px;
         }
+        .server-switcher {
+            display: flex;
+            gap: 8px;
+            padding: 8px;
+            background: #111827;
+            border-bottom: 1px solid #1f2937;
+        }
+        .server-btn {
+            background: #1f2937;
+            color: #fff;
+            border: none;
+            padding: 4px 10px;
+            font-size: 11px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .server-btn.active { background: #e11d48; }
         .iframe-container {
             position: relative;
             width: 100%;
@@ -171,10 +214,8 @@
         }
         .iframe-container iframe {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             border: none;
         }
     </style>
@@ -189,27 +230,53 @@
             </div>
         </div>
         
-        <!-- Category Selector Buttons -->
-        <div class="categories">
-            <button class="cat-btn active" onclick="loadCategory('all', this)">🔥 All Trending</button>
-            <button class="cat-btn" onclick="loadCategory('bollywood', this)">🎬 Bollywood (Hindi)</button>
-            <button class="cat-btn" onclick="loadCategory('bengali', this)">🎭 Tollywood (Bengali)</button>
-            <button class="cat-btn" onclick="loadCategory('series', this)">📺 Web Series</button>
-            <button class="cat-btn" onclick="loadCategory('hollywood', this)">🍿 Hollywood / Dubbed</button>
+        <div class="filters-container">
+            <!-- Category Selector -->
+            <div class="categories">
+                <button class="cat-btn active" onclick="setCategory('all', this)">🔥 All Trending</button>
+                <button class="cat-btn" onclick="setCategory('bollywood', this)">🎬 Bollywood</button>
+                <button class="cat-btn" onclick="setCategory('bengali', this)">🎭 Tollywood</button>
+                <button class="cat-btn" onclick="setCategory('series', this)">📺 Web Series</button>
+                <button class="cat-btn" onclick="setCategory('hollywood', this)">🍿 Hollywood</button>
+            </div>
+
+            <!-- Saal / Year Selector -->
+            <div class="years">
+                <button class="year-btn active" onclick="setYear('', this)">All Years</button>
+                <button class="year-btn" onclick="setYear('2026', this)">2026</button>
+                <button class="year-btn" onclick="setYear('2025', this)">2025</button>
+                <button class="year-btn" onclick="setYear('2024', this)">2024</button>
+                <button class="year-btn" onclick="setYear('2023', this)">2023</button>
+                <button class="year-btn" onclick="setYear('2022', this)">2022</button>
+                <button class="year-btn" onclick="setYear('2021', this)">2021</button>
+                <button class="year-btn" onclick="setYear('2020', this)">2020</button>
+            </div>
         </div>
     </header>
 
     <div class="container">
         <h2 id="sectionTitle">Trending Movies & Series</h2>
         <div class="grid" id="movieGrid"></div>
+
+        <!-- Page Pagination -->
+        <div class="pagination">
+            <button class="page-btn" onclick="changePage(-1)">❮ Prev</button>
+            <span class="page-info" id="pageNumber">Page 1</span>
+            <button class="page-btn" onclick="changePage(1)">Next ❯</button>
+        </div>
     </div>
 
-    <!-- Embed Player Modal -->
+    <!-- Sandboxed Player Modal -->
     <div class="modal" id="playerModal">
         <div class="modal-content">
             <span class="close-btn" onclick="closePlayer()">&times;</span>
+            <div class="server-switcher">
+                <button class="server-btn active" onclick="changeServer('vidsrc_fast', this)">⚡ Fast Server 1</button>
+                <button class="server-btn" onclick="changeServer('vidsrc_me', this)">⚡ Fast Server 2</button>
+                <button class="server-btn" onclick="changeServer('vidsrc_in', this)">⚡ Fast Server 3</button>
+            </div>
             <div class="iframe-container">
-                <iframe id="videoFrame" src="" allowfullscreen></iframe>
+                <iframe id="videoFrame" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation"></iframe>
             </div>
         </div>
     </div>
@@ -217,13 +284,19 @@
     <script>
         const API_KEY = 'e64b892cb94d9ddd0616e9998422ed9a';
         const READ_ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNjRiODkyY2I5NGQ5ZGRkMDYxNmU5OTk4NDIyZWQ5YSIsIm5iZiI6MTc5MzAwNTc1MS40MjIwMDAyLCJzdWIiOiI2YWRmMThiNzA4OWFmMWY4ODFlMWUxM2QiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.AAGzkIhl_V950fMfxr35gfw3Cf9qdVZLOo9pwUAgqwo';
-        
         const IMG_PATH = 'https://image.tmdb.org/t/p/w500';
 
         const movieGrid = document.getElementById('movieGrid');
         const playerModal = document.getElementById('playerModal');
         const videoFrame = document.getElementById('videoFrame');
         const sectionTitle = document.getElementById('sectionTitle');
+        const pageNumber = document.getElementById('pageNumber');
+
+        let currentPage = 1;
+        let currentCategory = 'all';
+        let currentYear = '';
+        let currentMediaId = null;
+        let currentMediaType = 'movie';
 
         const fetchOptions = {
             method: 'GET',
@@ -233,20 +306,35 @@
             }
         };
 
-        // Category URL Routes
-        const Endpoints = {
-            all: `https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}`,
-            bollywood: `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=hi&sort_by=popularity.desc`,
-            bengali: `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=bn&sort_by=popularity.desc`,
-            series: `https://api.themoviedb.org/3/trending/tv/week?api_key=${API_KEY}`,
-            hollywood: `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=en&sort_by=popularity.desc`
-        };
+        function buildApiUrl() {
+            let url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${currentPage}&sort_by=popularity.desc`;
 
-        async function getContent(url) {
+            if (currentCategory === 'bollywood') {
+                url += `&with_original_language=hi`;
+            } else if (currentCategory === 'bengali') {
+                url += `&with_original_language=bn`;
+            } else if (currentCategory === 'hollywood') {
+                url += `&with_original_language=en`;
+            } else if (currentCategory === 'series') {
+                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${currentPage}&sort_by=popularity.desc`;
+            } else if (currentCategory === 'all' && !currentYear) {
+                url = `https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}&page=${currentPage}`;
+            }
+
+            if (currentYear) {
+                url += (currentCategory === 'series' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`);
+            }
+
+            return url;
+        }
+
+        async function getContent() {
             try {
+                const url = buildApiUrl();
                 const res = await fetch(url, fetchOptions);
                 const data = await res.json();
                 showContent(data.results);
+                pageNumber.innerText = `Page ${currentPage}`;
             } catch (error) {
                 console.error("Error fetching content: ", error);
             }
@@ -255,7 +343,7 @@
         function showContent(items) {
             movieGrid.innerHTML = '';
             if(!items || items.length === 0) {
-                movieGrid.innerHTML = '<p style="color: #9ca3af; grid-column: 1/-1;">No content found.</p>';
+                movieGrid.innerHTML = '<p style="color: #9ca3af; grid-column: 1/-1;">No movies or series found.</p>';
                 return;
             }
 
@@ -264,7 +352,7 @@
                 if(!poster_path) return;
                 
                 const itemTitle = title || name;
-                const type = media_type || (title ? 'movie' : 'tv');
+                const type = media_type || (currentCategory === 'series' ? 'tv' : 'movie');
 
                 const card = document.createElement('div');
                 card.classList.add('card');
@@ -276,33 +364,66 @@
                         <div class="card-rating">⭐ ${vote_average ? vote_average.toFixed(1) : 'N/A'}</div>
                     </div>
                 `;
-                card.onclick = () => playStream(id, type);
+                card.onclick = () => openPlayer(id, type);
                 movieGrid.appendChild(card);
             });
         }
 
-        function loadCategory(category, btnElement) {
+        function setCategory(category, btnElement) {
             document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
             if(btnElement) btnElement.classList.add('active');
-
-            const titles = {
-                all: 'Trending Movies & Series',
-                bollywood: 'Bollywood Movies (Hindi)',
-                bengali: 'Tollywood & Bengali Content',
-                series: 'Trending Web Series & TV Shows',
-                hollywood: 'Hollywood Movies'
-            };
-            sectionTitle.innerText = titles[category] || 'Movies';
-            getContent(Endpoints[category]);
+            
+            currentCategory = category;
+            currentPage = 1;
+            getContent();
         }
 
-        function playStream(id, type) {
-            if (type === 'tv') {
-                videoFrame.src = `https://vidsrc.to/embed/tv/${id}/1/1`;
-            } else {
-                videoFrame.src = `https://vidsrc.to/embed/movie/${id}`;
+        function setYear(year, btnElement) {
+            document.querySelectorAll('.year-btn').forEach(btn => btn.classList.remove('active'));
+            if(btnElement) btnElement.classList.add('active');
+
+            currentYear = year;
+            currentPage = 1;
+            getContent();
+        }
+
+        function changePage(step) {
+            if (currentPage + step >= 1) {
+                currentPage += step;
+                getContent();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+        }
+
+        function openPlayer(id, type) {
+            currentMediaId = id;
+            currentMediaType = type;
+            
+            const firstServerBtn = document.querySelector('.server-btn');
+            changeServer('vidsrc_fast', firstServerBtn);
+            
             playerModal.style.display = 'flex';
+        }
+
+        function changeServer(server, btnElement) {
+            if(btnElement) {
+                document.querySelectorAll('.server-btn').forEach(b => b.classList.remove('active'));
+                btnElement.classList.add('active');
+            }
+
+            if (server === 'vidsrc_fast') {
+                videoFrame.src = currentMediaType === 'tv' 
+                    ? `https://vidsrc.cc/v2/embed/tv/${currentMediaId}/1/1` 
+                    : `https://vidsrc.cc/v2/embed/movie/${currentMediaId}`;
+            } else if (server === 'vidsrc_me') {
+                videoFrame.src = currentMediaType === 'tv' 
+                    ? `https://vidsrc.me/embed/tv?tmdb=${currentMediaId}&season=1&episode=1` 
+                    : `https://vidsrc.me/embed/movie?tmdb=${currentMediaId}`;
+            } else if (server === 'vidsrc_in') {
+                videoFrame.src = currentMediaType === 'tv' 
+                    ? `https://vidsrc.in/embed/tv/${currentMediaId}/1/1` 
+                    : `https://vidsrc.in/embed/movie/${currentMediaId}`;
+            }
         }
 
         function closePlayer() {
@@ -315,14 +436,17 @@
             if(query.length > 2) {
                 const SEARCH_URL = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}`;
                 sectionTitle.innerText = `Search Results for "${query}"`;
-                getContent(SEARCH_URL);
+                
+                fetch(SEARCH_URL, fetchOptions)
+                    .then(res => res.json())
+                    .then(data => showContent(data.results));
             } else if(query.length === 0) {
-                loadCategory('all', document.querySelector('.cat-btn'));
+                sectionTitle.innerText = 'Trending Movies & Series';
+                getContent();
             }
         }
 
-        // Initialize First Load
-        getContent(Endpoints.all);
+        getContent();
     </script>
 </body>
 </html>
