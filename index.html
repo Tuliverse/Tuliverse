@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
     <title>Tuliverse - Stream Movies & Series</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: #0b0f19; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* Header & Navigation */
         header { 
             background: #111827; 
             border-bottom: 1px solid #1f2937;
@@ -38,7 +38,6 @@
         }
         .search-box input:focus { border-color: #e11d48; }
 
-        /* Filter Controls */
         .filters-container {
             display: flex;
             flex-direction: column;
@@ -70,7 +69,6 @@
             border-color: #e11d48;
         }
 
-        /* Movie Grid Setup */
         .container { padding: 12px 2%; }
         h2 { font-size: 16px; margin-bottom: 12px; color: #f3f4f6; padding-left: 4px; }
         
@@ -152,7 +150,6 @@
         .page-btn:hover { background: #e11d48; border-color: #e11d48; }
         .page-info { font-size: 13px; font-weight: bold; color: #e11d48; }
 
-        /* Full Scrollable Modal Player UI */
         .modal { 
             display: none; 
             position: fixed; 
@@ -205,7 +202,6 @@
         }
         .close-btn:hover { color: #e11d48; }
 
-        /* Server Bar Above Video */
         .server-top-bar {
             display: flex;
             gap: 8px;
@@ -245,7 +241,6 @@
             border: none;
         }
 
-        /* Episode List Section */
         .episodes-section {
             padding: 12px;
             background: #1e293b;
@@ -334,11 +329,11 @@
                     <span class="close-btn" onclick="closePlayer()">&times;</span>
                 </div>
 
-                <!-- Servers Bar Above Video -->
+                <!-- Verified Working Stream Servers -->
                 <div class="server-top-bar">
-                    <button class="srv-btn active" onclick="changeServer('vidsrc_pro', this)">⚡ Server 1 (VidSrc Pro)</button>
-                    <button class="srv-btn" onclick="changeServer('embedsu', this)">⚡ Server 2 (EmbedSu Fast)</button>
-                    <button class="srv-btn" onclick="changeServer('vidsrc_cc', this)">⚡ Server 3 (VidSrc CC)</button>
+                    <button class="srv-btn active" onclick="changeServer('2embed', this)">⚡ Server 1 (2Embed Main)</button>
+                    <button class="srv-btn" onclick="changeServer('vidsrc_pm', this)">⚡ Server 2 (VidSrc PM)</button>
+                    <button class="srv-btn" onclick="changeServer('embedsu', this)">⚡ Server 3 (EmbedSu HD)</button>
                 </div>
 
                 <!-- Video Player Frame -->
@@ -374,7 +369,7 @@
         let currentYear = '';
         let currentMediaId = null;
         let currentMediaType = 'movie';
-        let currentServer = 'vidsrc_pro';
+        let currentServer = '2embed';
         let currentEpisode = 1;
 
         const fetchOptions = {
@@ -484,7 +479,7 @@
             currentEpisode = 1;
             playerMediaTitle.innerText = title ? `${title}` : "Watch Online";
             
-            currentServer = 'vidsrc_pro';
+            currentServer = '2embed';
             document.querySelectorAll('.srv-btn').forEach(b => b.classList.remove('active'));
             document.querySelector('.srv-btn').classList.add('active');
 
@@ -528,20 +523,20 @@
 
         function loadVideoSource() {
             if (currentMediaType === 'tv') {
-                if (currentServer === 'vidsrc_pro') {
-                    videoFrame.src = `https://vidsrc.pro/embed/tv/${currentMediaId}/1/${currentEpisode}`;
+                if (currentServer === '2embed') {
+                    videoFrame.src = `https://www.2embed.cc/embedtv/${currentMediaId}&s=1&e=${currentEpisode}`;
+                } else if (currentServer === 'vidsrc_pm') {
+                    videoFrame.src = `https://vidsrc.pm/embed/tv/${currentMediaId}/1/${currentEpisode}`;
                 } else if (currentServer === 'embedsu') {
                     videoFrame.src = `https://embed.su/embed/tv/${currentMediaId}/1/${currentEpisode}`;
-                } else if (currentServer === 'vidsrc_cc') {
-                    videoFrame.src = `https://vidsrc.cc/v2/embed/tv/${currentMediaId}/1/${currentEpisode}`;
                 }
             } else {
-                if (currentServer === 'vidsrc_pro') {
-                    videoFrame.src = `https://vidsrc.pro/embed/movie/${currentMediaId}`;
+                if (currentServer === '2embed') {
+                    videoFrame.src = `https://www.2embed.cc/embed/${currentMediaId}`;
+                } else if (currentServer === 'vidsrc_pm') {
+                    videoFrame.src = `https://vidsrc.pm/embed/movie/${currentMediaId}`;
                 } else if (currentServer === 'embedsu') {
                     videoFrame.src = `https://embed.su/embed/movie/${currentMediaId}`;
-                } else if (currentServer === 'vidsrc_cc') {
-                    videoFrame.src = `https://vidsrc.cc/v2/embed/movie/${currentMediaId}`;
                 }
             }
         }
