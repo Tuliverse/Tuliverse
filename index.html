@@ -7,7 +7,7 @@
     <title>Tuliverse - Stream Movies & Series</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #0b0f19; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0b0f19; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
         
         header { 
             background: #111827; 
@@ -24,7 +24,13 @@
             gap: 10px;
             margin-bottom: 10px;
         }
-        .logo { font-size: 20px; font-weight: 800; color: #e11d48; letter-spacing: 1px; cursor: pointer; }
+        .logo { 
+            font-size: 22px; 
+            font-weight: 800; 
+            color: #ffffff; 
+            letter-spacing: 1px; 
+            cursor: pointer; 
+        }
         .search-box { width: 100%; max-width: 250px; }
         .search-box input { 
             width: 100%;
@@ -104,7 +110,7 @@
             display: block;
         }
 
-        .container { padding: 12px 2%; }
+        .container { padding: 12px 2%; flex: 1; }
         h2 { font-size: 16px; margin-bottom: 12px; color: #f3f4f6; padding-left: 4px; }
         
         .grid { 
@@ -355,6 +361,16 @@
             color: #e2e8f0;
             margin-bottom: 8px;
         }
+
+        footer {
+            background: #111827;
+            border-top: 1px solid #1f2937;
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: auto;
+        }
     </style>
 </head>
 <body>
@@ -369,21 +385,8 @@
         
         <div class="filters-container">
             <button class="cat-btn active" id="btn-all" onclick="setCategory('all')">🏠 Home</button>
-
-            <!-- Movies Dropdown -->
-            <div class="dropdown">
-                <button class="cat-btn" id="btn-movies">🍿 Movies ▾</button>
-                <div class="dropdown-content">
-                    <button onclick="setCategory('series')">📺 Web Series</button>
-                    <button onclick="setCategory('adult')">🔞 Adult Movies</button>
-                    <button onclick="setCategory('bengali')">🪕 Tollywood Movies</button>
-                    <button onclick="setCategory('trending')">🔥 All Trending</button>
-                </div>
-            </div>
-
-            <!-- Top Level Categories -->
-            <button class="cat-btn" id="btn-hollywood" onclick="setCategory('hollywood')">🎬 Hollywood</button>
             <button class="cat-btn" id="btn-bollywood" onclick="setCategory('bollywood')">🎭 Bollywood</button>
+            <button class="cat-btn" id="btn-hollywood" onclick="setCategory('hollywood')">🎬 Hollywood</button>
 
             <!-- Hindi Dubbed Dropdown -->
             <div class="dropdown">
@@ -394,6 +397,11 @@
                     <button onclick="setCategory('hindi_dubbed_anime')">⛩️ Hindi Dubbed Anime</button>
                 </div>
             </div>
+
+            <!-- More Categories -->
+            <button class="cat-btn" id="btn-webseries" onclick="setCategory('webseries')">📺 Web Series</button>
+            <button class="cat-btn" id="btn-south_indian" onclick="setCategory('south_indian')">🍿 South Indian Dubbed</button>
+            <button class="cat-btn" id="btn-hot_series" onclick="setCategory('hot_series')">🔥 Hot Web Series</button>
 
             <!-- All Years Filter Dropdown -->
             <div class="dropdown">
@@ -422,6 +430,10 @@
             <button class="page-btn" onclick="changePage(1)">Next ❯</button>
         </div>
     </div>
+
+    <footer>
+        &copy; Tuliverse - All Rights Reserved
+    </footer>
 
     <div class="modal" id="playerModal">
         <div class="modal-dialog">
@@ -504,30 +516,35 @@
         };
 
         function buildApiUrl(page) {
-            let url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc`;
-
+            let url = '';
+            
             if (currentCategory === 'bollywood') {
-                url += `&with_original_language=hi`;
+                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=hi`;
+            } else if (currentCategory === 'hollywood') {
+                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=en`;
             } else if (currentCategory === 'hindi_dubbed_movie') {
-                url += `&with_keywords=210024|155239&with_original_language=en|ja|ko`;
+                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_keywords=210024|155239`;
             } else if (currentCategory === 'hindi_dubbed_series') {
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_keywords=210024|155239`;
             } else if (currentCategory === 'hindi_dubbed_anime') {
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=16&with_original_language=ja`;
-            } else if (currentCategory === 'bengali') {
-                url += `&with_original_language=bn`;
-            } else if (currentCategory === 'hollywood') {
-                url += `&with_original_language=en`;
-            } else if (currentCategory === 'adult') {
-                url += `&include_adult=true&with_genres=18,10749`;
-            } else if (currentCategory === 'series') {
+            } else if (currentCategory === 'webseries') {
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc`;
-            } else if ((currentCategory === 'all' || currentCategory === 'trending') && !currentYear) {
-                url = `https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}&page=${page}`;
+            } else if (currentCategory === 'south_indian') {
+                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=te|ta|ml|kn`;
+            } else if (currentCategory === 'hot_series') {
+                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=18,10749&include_adult=true`;
+            } else {
+                if (currentYear) {
+                    url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc`;
+                } else {
+                    url = `https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}&page=${page}`;
+                }
             }
 
             if (currentYear) {
-                url += (currentCategory === 'series' || currentCategory === 'hindi_dubbed_series' || currentCategory === 'hindi_dubbed_anime' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`);
+                const isTvCategory = ['webseries', 'hindi_dubbed_series', 'hindi_dubbed_anime', 'hot_series'].includes(currentCategory);
+                url += isTvCategory ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`;
             }
 
             return url;
@@ -561,7 +578,7 @@
                 if(!poster_path) return;
                 
                 const itemTitle = title || name;
-                const isTvSeries = (media_type === 'tv') || ['series', 'hindi_dubbed_series', 'hindi_dubbed_anime'].includes(currentCategory);
+                const isTvSeries = (media_type === 'tv') || ['webseries', 'hindi_dubbed_series', 'hindi_dubbed_anime', 'hot_series'].includes(currentCategory);
                 const type = isTvSeries ? 'tv' : 'movie';
 
                 const card = document.createElement('div');
@@ -585,17 +602,18 @@
             if(category === 'all') document.getElementById('btn-all')?.classList.add('active');
             if(category === 'hollywood') document.getElementById('btn-hollywood')?.classList.add('active');
             if(category === 'bollywood') document.getElementById('btn-bollywood')?.classList.add('active');
-            if(['trending', 'bengali', 'series', 'adult'].includes(category)) document.getElementById('btn-movies')?.classList.add('active');
+            if(category === 'webseries') document.getElementById('btn-webseries')?.classList.add('active');
+            if(category === 'south_indian') document.getElementById('btn-south_indian')?.classList.add('active');
+            if(category === 'hot_series') document.getElementById('btn-hot_series')?.classList.add('active');
             if(category.startsWith('hindi_dubbed')) document.getElementById('btn-hindi_dubbed')?.classList.add('active');
 
             const titleMap = {
                 'all': 'Trending Movies & Series',
-                'trending': '🔥 All Trending',
-                'bengali': '🪕 Tollywood Movies',
-                'series': '📺 Web Series',
-                'adult': '🔞 Adult Movies',
                 'hollywood': '🎬 Hollywood Movies',
                 'bollywood': '🎭 Bollywood Movies',
+                'webseries': '📺 Web Series',
+                'south_indian': '🍿 South Indian Dubbed Movies',
+                'hot_series': '🔥 Hot Web Series',
                 'hindi_dubbed_movie': '🎥 Hindi Dubbed Movies',
                 'hindi_dubbed_series': '📺 Hindi Dubbed Web Series',
                 'hindi_dubbed_anime': '⛩️ Hindi Dubbed Anime'
