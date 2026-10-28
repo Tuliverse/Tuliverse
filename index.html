@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tuliverse - Premium Stream Player</title>
+    <title>Tuliverse - Stream Movies & Series</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: #0b0f19; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -149,33 +149,39 @@
         .page-btn:hover { background: #e11d48; border-color: #e11d48; }
         .page-info { font-size: 13px; font-weight: bold; color: #e11d48; }
 
-        /* Custom Player Modal */
+        /* Scrollable Modal Setup */
         .modal { 
             display: none; 
             position: fixed; 
             top: 0; left: 0; 
             width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.95); 
-            justify-content: center; 
-            align-items: center; 
+            background: rgba(0, 0, 0, 0.92); 
             z-index: 1000; 
-            padding: 10px;
+            padding: 15px;
+            overflow-y: auto; /* Up-down scroll enabled */
+        }
+        .modal-dialog {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100%;
         }
         .modal-content { 
             position: relative; 
             width: 100%; 
-            max-width: 900px; 
+            max-width: 950px; 
             background: #0f172a; 
             border-radius: 12px; 
             overflow: hidden; 
             border: 1px solid #1e293b;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
+            margin: 20px 0;
         }
         .player-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 15px;
+            padding: 12px 15px;
             background: #1e293b;
             border-bottom: 1px solid #334155;
         }
@@ -186,60 +192,41 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 80%;
+            max-width: 85%;
         }
         .close-btn { 
             color: #94a3b8; 
-            font-size: 24px; 
+            font-size: 26px; 
             cursor: pointer; 
             font-weight: bold;
-            transition: color 0.2s;
         }
         .close-btn:hover { color: #e11d48; }
 
-        /* Control Pill Bar + Seek Buttons */
-        .player-controls-bar {
+        /* Server Bar Above Video */
+        .server-top-bar {
             display: flex;
             gap: 8px;
             padding: 8px 12px;
-            background: #0f172a;
-            border-bottom: 1px solid #1e293b;
+            background: #111827;
+            border-bottom: 1px solid #1f2937;
             overflow-x: auto;
             white-space: nowrap;
-            align-items: center;
         }
-        .pill-btn {
-            background: #1e293b;
-            color: #cbd5e1;
-            border: 1px solid #334155;
-            padding: 4px 10px;
+        .srv-btn {
+            background: #1f2937;
+            color: #d1d5db;
+            border: 1px solid #374151;
+            padding: 5px 12px;
             border-radius: 6px;
             font-size: 11px;
             font-weight: 600;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
         }
-        .pill-btn.active {
+        .srv-btn.active {
             background: #e11d48;
             color: #fff;
             border-color: #e11d48;
         }
-        .seek-btn {
-            background: #374151;
-            color: #f3f4f6;
-            border: 1px solid #4b5563;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight:bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 3px;
-        }
-        .seek-btn:hover { background: #4b5563; }
 
         .iframe-container {
             position: relative;
@@ -255,31 +242,43 @@
             border: none;
         }
 
-        .server-list-panel {
-            padding: 10px 12px;
+        /* Web Series Season & Episode List */
+        .episodes-section {
+            padding: 12px;
             background: #1e293b;
             border-top: 1px solid #334155;
-            display: flex;
-            flex-direction: column;
+            display: none; /* Auto shows when TV Series */
+        }
+        .episodes-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #f8fafc;
+            margin-bottom: 8px;
+        }
+        .episode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
             gap: 6px;
+            max-height: 160px;
+            overflow-y: auto;
+            padding-right: 4px;
         }
-        .server-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .ep-btn {
             background: #0f172a;
-            padding: 8px 12px;
-            border-radius: 6px;
+            color: #cbd5e1;
+            border: 1px solid #334155;
+            padding: 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
             cursor: pointer;
-            border: 1px solid #1e293b;
-            font-size: 12px;
+            text-align: center;
         }
-        .server-item.active {
+        .ep-btn.active, .ep-btn:hover {
+            background: #e11d48;
+            color: #fff;
             border-color: #e11d48;
-            background: rgba(225, 29, 72, 0.1);
         }
-        .server-item:hover { border-color: #38bdf8; }
-        .server-tag { font-size: 10px; color: #38bdf8; background: rgba(56, 189, 248, 0.1); padding: 2px 6px; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -323,41 +322,31 @@
         </div>
     </div>
 
-    <!-- Custom Player Modal with Forward & Rewind System -->
+    <!-- Scrollable Modal Window -->
     <div class="modal" id="playerModal">
-        <div class="modal-content">
-            <div class="player-header">
-                <div class="player-title" id="playerMediaTitle">Watch Online</div>
-                <span class="close-btn" onclick="closePlayer()">&times;</span>
-            </div>
-
-            <!-- Controls & Seek Buttons -->
-            <div class="player-controls-bar">
-                <button class="seek-btn" onclick="seekVideo(-10)">↺ -10s</button>
-                <button class="seek-btn" onclick="seekVideo(10)">+10s ↻</button>
-                <div class="pill-btn"><span>HD</span> 720p / 1080p</div>
-                <div class="pill-btn active" id="currentServerPill"><span>●</span> Server 1</div>
-                <div class="pill-btn"><span>🎧</span> Hindi / Original</div>
-            </div>
-
-            <!-- Video Player -->
-            <div class="iframe-container">
-                <iframe id="videoFrame" src="" allowfullscreen></iframe>
-            </div>
-
-            <!-- Server Selection -->
-            <div class="server-list-panel">
-                <div class="server-item active" onclick="changeServer('vidsrc_fast', this)">
-                    <span><strong>#1</strong> Server 1 (Primary - MultiCDN)</span>
-                    <span class="server-tag">720p - HEVC - FAST</span>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="player-header">
+                    <div class="player-title" id="playerMediaTitle">Watch Online</div>
+                    <span class="close-btn" onclick="closePlayer()">&times;</span>
                 </div>
-                <div class="server-item" onclick="changeServer('vidsrc_me', this)">
-                    <span><strong>#2</strong> Server 2 (Backup - High Bitrate)</span>
-                    <span class="server-tag">1080p - FULL HD</span>
+
+                <!-- Servers Bar (Positioned ABOVE Video) -->
+                <div class="server-top-bar">
+                    <button class="srv-btn active" onclick="changeServer('vidsrc_fast', this)">⚡ Server 1 (MultiCDN)</button>
+                    <button class="srv-btn" onclick="changeServer('vidsrc_me', this)">⚡ Server 2 (High Speed)</button>
+                    <button class="srv-btn" onclick="changeServer('embedsu', this)">⚡ Server 3 (Direct Ultra)</button>
                 </div>
-                <div class="server-item" onclick="changeServer('embedsu', this)">
-                    <span><strong>#3</strong> Server 3 (Direct Ultra Stream)</span>
-                    <span class="server-tag">720p - HEVC - BDIX</span>
+
+                <!-- Main Player -->
+                <div class="iframe-container">
+                    <iframe id="videoFrame" src="" allowfullscreen></iframe>
+                </div>
+
+                <!-- Web Series Episode List Container -->
+                <div class="episodes-section" id="episodesSection">
+                    <div class="episodes-title">Select Episode:</div>
+                    <div class="episode-grid" id="episodeGrid"></div>
                 </div>
             </div>
         </div>
@@ -374,13 +363,16 @@
         const sectionTitle = document.getElementById('sectionTitle');
         const pageNumber = document.getElementById('pageNumber');
         const playerMediaTitle = document.getElementById('playerMediaTitle');
-        const currentServerPill = document.getElementById('currentServerPill');
+        const episodesSection = document.getElementById('episodesSection');
+        const episodeGrid = document.getElementById('episodeGrid');
 
         let currentPage = 1;
         let currentCategory = 'all';
         let currentYear = '';
         let currentMediaId = null;
         let currentMediaType = 'movie';
+        let currentServer = 'vidsrc_fast';
+        let currentEpisode = 1;
 
         const fetchOptions = {
             method: 'GET',
@@ -431,7 +423,7 @@
         function showContent(items) {
             movieGrid.innerHTML = '';
             if(!items || items.length === 0) {
-                movieGrid.innerHTML = '<p style="color: #9ca3af; grid-column: 1/-1;">No movies or series found.</p>';
+                movieGrid.innerHTML = '<p style="color: #9ca3af; grid-column: 1/-1;">No content found.</p>';
                 return;
             }
 
@@ -486,48 +478,77 @@
         function openPlayer(id, type, title) {
             currentMediaId = id;
             currentMediaType = type;
-            playerMediaTitle.innerText = title ? `Watch Online - ${title}` : "Watch Online";
+            currentEpisode = 1;
+            playerMediaTitle.innerText = title ? `${title}` : "Watch Online";
             
-            const firstServerItem = document.querySelector('.server-item');
-            changeServer('vidsrc_fast', firstServerItem);
-            
-            playerModal.style.display = 'flex';
-        }
+            // Server 1 reset
+            currentServer = 'vidsrc_fast';
+            document.querySelectorAll('.srv-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('.srv-btn').classList.add('active');
 
-        function changeServer(server, element) {
-            if(element) {
-                document.querySelectorAll('.server-item').forEach(el => el.classList.remove('active'));
-                element.classList.add('active');
+            if (type === 'tv') {
+                episodesSection.style.display = 'block';
+                generateEpisodes();
+            } else {
+                episodesSection.style.display = 'none';
             }
 
-            if (server === 'vidsrc_fast') {
-                currentServerPill.innerHTML = "<span>●</span> Server 1";
-                videoFrame.src = currentMediaType === 'tv' 
-                    ? `https://vidsrc.cc/v2/embed/tv/${currentMediaId}/1/1` 
-                    : `https://vidsrc.cc/v2/embed/movie/${currentMediaId}`;
-            } else if (server === 'vidsrc_me') {
-                currentServerPill.innerHTML = "<span>●</span> Server 2";
-                videoFrame.src = currentMediaType === 'tv' 
-                    ? `https://vidsrc.me/embed/tv?tmdb=${currentMediaId}&season=1&episode=1` 
-                    : `https://vidsrc.me/embed/movie?tmdb=${currentMediaId}`;
-            } else if (server === 'embedsu') {
-                currentServerPill.innerHTML = "<span>●</span> Server 3";
-                videoFrame.src = currentMediaType === 'tv' 
-                    ? `https://embed.su/embed/tv/${currentMediaId}/1/1` 
-                    : `https://embed.su/embed/movie/${currentMediaId}`;
+            loadVideoSource();
+            playerModal.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Stop background scroll
+        }
+
+        function generateEpisodes() {
+            episodeGrid.innerHTML = '';
+            // Generate 24 Episodes List
+            for (let i = 1; i <= 24; i++) {
+                const btn = document.createElement('button');
+                btn.classList.add('ep-btn');
+                if (i === currentEpisode) btn.classList.add('active');
+                btn.innerText = `Ep ${i}`;
+                btn.onclick = () => {
+                    currentEpisode = i;
+                    document.querySelectorAll('.ep-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    loadVideoSource();
+                };
+                episodeGrid.appendChild(btn);
             }
         }
 
-        // PostMessage seek command to embedded iframe
-        function seekVideo(seconds) {
-            if(videoFrame && videoFrame.contentWindow) {
-                videoFrame.contentWindow.postMessage({ type: 'seek', time: seconds }, '*');
+        function changeServer(server, btnElement) {
+            if(btnElement) {
+                document.querySelectorAll('.srv-btn').forEach(b => b.classList.remove('active'));
+                btnElement.classList.add('active');
+            }
+            currentServer = server;
+            loadVideoSource();
+        }
+
+        function loadVideoSource() {
+            if (currentMediaType === 'tv') {
+                if (currentServer === 'vidsrc_fast') {
+                    videoFrame.src = `https://vidsrc.cc/v2/embed/tv/${currentMediaId}/1/${currentEpisode}`;
+                } else if (currentServer === 'vidsrc_me') {
+                    videoFrame.src = `https://vidsrc.me/embed/tv?tmdb=${currentMediaId}&season=1&episode=${currentEpisode}`;
+                } else if (currentServer === 'embedsu') {
+                    videoFrame.src = `https://embed.su/embed/tv/${currentMediaId}/1/${currentEpisode}`;
+                }
+            } else {
+                if (currentServer === 'vidsrc_fast') {
+                    videoFrame.src = `https://vidsrc.cc/v2/embed/movie/${currentMediaId}`;
+                } else if (currentServer === 'vidsrc_me') {
+                    videoFrame.src = `https://vidsrc.me/embed/movie?tmdb=${currentMediaId}`;
+                } else if (currentServer === 'embedsu') {
+                    videoFrame.src = `https://embed.su/embed/movie/${currentMediaId}`;
+                }
             }
         }
 
         function closePlayer() {
             playerModal.style.display = 'none';
             videoFrame.src = '';
+            document.body.style.overflow = 'auto'; // Enable background scroll back
         }
 
         function searchContent() {
