@@ -3,27 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tuliverse - Stream Movies & Series</title>
+    <title>Tuliverse - Stream Movies, Web Series & Live Streams</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: #0b0f19; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* Header & Search Bar Setup */
+        /* Header & Navigation Bar */
         header { 
-            display: flex; 
-            flex-wrap: wrap;
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 10px 4%; 
             background: #111827; 
             border-bottom: 1px solid #1f2937;
             position: sticky;
             top: 0;
             z-index: 100;
+            padding: 10px 4%;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             gap: 10px;
+            margin-bottom: 10px;
         }
         .logo { font-size: 20px; font-weight: 800; color: #e11d48; letter-spacing: 1px; }
-        .search-box { width: 100%; max-width: 260px; }
+        .search-box { width: 100%; max-width: 250px; }
         .search-box input { 
             width: 100%;
             padding: 7px 12px; 
@@ -36,44 +38,58 @@
         }
         .search-box input:focus { border-color: #e11d48; }
 
-        /* Mobile Column Grid (3-4 Columns Layout) */
+        /* Category Filter Buttons Horizontal Scroll */
+        .categories {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-bottom: 5px;
+            scrollbar-width: none; /* Firefox */
+        }
+        .categories::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+        
+        .cat-btn {
+            background: #1f2937;
+            color: #d1d5db;
+            border: 1px solid #374151;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .cat-btn.active, .cat-btn:hover {
+            background: #e11d48;
+            color: #fff;
+            border-color: #e11d48;
+        }
+
+        /* Mobile Column Grid Layout */
         .container { padding: 12px 2%; }
         h2 { font-size: 16px; margin-bottom: 12px; color: #f3f4f6; padding-left: 4px; }
         
         .grid { 
             display: grid; 
-            grid-template-columns: repeat(3, 1fr); /* Mobile default: 3 Columns */
+            grid-template-columns: repeat(3, 1fr); /* Default 3 Columns for Mobile */
             gap: 8px; 
         }
 
-        /* Very Small Mobile Screens (3 Columns) */
         @media (max-width: 360px) {
-            .grid { 
-                grid-template-columns: repeat(3, 1fr); 
-                gap: 6px; 
-            }
+            .grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
         }
 
-        /* Normal Mobile Screens (4 Columns) */
         @media (min-width: 480px) and (max-width: 767px) {
-            .grid { 
-                grid-template-columns: repeat(4, 1fr); 
-                gap: 8px; 
-            }
+            .grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
         }
 
-        /* Tablets & Laptops (5 to 6 Columns) */
         @media (min-width: 768px) {
             header { padding: 12px 5%; }
             .container { padding: 20px 4%; }
-            .search-box { width: auto; }
-            .grid { 
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
-                gap: 16px; 
-            }
+            .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
         }
 
-        /* Movie Card Design for Small Columns */
+        /* Card Component Setup */
         .card { 
             background: #1f2937; 
             border-radius: 6px; 
@@ -82,21 +98,31 @@
             transition: transform 0.2s; 
             display: flex;
             flex-direction: column;
+            position: relative;
         }
         .card:hover { transform: translateY(-3px); }
         
         .card img { 
             width: 100%; 
-            height: 140px; /* Smaller height for 3/4 columns */
+            height: 140px; 
             object-fit: cover; 
             display: block; 
         }
 
-        @media (min-width: 480px) {
-            .card img { height: 170px; }
-        }
-        @media (min-width: 768px) {
-            .card img { height: 220px; }
+        @media (min-width: 480px) { .card img { height: 170px; } }
+        @media (min-width: 768px) { .card img { height: 220px; } }
+
+        .type-badge {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: rgba(225, 29, 72, 0.9);
+            color: #fff;
+            font-size: 9px;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 3px;
+            text-transform: uppercase;
         }
 
         .card-info { padding: 6px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
@@ -140,7 +166,7 @@
         .iframe-container {
             position: relative;
             width: 100%;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            padding-bottom: 56.25%;
             height: 0;
         }
         .iframe-container iframe {
@@ -156,18 +182,29 @@
 <body>
 
     <header>
-        <div class="logo">TULIVERSE</div>
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search movie..." onkeyup="searchMovie()">
+        <div class="top-bar">
+            <div class="logo">TULIVERSE</div>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search movies/series..." onkeyup="searchContent()">
+            </div>
+        </div>
+        
+        <!-- Category Selector Buttons -->
+        <div class="categories">
+            <button class="cat-btn active" onclick="loadCategory('all', this)">🔥 All Trending</button>
+            <button class="cat-btn" onclick="loadCategory('bollywood', this)">🎬 Bollywood (Hindi)</button>
+            <button class="cat-btn" onclick="loadCategory('bengali', this)">🎭 Tollywood (Bengali)</button>
+            <button class="cat-btn" onclick="loadCategory('series', this)">📺 Web Series</button>
+            <button class="cat-btn" onclick="loadCategory('hollywood', this)">🍿 Hollywood / Dubbed</button>
         </div>
     </header>
 
     <div class="container">
-        <h2>Trending Movies</h2>
+        <h2 id="sectionTitle">Trending Movies & Series</h2>
         <div class="grid" id="movieGrid"></div>
     </div>
 
-    <!-- Embedded Player -->
+    <!-- Embed Player Modal -->
     <div class="modal" id="playerModal">
         <div class="modal-content">
             <span class="close-btn" onclick="closePlayer()">&times;</span>
@@ -181,13 +218,12 @@
         const API_KEY = 'e64b892cb94d9ddd0616e9998422ed9a';
         const READ_ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNjRiODkyY2I5NGQ5ZGRkMDYxNmU5OTk4NDIyZWQ5YSIsIm5iZiI6MTc5MzAwNTc1MS40MjIwMDAyLCJzdWIiOiI2YWRmMThiNzA4OWFmMWY4ODFlMWUxM2QiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.AAGzkIhl_V950fMfxr35gfw3Cf9qdVZLOo9pwUAgqwo';
         
-        const API_URL = `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`;
-        const SEARCH_URL = `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=`;
         const IMG_PATH = 'https://image.tmdb.org/t/p/w500';
 
         const movieGrid = document.getElementById('movieGrid');
         const playerModal = document.getElementById('playerModal');
         const videoFrame = document.getElementById('videoFrame');
+        const sectionTitle = document.getElementById('sectionTitle');
 
         const fetchOptions = {
             method: 'GET',
@@ -197,43 +233,75 @@
             }
         };
 
-        async function getMovies(url) {
+        // Category URL Routes
+        const Endpoints = {
+            all: `https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}`,
+            bollywood: `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=hi&sort_by=popularity.desc`,
+            bengali: `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=bn&sort_by=popularity.desc`,
+            series: `https://api.themoviedb.org/3/trending/tv/week?api_key=${API_KEY}`,
+            hollywood: `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_original_language=en&sort_by=popularity.desc`
+        };
+
+        async function getContent(url) {
             try {
                 const res = await fetch(url, fetchOptions);
                 const data = await res.json();
-                showMovies(data.results);
+                showContent(data.results);
             } catch (error) {
-                console.error("Error fetching data: ", error);
+                console.error("Error fetching content: ", error);
             }
         }
 
-        function showMovies(movies) {
+        function showContent(items) {
             movieGrid.innerHTML = '';
-            if(!movies || movies.length === 0) {
-                movieGrid.innerHTML = '<p style="color: #9ca3af; grid-column: 1/-1;">No movies found.</p>';
+            if(!items || items.length === 0) {
+                movieGrid.innerHTML = '<p style="color: #9ca3af; grid-column: 1/-1;">No content found.</p>';
                 return;
             }
 
-            movies.forEach(movie => {
-                const { id, title, poster_path, vote_average } = movie;
+            items.forEach(item => {
+                const { id, title, name, poster_path, vote_average, media_type } = item;
                 if(!poster_path) return;
                 
+                const itemTitle = title || name;
+                const type = media_type || (title ? 'movie' : 'tv');
+
                 const card = document.createElement('div');
                 card.classList.add('card');
                 card.innerHTML = `
-                    <img src="${IMG_PATH + poster_path}" alt="${title}" loading="lazy">
+                    <span class="type-badge">${type === 'tv' ? 'Series' : 'Movie'}</span>
+                    <img src="${IMG_PATH + poster_path}" alt="${itemTitle}" loading="lazy">
                     <div class="card-info">
-                        <div class="card-title">${title}</div>
+                        <div class="card-title">${itemTitle}</div>
                         <div class="card-rating">⭐ ${vote_average ? vote_average.toFixed(1) : 'N/A'}</div>
                     </div>
                 `;
-                card.onclick = () => playMovie(id);
+                card.onclick = () => playStream(id, type);
                 movieGrid.appendChild(card);
             });
         }
 
-        function playMovie(movieId) {
-            videoFrame.src = `https://vidsrc.to/embed/movie/${movieId}`;
+        function loadCategory(category, btnElement) {
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            if(btnElement) btnElement.classList.add('active');
+
+            const titles = {
+                all: 'Trending Movies & Series',
+                bollywood: 'Bollywood Movies (Hindi)',
+                bengali: 'Tollywood & Bengali Content',
+                series: 'Trending Web Series & TV Shows',
+                hollywood: 'Hollywood Movies'
+            };
+            sectionTitle.innerText = titles[category] || 'Movies';
+            getContent(Endpoints[category]);
+        }
+
+        function playStream(id, type) {
+            if (type === 'tv') {
+                videoFrame.src = `https://vidsrc.to/embed/tv/${id}/1/1`;
+            } else {
+                videoFrame.src = `https://vidsrc.to/embed/movie/${id}`;
+            }
             playerModal.style.display = 'flex';
         }
 
@@ -242,16 +310,19 @@
             videoFrame.src = '';
         }
 
-        function searchMovie() {
+        function searchContent() {
             const query = document.getElementById('searchInput').value.trim();
             if(query.length > 2) {
-                getMovies(SEARCH_URL + encodeURIComponent(query));
+                const SEARCH_URL = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}`;
+                sectionTitle.innerText = `Search Results for "${query}"`;
+                getContent(SEARCH_URL);
             } else if(query.length === 0) {
-                getMovies(API_URL);
+                loadCategory('all', document.querySelector('.cat-btn'));
             }
         }
 
-        getMovies(API_URL);
+        // Initialize First Load
+        getContent(Endpoints.all);
     </script>
 </body>
 </html>
