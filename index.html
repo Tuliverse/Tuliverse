@@ -603,12 +603,15 @@
             } else if (currentCategory === 'bengali') {
                 url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=bn`;
             } else if (currentCategory === 'hindi_dubbed_movie') {
-                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_keywords=210024|155239`;
+                // Non-Hindi movies (English, South Indian, Foreign) dubbed in Hindi
+                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_keywords=210024|155239&without_original_language=hi`;
             } else if (currentCategory === 'hindi_dubbed_series') {
-                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_keywords=210024|155239`;
+                // Non-Hindi series (Hollywood, Korean, Anime) dubbed in Hindi
+                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_keywords=210024|155239&without_original_language=hi`;
             } else if (currentCategory === 'hindi_dubbed_anime') {
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=16&with_original_language=ja`;
             } else if (currentCategory === 'webseries') {
+                // Both Indian & Global web series
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc`;
             } else if (currentCategory === 'south_indian') {
                 url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=te|ta|ml|kn`;
