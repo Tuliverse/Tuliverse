@@ -228,6 +228,33 @@
             border-color: #e11d48;
         }
 
+        .audio-bar {
+            display: flex;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #0f172a;
+            border-bottom: 1px solid #1e293b;
+            overflow-x: auto;
+            white-space: nowrap;
+            align-items: center;
+        }
+        .audio-label { font-size: 11px; font-weight: bold; color: #38bdf8; margin-right: 4px; }
+        .lang-pill {
+            background: #1e293b;
+            color: #94a3b8;
+            border: 1px solid #334155;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .lang-pill.active, .lang-pill:hover {
+            background: #38bdf8;
+            color: #000;
+            border-color: #38bdf8;
+        }
+
         .status-badge {
             font-size: 11px;
             color: #fbbf24;
@@ -358,6 +385,14 @@
                     <span class="status-badge" id="statusBadge">Connecting...</span>
                 </div>
 
+                <!-- Audio Language Bar (Hindi & English/Original) -->
+                <div class="audio-bar">
+                    <span class="audio-label">🎧 Audio Language:</span>
+                    <button class="lang-pill active" onclick="setAudioLang('all', this)">Auto / Multi</button>
+                    <button class="lang-pill" onclick="setAudioLang('hi', this)">Hindi Dubbed</button>
+                    <button class="lang-pill" onclick="setAudioLang('en', this)">English / Original</button>
+                </div>
+
                 <!-- Video Player Frame -->
                 <div class="iframe-container">
                     <iframe id="videoFrame" src="" allowfullscreen></iframe>
@@ -396,6 +431,7 @@
         let currentYear = '';
         let currentMediaId = null;
         let currentMediaType = 'movie';
+        let currentAudioLang = 'all';
         
         const serverList = ['2embed', 'multiembed', 'vidcore'];
         let currentServerIndex = 0;
@@ -579,6 +615,13 @@
             }
         }
 
+        function setAudioLang(lang, btnElement) {
+            document.querySelectorAll('.lang-pill').forEach(b => b.classList.remove('active'));
+            if(btnElement) btnElement.classList.add('active');
+            currentAudioLang = lang;
+            loadVideoSource();
+        }
+
         function userSelectServer(serverName) {
             currentServerIndex = serverList.indexOf(serverName);
             loadVideoSource();
@@ -600,10 +643,11 @@
             statusBadge.innerText = `Connecting Server ${currentServerIndex + 1}...`;
 
             let srcUrl = '';
+            let langParam = currentAudioLang !== 'all' ? `&lang=${currentAudioLang}` : '';
 
             if (currentMediaType === 'tv') {
                 if (serverName === '2embed') {
-                    srcUrl = `https://www.2embed.cc/embedtv/${currentMediaId}&s=${currentSeason}&e=${currentEpisode}`;
+                    srcUrl = `https://www.2embed.cc/embedtv/${currentMediaId}&s=${currentSeason}&e=${currentEpisode}${langParam}`;
                 } else if (serverName === 'multiembed') {
                     srcUrl = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1&s=${currentSeason}&e=${currentEpisode}`;
                 } else if (serverName === 'vidcore') {
@@ -611,7 +655,7 @@
                 }
             } else {
                 if (serverName === '2embed') {
-                    srcUrl = `https://www.2embed.cc/embed/${currentMediaId}`;
+                    srcUrl = `https://www.2embed.cc/embed/${currentMediaId}${langParam ? '?' + langParam.replace('&', '') : ''}`;
                 } else if (serverName === 'multiembed') {
                     srcUrl = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1`;
                 } else if (serverName === 'vidcore') {
