@@ -350,13 +350,12 @@
                     <span class="close-btn" onclick="closePlayer()">&times;</span>
                 </div>
 
-                <!-- Servers Bar including Hindi Special API Nodes -->
+                <!-- Server Top Bar -->
                 <div class="server-top-bar">
-                    <button class="srv-btn active" id="btn-vidsrc_vip" onclick="userSelectServer('vidsrc_vip')">⚡ Server 1 (Hindi Special)</button>
-                    <button class="srv-btn" id="btn-autoembed" onclick="userSelectServer('autoembed')">⚡ Server 2 (AutoEmbed Multi)</button>
-                    <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server 3 (MultiEmbed VIP)</button>
-                    <button class="srv-btn" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 4 (2Embed)</button>
-                    <button class="srv-btn" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ Server 5 (VidCore)</button>
+                    <button class="srv-btn active" id="btn-vidsrc_vapi" onclick="userSelectServer('vidsrc_vapi')">⚡ Server 1 (VidSrc vAPI Sub)</button>
+                    <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server 2 (MultiEmbed VIP)</button>
+                    <button class="srv-btn" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 3 (2Embed)</button>
+                    <button class="srv-btn" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ Server 4 (VidCore)</button>
                     <span class="status-badge" id="statusBadge">Connecting...</span>
                 </div>
 
@@ -399,7 +398,10 @@
         let currentMediaId = null;
         let currentMediaType = 'movie';
         
-        const serverList = ['vidsrc_vip', 'autoembed', 'multiembed', '2embed', 'vidcore'];
+        // Custom Subtitle JSON URL (If available)
+        let customSubJsonUrl = ''; 
+
+        const serverList = ['vidsrc_vapi', 'multiembed', '2embed', 'vidcore'];
         let currentServerIndex = 0;
         let fallbackTimer = null;
         
@@ -602,14 +604,12 @@
             statusBadge.innerText = `Connecting Server ${currentServerIndex + 1}...`;
 
             let srcUrl = '';
+            let subParam = customSubJsonUrl ? `?sub.info=${encodeURIComponent(customSubJsonUrl)}` : '';
 
             if (currentMediaType === 'tv') {
-                if (serverName === 'vidsrc_vip') {
-                    // Specialized Hindi Stream Node
-                    srcUrl = `https://vidsrc.vip/embed/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
-                } else if (serverName === 'autoembed') {
-                    // AutoEmbed Multi Node
-                    srcUrl = `https://player.autoembed.cc/embed/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
+                if (serverName === 'vidsrc_vapi') {
+                    // vidsrc.mov vAPI Endpoint with Subtitle Query Support
+                    srcUrl = `https://vidsrc.mov/vapi/tv/new/${currentMediaId}/${currentSeason}/${currentEpisode}${subParam}`;
                 } else if (serverName === 'multiembed') {
                     srcUrl = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1&s=${currentSeason}&e=${currentEpisode}`;
                 } else if (serverName === '2embed') {
@@ -618,12 +618,9 @@
                     srcUrl = `https://vidcore.org/embed/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
                 }
             } else {
-                if (serverName === 'vidsrc_vip') {
-                    // Specialized Hindi Stream Node
-                    srcUrl = `https://vidsrc.vip/embed/movie/${currentMediaId}`;
-                } else if (serverName === 'autoembed') {
-                    // AutoEmbed Multi Node
-                    srcUrl = `https://player.autoembed.cc/embed/movie/${currentMediaId}`;
+                if (serverName === 'vidsrc_vapi') {
+                    // vidsrc.mov vAPI Endpoint with Subtitle Query Support
+                    srcUrl = `https://vidsrc.mov/vapi/movie/new/${currentMediaId}${subParam}`;
                 } else if (serverName === 'multiembed') {
                     srcUrl = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1`;
                 } else if (serverName === '2embed') {
