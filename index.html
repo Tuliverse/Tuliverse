@@ -40,33 +40,68 @@
 
         .filters-container {
             display: flex;
-            flex-direction: column;
+            align-items: center;
             gap: 8px;
-        }
-        .categories, .years {
-            display: flex;
-            gap: 6px;
             overflow-x: auto;
-            white-space: nowrap;
             padding-bottom: 4px;
             scrollbar-width: none;
         }
-        .categories::-webkit-scrollbar, .years::-webkit-scrollbar { display: none; }
+        .filters-container::-webkit-scrollbar { display: none; }
         
-        .cat-btn, .year-btn {
+        .cat-btn, .year-dropdown-btn {
             background: #1f2937;
             color: #d1d5db;
             border: 1px solid #374151;
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 12px;
-            font-size: 11px;
+            font-size: 12px;
             cursor: pointer;
             transition: all 0.2s;
+            white-space: nowrap;
         }
-        .cat-btn.active, .year-btn.active, .cat-btn:hover, .year-btn:hover {
+        .cat-btn.active, .cat-btn:hover, .year-dropdown-btn:hover {
             background: #e11d48;
             color: #fff;
             border-color: #e11d48;
+        }
+
+        /* Dropdown Styling */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #1f2937;
+            min-width: 150px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+            border: 1px solid #374151;
+            border-radius: 8px;
+            z-index: 200;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+        .dropdown-content button {
+            color: #d1d5db;
+            padding: 8px 12px;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        .dropdown-content button:hover {
+            background-color: #e11d48;
+            color: #fff;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
         }
 
         .container { padding: 12px 2%; }
@@ -333,24 +368,37 @@
         </div>
         
         <div class="filters-container">
-            <div class="categories">
-                <button class="cat-btn active" onclick="setCategory('all', this)">🏠 Home</button>
-                <button class="cat-btn" onclick="setCategory('trending', this)">🔥 All Trending</button>
-                <button class="cat-btn" onclick="setCategory('movies', this)">🍿 Movies</button>
-                <button class="cat-btn" onclick="setCategory('hollywood', this)">🎬 Hollywood</button>
-                <button class="cat-btn" onclick="setCategory('bollywood', this)">🎭 Bollywood</button>
-                <button class="cat-btn" onclick="setCategory('hindi_dubbed', this)">🎧 Hindi Dubbed</button>
-                <button class="cat-btn" onclick="setCategory('bengali', this)">🪕 Tollywood (Bengali)</button>
-                <button class="cat-btn" onclick="setCategory('series', this)">📺 Web Series</button>
+            <button class="cat-btn active" onclick="setCategory('all', this)">🏠 Home</button>
+
+            <!-- Main Movies Dropdown -->
+            <div class="dropdown">
+                <button class="cat-btn">🍿 Movies ▾</button>
+                <div class="dropdown-content">
+                    <button onclick="setCategory('trending', this)">🔥 All Trending</button>
+                    <button onclick="setCategory('bengali', this)">🪕 Tollywood (Bengali)</button>
+                    <button onclick="setCategory('series', this)">📺 Web Series</button>
+                    <button onclick="setCategory('adult', this)">🔞 Adult Movies</button>
+                </div>
             </div>
 
-            <div class="years">
-                <button class="year-btn active" onclick="setYear('', this)">All Years</button>
-                <button class="year-btn" onclick="setYear('2026', this)">2026</button>
-                <button class="year-btn" onclick="setYear('2025', this)">2025</button>
-                <button class="year-btn" onclick="setYear('2024', this)">2024</button>
-                <button class="year-btn" onclick="setYear('2023', this)">2023</button>
-                <button class="year-btn" onclick="setYear('2022', this)">2022</button>
+            <!-- Top Category Buttons -->
+            <button class="cat-btn" onclick="setCategory('hollywood', this)">🎬 Hollywood</button>
+            <button class="cat-btn" onclick="setCategory('bollywood', this)">🎭 Bollywood</button>
+            <button class="cat-btn" onclick="setCategory('hindi_dubbed', this)">🎧 Hindi Dubbed</button>
+
+            <!-- All Years Filter Dropdown -->
+            <div class="dropdown">
+                <button class="year-dropdown-btn" id="yearSelectLabel">📅 All Years ▾</button>
+                <div class="dropdown-content">
+                    <button onclick="setYear('', 'All Years')">All Years</button>
+                    <button onclick="setYear('2026', '2026')">2026</button>
+                    <button onclick="setYear('2025', '2025')">2025</button>
+                    <button onclick="setYear('2024', '2024')">2024</button>
+                    <button onclick="setYear('2023', '2023')">2023</button>
+                    <button onclick="setYear('2022', '2022')">2022</button>
+                    <button onclick="setYear('2021', '2021')">2021</button>
+                    <button onclick="setYear('2020', '2020')">2020</button>
+                </div>
             </div>
         </div>
     </header>
@@ -449,9 +497,7 @@
         function buildApiUrl(page) {
             let url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc`;
 
-            if (currentCategory === 'movies') {
-                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc`;
-            } else if (currentCategory === 'bollywood') {
+            if (currentCategory === 'bollywood') {
                 url += `&with_original_language=hi`;
             } else if (currentCategory === 'hindi_dubbed') {
                 url += `&with_keywords=210024|155239`;
@@ -459,6 +505,8 @@
                 url += `&with_original_language=bn`;
             } else if (currentCategory === 'hollywood') {
                 url += `&with_original_language=en`;
+            } else if (currentCategory === 'adult') {
+                url += `&include_adult=true&with_genres=18,10749`;
             } else if (currentCategory === 'series') {
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc`;
             } else if ((currentCategory === 'all' || currentCategory === 'trending') && !currentYear) {
@@ -519,18 +567,16 @@
 
         function setCategory(category, btnElement) {
             document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-            if(btnElement) btnElement.classList.add('active');
+            if(btnElement && btnElement.tagName === 'BUTTON') btnElement.classList.add('active');
             
             currentCategory = category;
             currentPage = 1;
             getContent();
         }
 
-        function setYear(year, btnElement) {
-            document.querySelectorAll('.year-btn').forEach(btn => btn.classList.remove('active'));
-            if(btnElement) btnElement.classList.add('active');
-
+        function setYear(year, label) {
             currentYear = year;
+            document.getElementById('yearSelectLabel').innerText = `📅 ${label} ▾`;
             currentPage = 1;
             getContent();
         }
