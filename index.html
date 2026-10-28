@@ -76,7 +76,7 @@
             top: 100%;
             left: 0;
             background-color: #1f2937;
-            min-width: 150px;
+            min-width: 170px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
             border: 1px solid #374151;
             border-radius: 8px;
@@ -86,7 +86,7 @@
         }
         .dropdown-content button {
             color: #d1d5db;
-            padding: 8px 12px;
+            padding: 9px 14px;
             text-decoration: none;
             display: block;
             width: 100%;
@@ -361,30 +361,39 @@
 
     <header>
         <div class="top-bar">
-            <div class="logo" onclick="setCategory('all', document.querySelector('.cat-btn'))">TULIVERSE</div>
+            <div class="logo" onclick="setCategory('all')">TULIVERSE</div>
             <div class="search-box">
                 <input type="text" id="searchInput" placeholder="Search movies/series..." onkeyup="searchContent()">
             </div>
         </div>
         
         <div class="filters-container">
-            <button class="cat-btn active" onclick="setCategory('all', this)">🏠 Home</button>
+            <button class="cat-btn active" id="btn-all" onclick="setCategory('all')">🏠 Home</button>
 
-            <!-- Main Movies Dropdown -->
+            <!-- Movies Dropdown -->
             <div class="dropdown">
-                <button class="cat-btn">🍿 Movies ▾</button>
+                <button class="cat-btn" id="btn-movies">🍿 Movies ▾</button>
                 <div class="dropdown-content">
-                    <button onclick="setCategory('trending', this)">🔥 All Trending</button>
-                    <button onclick="setCategory('bengali', this)">🪕 Tollywood (Bengali)</button>
-                    <button onclick="setCategory('series', this)">📺 Web Series</button>
-                    <button onclick="setCategory('adult', this)">🔞 Adult Movies</button>
+                    <button onclick="setCategory('series')">📺 Web Series</button>
+                    <button onclick="setCategory('adult')">🔞 Adult Movies</button>
+                    <button onclick="setCategory('bengali')">🪕 Tollywood Movies</button>
+                    <button onclick="setCategory('trending')">🔥 All Trending</button>
                 </div>
             </div>
 
-            <!-- Top Category Buttons -->
-            <button class="cat-btn" onclick="setCategory('hollywood', this)">🎬 Hollywood</button>
-            <button class="cat-btn" onclick="setCategory('bollywood', this)">🎭 Bollywood</button>
-            <button class="cat-btn" onclick="setCategory('hindi_dubbed', this)">🎧 Hindi Dubbed</button>
+            <!-- Top Level Categories -->
+            <button class="cat-btn" id="btn-hollywood" onclick="setCategory('hollywood')">🎬 Hollywood</button>
+            <button class="cat-btn" id="btn-bollywood" onclick="setCategory('bollywood')">🎭 Bollywood</button>
+
+            <!-- Hindi Dubbed Dropdown -->
+            <div class="dropdown">
+                <button class="cat-btn" id="btn-hindi_dubbed">🎧 Hindi Dubbed ▾</button>
+                <div class="dropdown-content">
+                    <button onclick="setCategory('hindi_dubbed_movie')">🎥 Hindi Dubbed Movies</button>
+                    <button onclick="setCategory('hindi_dubbed_series')">📺 Hindi Dubbed Series</button>
+                    <button onclick="setCategory('hindi_dubbed_anime')">⛩️ Hindi Dubbed Anime</button>
+                </div>
+            </div>
 
             <!-- All Years Filter Dropdown -->
             <div class="dropdown">
@@ -499,8 +508,12 @@
 
             if (currentCategory === 'bollywood') {
                 url += `&with_original_language=hi`;
-            } else if (currentCategory === 'hindi_dubbed') {
-                url += `&with_keywords=210024|155239`;
+            } else if (currentCategory === 'hindi_dubbed_movie') {
+                url += `&with_keywords=210024|155239&with_original_language=en|ja|ko`;
+            } else if (currentCategory === 'hindi_dubbed_series') {
+                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_keywords=210024|155239`;
+            } else if (currentCategory === 'hindi_dubbed_anime') {
+                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=16&with_original_language=ja`;
             } else if (currentCategory === 'bengali') {
                 url += `&with_original_language=bn`;
             } else if (currentCategory === 'hollywood') {
@@ -514,7 +527,7 @@
             }
 
             if (currentYear) {
-                url += (currentCategory === 'series' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`);
+                url += (currentCategory === 'series' || currentCategory === 'hindi_dubbed_series' || currentCategory === 'hindi_dubbed_anime' ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`);
             }
 
             return url;
@@ -539,7 +552,7 @@
         function showContent(items) {
             movieGrid.innerHTML = '';
             if(!items || items.length === 0) {
-                movieGrid.innerHTML = '<p style="color: #9ca3af; grid-column: 1/-1;">No content found.</p>';
+                movieGrid.innerHTML = '<p style="color: #9ca3af; grid-column: 1/-1; padding: 20px;">No content found.</p>';
                 return;
             }
 
@@ -548,7 +561,8 @@
                 if(!poster_path) return;
                 
                 const itemTitle = title || name;
-                const type = media_type || (currentCategory === 'series' ? 'tv' : 'movie');
+                const isTvSeries = (media_type === 'tv') || ['series', 'hindi_dubbed_series', 'hindi_dubbed_anime'].includes(currentCategory);
+                const type = isTvSeries ? 'tv' : 'movie';
 
                 const card = document.createElement('div');
                 card.classList.add('card');
@@ -565,10 +579,29 @@
             });
         }
 
-        function setCategory(category, btnElement) {
+        function setCategory(category) {
             document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-            if(btnElement && btnElement.tagName === 'BUTTON') btnElement.classList.add('active');
             
+            if(category === 'all') document.getElementById('btn-all')?.classList.add('active');
+            if(category === 'hollywood') document.getElementById('btn-hollywood')?.classList.add('active');
+            if(category === 'bollywood') document.getElementById('btn-bollywood')?.classList.add('active');
+            if(['trending', 'bengali', 'series', 'adult'].includes(category)) document.getElementById('btn-movies')?.classList.add('active');
+            if(category.startsWith('hindi_dubbed')) document.getElementById('btn-hindi_dubbed')?.classList.add('active');
+
+            const titleMap = {
+                'all': 'Trending Movies & Series',
+                'trending': '🔥 All Trending',
+                'bengali': '🪕 Tollywood Movies',
+                'series': '📺 Web Series',
+                'adult': '🔞 Adult Movies',
+                'hollywood': '🎬 Hollywood Movies',
+                'bollywood': '🎭 Bollywood Movies',
+                'hindi_dubbed_movie': '🎥 Hindi Dubbed Movies',
+                'hindi_dubbed_series': '📺 Hindi Dubbed Web Series',
+                'hindi_dubbed_anime': '⛩️ Hindi Dubbed Anime'
+            };
+
+            sectionTitle.innerText = titleMap[category] || 'Explore Movies & Series';
             currentCategory = category;
             currentPage = 1;
             getContent();
