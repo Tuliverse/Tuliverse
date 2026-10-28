@@ -299,6 +299,28 @@
             color: #fff;
             border-color: #e11d48;
         }
+
+        /* OMDb Details Section Styling */
+        .omdb-info-section {
+            padding: 15px;
+            background: #0f172a;
+            border-top: 1px solid #1e293b;
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+        .omdb-meta {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+            color: #fbbf24;
+            font-weight: 600;
+        }
+        .omdb-plot {
+            color: #e2e8f0;
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
@@ -372,6 +394,13 @@
                     </div>
                     <div class="episode-grid" id="episodeGrid"></div>
                 </div>
+
+                <!-- OMDb Metadata Section -->
+                <div class="omdb-info-section" id="omdbInfoSection" style="display:none;">
+                    <div class="omdb-meta" id="omdbMeta"></div>
+                    <div class="omdb-plot" id="omdbPlot"></div>
+                    <div id="omdbCast"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -379,6 +408,7 @@
     <script>
         const API_KEY = 'e64b892cb94d9ddd0616e9998422ed9a';
         const READ_ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNjRiODkyY2I5NGQ5ZGRkMDYxNmU5OTk4NDIyZWQ5YSIsIm5iZiI6MTc5MzAwNTc1MS40MjIwMDAyLCJzdWIiOiI2YWRmMThiNzA4OWFmMWY4ODFlMWUxM2QiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.AAGzkIhl_V950fMfxr35gfw3Cf9qdVZLOo9pwUAgqwo';
+        const OMDB_API_KEY = '17fc936b';
         const IMG_PATH = 'https://image.tmdb.org/t/p/w500';
 
         const movieGrid = document.getElementById('movieGrid');
@@ -391,6 +421,11 @@
         const episodeGrid = document.getElementById('episodeGrid');
         const seasonSelect = document.getElementById('seasonSelect');
         const statusBadge = document.getElementById('statusBadge');
+        
+        const omdbInfoSection = document.getElementById('omdbInfoSection');
+        const omdbMeta = document.getElementById('omdbMeta');
+        const omdbPlot = document.getElementById('omdbPlot');
+        const omdbCast = document.getElementById('omdbCast');
 
         let currentPage = 1;
         let currentCategory = 'all';
@@ -398,7 +433,6 @@
         let currentMediaId = null;
         let currentMediaType = 'movie';
         
-        // Custom Subtitle JSON URL (If available)
         let customSubJsonUrl = ''; 
 
         const serverList = ['vidsrc_vapi', 'multiembed', '2embed', 'vidcore'];
@@ -510,6 +544,51 @@
             }
         }
 
+        async function fetchOmdbDataByQuery(title, imdbId = '') {
+            try {
+                let queryUrl = imdbId 
+                    ? `https://www.omdbapi.com/?i=${imdbId}&apikey=${OMDB_API_KEY}`
+                    : `https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${OMDB_API_KEY}`;
+                
+                const res = await fetch(queryUrl);
+                const data = await res.json();
+                
+                if (data.Response === "True") {
+                    omdbInfoSection.style.display = 'block';
+                    const rtRating = data.Ratings?.find(r => r.Source === "Rotten Tomatoes")?.Value || 'N/A';
+                    omdbMeta.innerHTML = `
+                        <span>⭐ IMDb: ${data.imdbRating || 'N/A'}</span>
+                        <span>🍅 Rotten Tomatoes: ${rtRating}</span>
+                        <span>📅 Released: ${data.Released || 'N/A'}</span>
+                        <span>⏱️ Runtime: ${data.Runtime || 'N/A'}</span>
+                        <span>🎭 Genre: ${data.Genre || 'N/A'}</span>
+                    `;
+                    omdbPlot.innerHTML = `<strong>Plot:</strong> ${data.Plot || 'N/A'}`;
+                    omdbCast.innerHTML = `<strong>Director:</strong> ${data.Director || 'N/A'} | <strong>Cast:</strong> ${data.Actors || 'N/A'}`;
+                } else {
+                    omdbInfoSection.style.display = 'none';
+                }
+            } catch (e) {
+                console.error("OMDb API error: ", e);
+                omdbInfoSection.style.display = 'none';
+            }
+        }
+
+        async function fetchImdbIdAndOmdb(id, type, title) {
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}/external_ids?api_key=${API_KEY}`, fetchOptions);
+                const data = await res.json();
+                if (data && data.imdb_id) {
+                    fetchOmdbDataByQuery(title, data.imdb_id);
+                } else {
+                    fetchOmdbDataByQuery(title);
+                }
+            } catch (e) {
+                console.error("External IDs fetch error: ", e);
+                fetchOmdbDataByQuery(title);
+            }
+        }
+
         async function openPlayer(id, type, title) {
             currentMediaId = id;
             currentMediaType = type;
@@ -517,6 +596,8 @@
             currentEpisode = 1;
             currentServerIndex = 0;
             playerMediaTitle.innerText = title ? `${title}` : "Watch Online";
+
+            fetchImdbIdAndOmdb(id, type, title);
 
             if (type === 'tv') {
                 episodesSection.style.display = 'block';
@@ -608,7 +689,6 @@
 
             if (currentMediaType === 'tv') {
                 if (serverName === 'vidsrc_vapi') {
-                    // vidsrc.mov vAPI Endpoint with Subtitle Query Support
                     srcUrl = `https://vidsrc.mov/vapi/tv/new/${currentMediaId}/${currentSeason}/${currentEpisode}${subParam}`;
                 } else if (serverName === 'multiembed') {
                     srcUrl = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1&s=${currentSeason}&e=${currentEpisode}`;
@@ -619,7 +699,6 @@
                 }
             } else {
                 if (serverName === 'vidsrc_vapi') {
-                    // vidsrc.mov vAPI Endpoint with Subtitle Query Support
                     srcUrl = `https://vidsrc.mov/vapi/movie/new/${currentMediaId}${subParam}`;
                 } else if (serverName === 'multiembed') {
                     srcUrl = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1`;
@@ -655,6 +734,7 @@
             if (fallbackTimer) clearTimeout(fallbackTimer);
             playerModal.style.display = 'none';
             videoFrame.src = '';
+            omdbInfoSection.style.display = 'none';
             document.body.style.overflow = 'auto';
         }
 
