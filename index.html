@@ -15,76 +15,107 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            padding: 12px 4%;
+            padding: 14px 4%;
         }
         .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 15px;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             flex-wrap: wrap;
         }
+        
+        /* Boro Logo Style - Image T Logo Concept */
         .logo { 
-            font-size: 28px; 
-            font-weight: 900; 
-            letter-spacing: 1.5px; 
+            display: flex;
+            align-items: baseline;
             cursor: pointer; 
             user-select: none;
         }
-        .logo .white-text { color: #ffffff; }
-        .logo .black-text { color: #9ca3af; }
+        .logo .logo-big-t { 
+            font-size: 42px; 
+            font-weight: 900; 
+            font-family: 'Times New Roman', Times, serif;
+            color: #ffffff;
+            line-height: 0.8;
+            margin-right: 2px;
+            background: linear-gradient(180deg, #ffffff 0%, #9ca3af 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .logo .logo-text { 
+            font-size: 24px; 
+            font-weight: 800; 
+            letter-spacing: 1px;
+            color: #ffffff;
+        }
+        .logo .logo-text span {
+            color: #9ca3af;
+        }
 
         .search-box { 
             position: relative;
             width: 100%; 
-            max-width: 280px; 
+            max-width: 300px; 
         }
         .search-box input { 
             width: 100%;
-            padding: 8px 15px 8px 38px; 
-            border-radius: 20px; 
+            padding: 10px 16px 10px 42px; 
+            border-radius: 25px; 
             border: 1px solid #374151; 
             background: #1f2937;
             color: #fff;
             outline: none; 
-            font-size: 13px;
-            transition: border-color 0.2s;
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .search-box input:focus { border-color: #e11d48; }
+        .search-box input:focus { 
+            border-color: #e11d48; 
+            box-shadow: 0 0 8px rgba(225, 29, 72, 0.4);
+        }
         .search-box .search-icon {
             position: absolute;
-            left: 12px;
+            left: 14px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 14px;
+            font-size: 16px;
             color: #9ca3af;
             pointer-events: none;
         }
 
+        /* Prominent & Larger Menu Buttons */
         .filters-container {
             display: flex;
             align-items: center;
-            gap: 8px;
-            flex-wrap: wrap; /* Scroll er poriborte mobile-e ekta er niche arekta ashbe */
+            gap: 10px;
+            flex-wrap: wrap; 
             padding-bottom: 4px;
         }
         
         .cat-btn, .year-dropdown-btn {
             background: #1f2937;
-            color: #d1d5db;
+            color: #e5e7eb;
             border: 1px solid #374151;
-            padding: 6px 14px;
-            border-radius: 12px;
-            font-size: 12px;
+            padding: 8px 18px; /* Larger Button Padding */
+            border-radius: 20px; /* Rounded Pill Design */
+            font-size: 14px; /* Larger Text */
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.25s ease;
             white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
+        
         .cat-btn.active, .cat-btn:hover, .year-dropdown-btn:hover {
             background: #e11d48;
-            color: #fff;
+            color: #ffffff;
             border-color: #e11d48;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.4);
         }
 
         /* Dropdown Styling */
@@ -98,25 +129,27 @@
             top: 100%;
             left: 0;
             background-color: #1f2937;
-            min-width: 170px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+            min-width: 190px;
+            box-shadow: 0px 8px 20px 0px rgba(0,0,0,0.6);
             border: 1px solid #374151;
-            border-radius: 8px;
+            border-radius: 12px;
             z-index: 200;
-            margin-top: 4px;
+            margin-top: 6px;
             overflow: hidden;
         }
         .dropdown-content button {
             color: #d1d5db;
-            padding: 9px 14px;
+            padding: 12px 16px;
             text-decoration: none;
             display: block;
             width: 100%;
             text-align: left;
             background: none;
             border: none;
-            font-size: 11px;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
+            transition: background 0.2s;
         }
         .dropdown-content button:hover {
             background-color: #e11d48;
@@ -126,87 +159,98 @@
             display: block;
         }
 
-        .container { padding: 12px 2%; flex: 1; }
-        h2 { font-size: 16px; margin-bottom: 12px; color: #f3f4f6; padding-left: 4px; }
+        .container { padding: 15px 2%; flex: 1; }
+        h2 { font-size: 18px; margin-bottom: 14px; color: #f3f4f6; padding-left: 4px; font-weight: 700; }
         
         .grid { 
             display: grid; 
             grid-template-columns: repeat(3, 1fr); 
-            gap: 8px; 
+            gap: 10px; 
         }
 
-        @media (max-width: 360px) {
+        @media (max-width: 480px) {
             .grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
-            .logo { font-size: 24px; }
+            .logo .logo-big-t { font-size: 36px; }
+            .logo .logo-text { font-size: 20px; }
+            .cat-btn, .year-dropdown-btn { 
+                padding: 7px 14px; 
+                font-size: 13px; 
+            }
         }
 
-        @media (min-width: 480px) and (max-width: 767px) {
-            .grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        @media (min-width: 481px) and (max-width: 767px) {
+            .grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
         }
 
         @media (min-width: 768px) {
-            header { padding: 12px 5%; }
-            .container { padding: 20px 4%; }
-            .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
+            header { padding: 16px 5%; }
+            .container { padding: 25px 4%; }
+            .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 18px; }
         }
 
         .card { 
             background: #1f2937; 
-            border-radius: 6px; 
+            border-radius: 8px; 
             overflow: hidden; 
             cursor: pointer; 
-            transition: transform 0.2s; 
+            transition: transform 0.25s, box-shadow 0.25s; 
             display: flex;
             flex-direction: column;
             position: relative;
         }
-        .card:hover { transform: translateY(-3px); }
+        .card:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+        }
         
         .card img { 
             width: 100%; 
-            height: 140px; 
+            height: 145px; 
             object-fit: cover; 
             display: block; 
         }
 
-        @media (min-width: 480px) { .card img { height: 170px; } }
-        @media (min-width: 768px) { .card img { height: 220px; } }
+        @media (min-width: 480px) { .card img { height: 180px; } }
+        @media (min-width: 768px) { .card img { height: 230px; } }
 
         .type-badge {
             position: absolute;
-            top: 5px;
-            left: 5px;
-            background: rgba(225, 29, 72, 0.9);
+            top: 6px;
+            left: 6px;
+            background: rgba(225, 29, 72, 0.95);
             color: #fff;
-            font-size: 9px;
-            font-weight: bold;
-            padding: 2px 5px;
-            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 6px;
+            border-radius: 4px;
             text-transform: uppercase;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        .card-info { padding: 6px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .card-title { font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #f9fafb; }
-        .card-rating { font-size: 10px; color: #fbbf24; margin-top: 2px; }
+        .card-info { padding: 8px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-title { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #f9fafb; }
+        .card-rating { font-size: 11px; color: #fbbf24; margin-top: 3px; font-weight: 600; }
 
         .pagination {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 15px;
-            margin: 25px 0 10px 0;
+            margin: 30px 0 15px 0;
         }
         .page-btn {
             background: #1f2937;
             color: #fff;
             border: 1px solid #374151;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 9px 20px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s;
         }
         .page-btn:hover { background: #e11d48; border-color: #e11d48; }
-        .page-info { font-size: 13px; font-weight: bold; color: #e11d48; }
+        .page-info { font-size: 14px; font-weight: bold; color: #e11d48; }
 
         .modal { 
             display: none; 
@@ -229,7 +273,7 @@
             width: 100%; 
             max-width: 920px; 
             background: #0f172a; 
-            border-radius: 10px; 
+            border-radius: 12px; 
             overflow: hidden; 
             border: 1px solid #1e293b;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
@@ -239,12 +283,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 15px;
+            padding: 12px 18px;
             background: #1e293b;
             border-bottom: 1px solid #334155;
         }
         .player-title {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 700;
             color: #f8fafc;
             white-space: nowrap;
@@ -254,16 +298,17 @@
         }
         .close-btn { 
             color: #94a3b8; 
-            font-size: 26px; 
+            font-size: 28px; 
             cursor: pointer; 
             font-weight: bold;
+            line-height: 1;
         }
         .close-btn:hover { color: #e11d48; }
 
         .server-top-bar {
             display: flex;
             gap: 8px;
-            padding: 8px 12px;
+            padding: 10px 14px;
             background: #111827;
             border-bottom: 1px solid #1f2937;
             overflow-x: auto;
@@ -274,9 +319,9 @@
             background: #1f2937;
             color: #d1d5db;
             border: 1px solid #374151;
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 11px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
         }
@@ -287,7 +332,7 @@
         }
 
         .status-badge {
-            font-size: 11px;
+            font-size: 12px;
             color: #fbbf24;
             margin-left: auto;
             font-weight: 600;
@@ -308,7 +353,7 @@
         }
 
         .episodes-section {
-            padding: 12px;
+            padding: 14px;
             background: #1e293b;
             border-top: 1px solid #334155;
             display: none;
@@ -316,28 +361,28 @@
         .ep-controls {
             display: flex;
             gap: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             align-items: center;
         }
         .season-select {
             background: #0f172a;
             color: #fff;
             border: 1px solid #334155;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
             outline: none;
         }
         .episodes-title {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: bold;
             color: #f8fafc;
         }
         .episode-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-            gap: 6px;
-            max-height: 150px;
+            grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+            gap: 8px;
+            max-height: 160px;
             overflow-y: auto;
             padding-right: 4px;
         }
@@ -345,9 +390,9 @@
             background: #0f172a;
             color: #cbd5e1;
             border: 1px solid #334155;
-            padding: 6px;
-            border-radius: 4px;
-            font-size: 11px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             text-align: center;
@@ -359,32 +404,32 @@
         }
 
         .omdb-info-section {
-            padding: 15px;
+            padding: 18px;
             background: #0f172a;
             border-top: 1px solid #1e293b;
-            font-size: 12px;
+            font-size: 13px;
             color: #94a3b8;
-            line-height: 1.5;
+            line-height: 1.6;
         }
         .omdb-meta {
             display: flex;
-            gap: 12px;
+            gap: 14px;
             flex-wrap: wrap;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: #fbbf24;
             font-weight: 600;
         }
         .omdb-plot {
             color: #e2e8f0;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         footer {
             background: #111827;
             border-top: 1px solid #1f2937;
             text-align: center;
-            padding: 15px;
-            font-size: 12px;
+            padding: 18px;
+            font-size: 13px;
             color: #9ca3af;
             margin-top: auto;
         }
@@ -395,7 +440,8 @@
     <header>
         <div class="top-bar">
             <div class="logo" onclick="setCategory('all')">
-                <span class="white-text">TULI</span><span class="black-text">VERSE</span>
+                <span class="logo-big-t">T</span>
+                <span class="logo-text">uli<span>verse</span></span>
             </div>
             <div class="search-box">
                 <span class="search-icon">🔍</span>
@@ -418,7 +464,7 @@
                 </div>
             </div>
 
-            <!-- More Categories -->
+            <!-- Categories -->
             <button class="cat-btn" id="btn-webseries" onclick="setCategory('webseries')">📺 Web Series</button>
             <button class="cat-btn" id="btn-south_indian" onclick="setCategory('south_indian')">🍿 South Indian Dubbed</button>
             <button class="cat-btn" id="btn-hot_series" onclick="setCategory('hot_series')">🔥 Hot Web Series</button>
