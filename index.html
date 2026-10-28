@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer">
-    <title>Tuliverse - Stream Movies & Series</title>
+    <title>Tuliverse - Auto Fallback & Multi-Quality Stream</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: #0b0f19; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -210,6 +210,7 @@
             border-bottom: 1px solid #1f2937;
             overflow-x: auto;
             white-space: nowrap;
+            align-items: center;
         }
         .srv-btn {
             background: #1f2937;
@@ -225,6 +226,12 @@
             background: #e11d48;
             color: #fff;
             border-color: #e11d48;
+        }
+        .status-badge {
+            font-size: 11px;
+            color: #fbbf24;
+            margin-left: auto;
+            font-weight: 600;
         }
 
         .iframe-container {
@@ -247,11 +254,25 @@
             border-top: 1px solid #334155;
             display: none;
         }
+        .ep-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        .season-select {
+            background: #0f172a;
+            color: #fff;
+            border: 1px solid #334155;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            outline: none;
+        }
         .episodes-title {
             font-size: 13px;
             font-weight: bold;
             color: #f8fafc;
-            margin-bottom: 8px;
         }
         .episode-grid {
             display: grid;
@@ -292,8 +313,8 @@
         <div class="filters-container">
             <div class="categories">
                 <button class="cat-btn active" onclick="setCategory('all', this)">🔥 All Trending</button>
-                <button class="cat-btn" onclick="setCategory('bollywood', this)">🎬 Bollywood</button>
-                <button class="cat-btn" onclick="setCategory('bengali', this)">🎭 Tollywood</button>
+                <button class="cat-btn" onclick="setCategory('bollywood', this)">🎬 Bollywood (Hindi)</button>
+                <button class="cat-btn" onclick="setCategory('bengali', this)">🎭 Tollywood (Bengali)</button>
                 <button class="cat-btn" onclick="setCategory('series', this)">📺 Web Series</button>
                 <button class="cat-btn" onclick="setCategory('hollywood', this)">🍿 Hollywood</button>
             </div>
@@ -320,7 +341,7 @@
         </div>
     </div>
 
-    <!-- Scrollable Modal Window -->
+    <!-- Modal Window -->
     <div class="modal" id="playerModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -329,11 +350,12 @@
                     <span class="close-btn" onclick="closePlayer()">&times;</span>
                 </div>
 
-                <!-- 2Embed Primary Server Integration -->
+                <!-- Servers Bar -->
                 <div class="server-top-bar">
-                    <button class="srv-btn active" onclick="changeServer('2embed_cc', this)">⚡ Server 1 (2Embed Main)</button>
-                    <button class="srv-btn" onclick="changeServer('2embed_skin', this)">⚡ Server 2 (2Embed Skin)</button>
-                    <button class="srv-btn" onclick="changeServer('vidsrc_cc', this)">⚡ Server 3 (VidSrc Fast)</button>
+                    <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 1 (2Embed)</button>
+                    <button class="srv-btn" id="btn-vidsrc_cc" onclick="userSelectServer('vidsrc_cc')">⚡ Server 2 (VidSrc CC)</button>
+                    <button class="srv-btn" id="btn-embedsu" onclick="userSelectServer('embedsu')">⚡ Server 3 (EmbedSu HD)</button>
+                    <span class="status-badge" id="statusBadge">Connecting...</span>
                 </div>
 
                 <!-- Video Player Frame -->
@@ -341,9 +363,12 @@
                     <iframe id="videoFrame" src="" allowfullscreen></iframe>
                 </div>
 
-                <!-- Episode Picker Grid -->
+                <!-- Auto Season & Episode Picker Grid -->
                 <div class="episodes-section" id="episodesSection">
-                    <div class="episodes-title">Select Episode:</div>
+                    <div class="ep-controls">
+                        <span class="episodes-title">Season:</span>
+                        <select class="season-select" id="seasonSelect" onchange="onSeasonChange()"></select>
+                    </div>
                     <div class="episode-grid" id="episodeGrid"></div>
                 </div>
             </div>
@@ -363,14 +388,23 @@
         const playerMediaTitle = document.getElementById('playerMediaTitle');
         const episodesSection = document.getElementById('episodesSection');
         const episodeGrid = document.getElementById('episodeGrid');
+        const seasonSelect = document.getElementById('seasonSelect');
+        const statusBadge = document.getElementById('statusBadge');
 
         let currentPage = 1;
         let currentCategory = 'all';
         let currentYear = '';
         let currentMediaId = null;
         let currentMediaType = 'movie';
-        let currentServer = '2embed_cc';
+        
+        // Auto Switch Server Logic Arrays
+        const serverList = ['2embed', 'vidsrc_cc', 'embedsu'];
+        let currentServerIndex = 0;
+        let fallbackTimer = null;
+        
+        let currentSeason = 1;
         let currentEpisode = 1;
+        let showSeasonsData = [];
 
         const fetchOptions = {
             method: 'GET',
@@ -473,19 +507,17 @@
             }
         }
 
-        function openPlayer(id, type, title) {
+        async function openPlayer(id, type, title) {
             currentMediaId = id;
             currentMediaType = type;
+            currentSeason = 1;
             currentEpisode = 1;
+            currentServerIndex = 0; // Reset Server 1
             playerMediaTitle.innerText = title ? `${title}` : "Watch Online";
-            
-            currentServer = '2embed_cc';
-            document.querySelectorAll('.srv-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector('.srv-btn').classList.add('active');
 
             if (type === 'tv') {
                 episodesSection.style.display = 'block';
-                generateEpisodes();
+                await fetchTVDetails(id);
             } else {
                 episodesSection.style.display = 'none';
             }
@@ -495,9 +527,45 @@
             document.body.style.overflow = 'hidden';
         }
 
-        function generateEpisodes() {
+        async function fetchTVDetails(tvId) {
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3/tv/${tvId}?api_key=${API_KEY}`, fetchOptions);
+                const data = await res.json();
+                
+                showSeasonsData = data.seasons ? data.seasons.filter(s => s.season_number > 0) : [];
+                seasonSelect.innerHTML = '';
+
+                if (showSeasonsData.length === 0) {
+                    showSeasonsData = [{ season_number: 1, episode_count: 20 }];
+                }
+
+                showSeasonsData.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s.season_number;
+                    opt.innerText = `Season ${s.season_number} (${s.episode_count} Eps)`;
+                    seasonSelect.appendChild(opt);
+                });
+
+                currentSeason = showSeasonsData[0].season_number;
+                renderEpisodesGrid(showSeasonsData[0].episode_count);
+            } catch (err) {
+                console.error("TV Metadata error: ", err);
+                renderEpisodesGrid(20);
+            }
+        }
+
+        function onSeasonChange() {
+            currentSeason = parseInt(seasonSelect.value);
+            const seasonObj = showSeasonsData.find(s => s.season_number === currentSeason);
+            const epCount = seasonObj ? seasonObj.episode_count : 20;
+            currentEpisode = 1;
+            renderEpisodesGrid(epCount);
+            loadVideoSource();
+        }
+
+        function renderEpisodesGrid(count) {
             episodeGrid.innerHTML = '';
-            for (let i = 1; i <= 24; i++) {
+            for (let i = 1; i <= count; i++) {
                 const btn = document.createElement('button');
                 btn.classList.add('ep-btn');
                 if (i === currentEpisode) btn.classList.add('active');
@@ -512,37 +580,69 @@
             }
         }
 
-        function changeServer(server, btnElement) {
-            if(btnElement) {
-                document.querySelectorAll('.srv-btn').forEach(b => b.classList.remove('active'));
-                btnElement.classList.add('active');
-            }
-            currentServer = server;
+        function userSelectServer(serverName) {
+            currentServerIndex = serverList.indexOf(serverName);
             loadVideoSource();
         }
 
-        function loadVideoSource() {
-            // 2Embed Standard Routing
-            if (currentMediaType === 'tv') {
-                if (currentServer === '2embed_cc') {
-                    videoFrame.src = `https://www.2embed.cc/embedtv/${currentMediaId}&s=1&e=${currentEpisode}`;
-                } else if (currentServer === '2embed_skin') {
-                    videoFrame.src = `https://www.2embed.skin/embedtv/${currentMediaId}&s=1&e=${currentEpisode}`;
-                } else if (currentServer === 'vidsrc_cc') {
-                    videoFrame.src = `https://vidsrc.cc/v2/embed/tv/${currentMediaId}/1/${currentEpisode}`;
-                }
-            } else {
-                if (currentServer === '2embed_cc') {
-                    videoFrame.src = `https://www.2embed.cc/embed/${currentMediaId}`;
-                } else if (currentServer === '2embed_skin') {
-                    videoFrame.src = `https://www.2embed.skin/embed/${currentMediaId}`;
-                } else if (currentServer === 'vidsrc_cc') {
-                    videoFrame.src = `https://vidsrc.cc/v2/embed/movie/${currentMediaId}`;
-                }
-            }
+        function updateServerUI(serverName) {
+            document.querySelectorAll('.srv-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById(`btn-${serverName}`);
+            if(activeBtn) activeBtn.classList.add('active');
         }
 
+        function loadVideoSource() {
+            if (fallbackTimer) clearTimeout(fallbackTimer);
+            
+            const serverName = serverList[currentServerIndex];
+            updateServerUI(serverName);
+
+            statusBadge.style.color = '#fbbf24';
+            statusBadge.innerText = `Connecting Server ${currentServerIndex + 1}...`;
+
+            let srcUrl = '';
+            if (currentMediaType === 'tv') {
+                if (serverName === '2embed') {
+                    srcUrl = `https://www.2embed.cc/embedtv/${currentMediaId}&s=${currentSeason}&e=${currentEpisode}`;
+                } else if (serverName === 'vidsrc_cc') {
+                    srcUrl = `https://vidsrc.cc/v2/embed/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
+                } else if (serverName === 'embedsu') {
+                    srcUrl = `https://embed.su/embed/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
+                }
+            } else {
+                if (serverName === '2embed') {
+                    srcUrl = `https://www.2embed.cc/embed/${currentMediaId}`;
+                } else if (serverName === 'vidsrc_cc') {
+                    srcUrl = `https://vidsrc.cc/v2/embed/movie/${currentMediaId}`;
+                } else if (serverName === 'embedsu') {
+                    srcUrl = `https://embed.su/embed/movie/${currentMediaId}`;
+                }
+            }
+
+            videoFrame.src = srcUrl;
+
+            // Auto-redirect to next server if stream fails to respond within 5 seconds
+            fallbackTimer = setTimeout(() => {
+                if (currentServerIndex < serverList.length - 1) {
+                    statusBadge.style.color = '#ef4444';
+                    statusBadge.innerText = `Server ${currentServerIndex + 1} Offline! Auto Redirecting...`;
+                    currentServerIndex++;
+                    setTimeout(() => loadVideoSource(), 1000);
+                } else {
+                    statusBadge.style.color = '#10b981';
+                    statusBadge.innerText = `Connected`;
+                }
+            }, 5000);
+        }
+
+        videoFrame.onload = function() {
+            if (fallbackTimer) clearTimeout(fallbackTimer);
+            statusBadge.style.color = '#10b981';
+            statusBadge.innerText = `Connected`;
+        };
+
         function closePlayer() {
+            if (fallbackTimer) clearTimeout(fallbackTimer);
             playerModal.style.display = 'none';
             videoFrame.src = '';
             document.body.style.overflow = 'auto';
