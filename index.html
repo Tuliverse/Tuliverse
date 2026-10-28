@@ -15,18 +15,18 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            padding: 14px 4%;
+            padding: 16px 4%;
         }
         .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 15px;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
         }
         
-        /* Boro Logo Style - Image T Logo Concept */
+        /* Boro Styled Logo */
         .logo { 
             display: flex;
             align-items: baseline;
@@ -34,7 +34,7 @@
             user-select: none;
         }
         .logo .logo-big-t { 
-            font-size: 42px; 
+            font-size: 52px; 
             font-weight: 900; 
             font-family: 'Times New Roman', Times, serif;
             color: #ffffff;
@@ -45,7 +45,7 @@
             -webkit-text-fill-color: transparent;
         }
         .logo .logo-text { 
-            font-size: 24px; 
+            font-size: 28px; 
             font-weight: 800; 
             letter-spacing: 1px;
             color: #ffffff;
@@ -57,29 +57,29 @@
         .search-box { 
             position: relative;
             width: 100%; 
-            max-width: 300px; 
+            max-width: 320px; 
         }
         .search-box input { 
             width: 100%;
-            padding: 10px 16px 10px 42px; 
-            border-radius: 25px; 
+            padding: 12px 18px 12px 45px; 
+            border-radius: 30px; 
             border: 1px solid #374151; 
             background: #1f2937;
             color: #fff;
             outline: none; 
-            font-size: 14px;
+            font-size: 15px;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
         .search-box input:focus { 
             border-color: #e11d48; 
-            box-shadow: 0 0 8px rgba(225, 29, 72, 0.4);
+            box-shadow: 0 0 10px rgba(225, 29, 72, 0.4);
         }
         .search-box .search-icon {
             position: absolute;
-            left: 14px;
+            left: 16px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 16px;
+            font-size: 18px;
             color: #9ca3af;
             pointer-events: none;
         }
@@ -88,34 +88,34 @@
         .filters-container {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap; 
             padding-bottom: 4px;
         }
         
         .cat-btn, .year-dropdown-btn {
             background: #1f2937;
-            color: #e5e7eb;
+            color: #f3f4f6;
             border: 1px solid #374151;
-            padding: 8px 18px; /* Larger Button Padding */
-            border-radius: 20px; /* Rounded Pill Design */
-            font-size: 14px; /* Larger Text */
-            font-weight: 600;
+            padding: 10px 22px; /* Bigger Button Padding */
+            border-radius: 25px; 
+            font-size: 15px; /* Larger Font Size */
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.25s ease;
             white-space: nowrap;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
         
         .cat-btn.active, .cat-btn:hover, .year-dropdown-btn:hover {
             background: #e11d48;
             color: #ffffff;
             border-color: #e11d48;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(225, 29, 72, 0.45);
         }
 
         /* Dropdown Styling */
@@ -129,24 +129,24 @@
             top: 100%;
             left: 0;
             background-color: #1f2937;
-            min-width: 190px;
-            box-shadow: 0px 8px 20px 0px rgba(0,0,0,0.6);
+            min-width: 210px;
+            box-shadow: 0px 10px 25px 0px rgba(0,0,0,0.7);
             border: 1px solid #374151;
-            border-radius: 12px;
+            border-radius: 14px;
             z-index: 200;
             margin-top: 6px;
             overflow: hidden;
         }
         .dropdown-content button {
-            color: #d1d5db;
-            padding: 12px 16px;
+            color: #e5e7eb;
+            padding: 14px 18px;
             text-decoration: none;
             display: block;
             width: 100%;
             text-align: left;
             background: none;
             border: none;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: background 0.2s;
@@ -160,7 +160,7 @@
         }
 
         .container { padding: 15px 2%; flex: 1; }
-        h2 { font-size: 18px; margin-bottom: 14px; color: #f3f4f6; padding-left: 4px; font-weight: 700; }
+        h2 { font-size: 20px; margin-bottom: 16px; color: #f3f4f6; padding-left: 4px; font-weight: 700; }
         
         .grid { 
             display: grid; 
@@ -170,10 +170,10 @@
 
         @media (max-width: 480px) {
             .grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
-            .logo .logo-big-t { font-size: 36px; }
-            .logo .logo-text { font-size: 20px; }
+            .logo .logo-big-t { font-size: 42px; }
+            .logo .logo-text { font-size: 22px; }
             .cat-btn, .year-dropdown-btn { 
-                padding: 7px 14px; 
+                padding: 8px 16px; 
                 font-size: 13px; 
             }
         }
@@ -183,7 +183,7 @@
         }
 
         @media (min-width: 768px) {
-            header { padding: 16px 5%; }
+            header { padding: 18px 5%; }
             .container { padding: 25px 4%; }
             .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 18px; }
         }
@@ -242,15 +242,15 @@
             background: #1f2937;
             color: #fff;
             border: 1px solid #374151;
-            padding: 9px 20px;
+            padding: 10px 22px;
             border-radius: 25px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
         }
         .page-btn:hover { background: #e11d48; border-color: #e11d48; }
-        .page-info { font-size: 14px; font-weight: bold; color: #e11d48; }
+        .page-info { font-size: 15px; font-weight: bold; color: #e11d48; }
 
         .modal { 
             display: none; 
@@ -453,6 +453,7 @@
             <button class="cat-btn active" id="btn-all" onclick="setCategory('all')">🏠 Home</button>
             <button class="cat-btn" id="btn-bollywood" onclick="setCategory('bollywood')">🎭 Bollywood</button>
             <button class="cat-btn" id="btn-hollywood" onclick="setCategory('hollywood')">🎬 Hollywood</button>
+            <button class="cat-btn" id="btn-bengali" onclick="setCategory('bengali')">🪕 Tollywood / Bengali</button>
 
             <!-- Hindi Dubbed Dropdown -->
             <div class="dropdown">
@@ -464,10 +465,17 @@
                 </div>
             </div>
 
-            <!-- Categories -->
             <button class="cat-btn" id="btn-webseries" onclick="setCategory('webseries')">📺 Web Series</button>
             <button class="cat-btn" id="btn-south_indian" onclick="setCategory('south_indian')">🍿 South Indian Dubbed</button>
-            <button class="cat-btn" id="btn-hot_series" onclick="setCategory('hot_series')">🔥 Hot Web Series</button>
+
+            <!-- Hot Series Dropdown with Sub menu -->
+            <div class="dropdown">
+                <button class="cat-btn" id="btn-hot_series">🔥 Hot Web Series ▾</button>
+                <div class="dropdown-content">
+                    <button onclick="setCategory('hot_series')">🔥 All Hot Web Series</button>
+                    <button onclick="setCategory('indian_hot_series')">🇮🇳 Indian Hot Series</button>
+                </div>
+            </div>
 
             <!-- All Years Filter Dropdown -->
             <div class="dropdown">
@@ -588,6 +596,8 @@
                 url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=hi`;
             } else if (currentCategory === 'hollywood') {
                 url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=en`;
+            } else if (currentCategory === 'bengali') {
+                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=bn`;
             } else if (currentCategory === 'hindi_dubbed_movie') {
                 url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_keywords=210024|155239`;
             } else if (currentCategory === 'hindi_dubbed_series') {
@@ -600,6 +610,8 @@
                 url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=te|ta|ml|kn`;
             } else if (currentCategory === 'hot_series') {
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=18,10749&include_adult=true`;
+            } else if (currentCategory === 'indian_hot_series') {
+                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=18,10749&with_original_language=hi&include_adult=true`;
             } else {
                 if (currentYear) {
                     url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc`;
@@ -609,7 +621,7 @@
             }
 
             if (currentYear) {
-                const isTvCategory = ['webseries', 'hindi_dubbed_series', 'hindi_dubbed_anime', 'hot_series'].includes(currentCategory);
+                const isTvCategory = ['webseries', 'hindi_dubbed_series', 'hindi_dubbed_anime', 'hot_series', 'indian_hot_series'].includes(currentCategory);
                 url += isTvCategory ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`;
             }
 
@@ -644,7 +656,7 @@
                 if(!poster_path) return;
                 
                 const itemTitle = title || name;
-                const isTvSeries = (media_type === 'tv') || ['webseries', 'hindi_dubbed_series', 'hindi_dubbed_anime', 'hot_series'].includes(currentCategory);
+                const isTvSeries = (media_type === 'tv') || ['webseries', 'hindi_dubbed_series', 'hindi_dubbed_anime', 'hot_series', 'indian_hot_series'].includes(currentCategory);
                 const type = isTvSeries ? 'tv' : 'movie';
 
                 const card = document.createElement('div');
@@ -668,18 +680,21 @@
             if(category === 'all') document.getElementById('btn-all')?.classList.add('active');
             if(category === 'hollywood') document.getElementById('btn-hollywood')?.classList.add('active');
             if(category === 'bollywood') document.getElementById('btn-bollywood')?.classList.add('active');
+            if(category === 'bengali') document.getElementById('btn-bengali')?.classList.add('active');
             if(category === 'webseries') document.getElementById('btn-webseries')?.classList.add('active');
             if(category === 'south_indian') document.getElementById('btn-south_indian')?.classList.add('active');
-            if(category === 'hot_series') document.getElementById('btn-hot_series')?.classList.add('active');
+            if(category.includes('hot_series')) document.getElementById('btn-hot_series')?.classList.add('active');
             if(category.startsWith('hindi_dubbed')) document.getElementById('btn-hindi_dubbed')?.classList.add('active');
 
             const titleMap = {
                 'all': 'Trending Movies & Series',
                 'hollywood': '🎬 Hollywood Movies',
                 'bollywood': '🎭 Bollywood Movies',
+                'bengali': '🪕 Tollywood / Bengali Movies',
                 'webseries': '📺 Web Series',
                 'south_indian': '🍿 South Indian Dubbed Movies',
                 'hot_series': '🔥 Hot Web Series',
+                'indian_hot_series': '🇮🇳 Indian Hot Web Series',
                 'hindi_dubbed_movie': '🎥 Hindi Dubbed Movies',
                 'hindi_dubbed_series': '📺 Hindi Dubbed Web Series',
                 'hindi_dubbed_anime': '⛩️ Hindi Dubbed Anime'
