@@ -202,7 +202,6 @@
         }
         .close-btn:hover { color: #e11d48; }
 
-        /* Server Bar */
         .server-top-bar {
             display: flex;
             gap: 8px;
@@ -229,7 +228,6 @@
             border-color: #e11d48;
         }
 
-        /* Audio Language Selection Bar */
         .audio-bar {
             display: flex;
             gap: 6px;
@@ -381,15 +379,17 @@
 
                 <!-- Servers Bar -->
                 <div class="server-top-bar">
-                    <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 1 (2Embed Dual Audio)</button>
-                    <button class="srv-btn" id="btn-multiembed_vip" onclick="userSelectServer('multiembed_vip')">⚡ Server 2 (MultiEmbed VIP)</button>
-                    <button class="srv-btn" id="btn-vidsrc_cc" onclick="userSelectServer('vidsrc_cc')">⚡ Server 3 (VidSrc Fast)</button>
+                    <button class="srv-btn active" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ VidCore</button>
+                    <button class="srv-btn" id="btn-vidsrc_me" onclick="userSelectServer('vidsrc_me')">⚡ VidSrc.me</button>
+                    <button class="srv-btn" id="btn-superembed" onclick="userSelectServer('superembed')">⚡ SuperEmbed</button>
+                    <button class="srv-btn" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ 2Embed</button>
+                    <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ MultiEmbed</button>
                     <span class="status-badge" id="statusBadge">Connecting...</span>
                 </div>
 
-                <!-- Audio Track / Dubbed Preference Selector -->
+                <!-- Audio Language Preference Controls -->
                 <div class="audio-bar">
-                    <span class="audio-label">🎧 Audio:</span>
+                    <span class="audio-label">🎧 Audio Language:</span>
                     <button class="lang-pill active" onclick="setAudioLang('all', this)">Auto / Multi</button>
                     <button class="lang-pill" onclick="setAudioLang('hi', this)">Hindi Dubbed</button>
                     <button class="lang-pill" onclick="setAudioLang('bn', this)">Bengali</button>
@@ -401,7 +401,7 @@
                     <iframe id="videoFrame" src="" allowfullscreen></iframe>
                 </div>
 
-                <!-- Auto Season & Episode Picker Grid -->
+                <!-- Season & Episode Picker Grid -->
                 <div class="episodes-section" id="episodesSection">
                     <div class="ep-controls">
                         <span class="episodes-title">Season:</span>
@@ -436,7 +436,7 @@
         let currentMediaType = 'movie';
         let currentAudioLang = 'all';
         
-        const serverList = ['2embed', 'multiembed_vip', 'vidsrc_cc'];
+        const serverList = ['vidcore', 'vidsrc_me', 'superembed', '2embed', 'multiembed'];
         let currentServerIndex = 0;
         let fallbackTimer = null;
         
@@ -649,20 +649,28 @@
             let langParam = currentAudioLang !== 'all' ? `&lang=${currentAudioLang}` : '';
 
             if (currentMediaType === 'tv') {
-                if (serverName === '2embed') {
+                if (serverName === 'vidcore') {
+                    srcUrl = `https://vidcore.org/embed/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
+                } else if (serverName === 'vidsrc_me') {
+                    srcUrl = `https://vidsrc.me/embed/tv?tmdb=${currentMediaId}&season=${currentSeason}&episode=${currentEpisode}`;
+                } else if (serverName === 'superembed') {
+                    srcUrl = `https://superembed.stream/embedtv.php?tmdb=${currentMediaId}&s=${currentSeason}&e=${currentEpisode}`;
+                } else if (serverName === '2embed') {
                     srcUrl = `https://www.2embed.cc/embedtv/${currentMediaId}&s=${currentSeason}&e=${currentEpisode}${langParam}`;
-                } else if (serverName === 'multiembed_vip') {
-                    srcUrl = `https://multiembed.mov/directstream.php?video_id=${currentMediaId}&tmdb=1&s=${currentSeason}&e=${currentEpisode}`;
-                } else if (serverName === 'vidsrc_cc') {
-                    srcUrl = `https://vidsrc.cc/v2/embed/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
+                } else if (serverName === 'multiembed') {
+                    srcUrl = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1&s=${currentSeason}&e=${currentEpisode}`;
                 }
             } else {
-                if (serverName === '2embed') {
+                if (serverName === 'vidcore') {
+                    srcUrl = `https://vidcore.org/embed/movie/${currentMediaId}`;
+                } else if (serverName === 'vidsrc_me') {
+                    srcUrl = `https://vidsrc.me/embed/movie?tmdb=${currentMediaId}`;
+                } else if (serverName === 'superembed') {
+                    srcUrl = `https://superembed.stream/embed.php?tmdb=${currentMediaId}`;
+                } else if (serverName === '2embed') {
                     srcUrl = `https://www.2embed.cc/embed/${currentMediaId}${langParam ? '?' + langParam.replace('&', '') : ''}`;
-                } else if (serverName === 'multiembed_vip') {
-                    srcUrl = `https://multiembed.mov/directstream.php?video_id=${currentMediaId}&tmdb=1`;
-                } else if (serverName === 'vidsrc_cc') {
-                    srcUrl = `https://vidsrc.cc/v2/embed/movie/${currentMediaId}`;
+                } else if (serverName === 'multiembed') {
+                    srcUrl = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1`;
                 }
             }
 
