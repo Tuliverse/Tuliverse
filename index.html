@@ -4,7 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer">
-    <title>Tuliverse - Stream Movies & Series</title>
+    
+    <!-- GOOGLE SITE VERIFICATION META TAG -->
+    <meta name="google-site-verification" content="google245f19f59d08c608" />
+
+    <!-- GOOGLE SEARCH ENGINE OPTIMIZATION (SEO) META TAGS -->
+    <title>Tuliverse - Stream Free Movies & Web Series Online</title>
+    <meta name="description" content="Watch trending Hollywood, Bollywood, Tollywood, Hindi Dubbed movies and web series online for free on Tuliverse.">
+    <meta name="keywords" content="Tuliverse, Stream Movies, Watch Web Series, Hindi Dubbed Movies, Hollywood Movies, Free Streaming">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://tuliverse.cyou/">
+
+    <!-- OPEN GRAPH FOR SOCIAL MEDIA & GOOGLE INDEXING -->
+    <meta property="og:title" content="Tuliverse - Stream Movies & Series">
+    <meta property="og:description" content="Watch trending movies and web series online for free.">
+    <meta property="og:url" content="https://tuliverse.cyou/">
+    <meta property="og:type" content="website">
 
     <!-- LARGER & PURE WHITE CIRCULAR T-FAVICON -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23111827'/><text x='50%25' y='75%25' dominant-baseline='middle' text-anchor='middle' font-family='Times New Roman, serif' font-weight='900' font-size='85' fill='%23ffffff'>T</text></svg>">
@@ -529,7 +544,7 @@
                 </div>
 
                 <div class="iframe-container">
-                    <iframe id="videoFrame" src="" allowfullscreen></iframe>
+                    <iframe id="videoFrame" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
                 </div>
 
                 <div class="episodes-section" id="episodesSection">
@@ -603,15 +618,12 @@
             } else if (currentCategory === 'bengali') {
                 url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=bn`;
             } else if (currentCategory === 'hindi_dubbed_movie') {
-                // Non-Hindi movies (English, South Indian, Foreign) dubbed in Hindi
                 url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_keywords=210024|155239&without_original_language=hi`;
             } else if (currentCategory === 'hindi_dubbed_series') {
-                // Non-Hindi series (Hollywood, Korean, Anime) dubbed in Hindi
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_keywords=210024|155239&without_original_language=hi`;
             } else if (currentCategory === 'hindi_dubbed_anime') {
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=16&with_original_language=ja`;
             } else if (currentCategory === 'webseries') {
-                // Both Indian & Global web series
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc`;
             } else if (currentCategory === 'south_indian') {
                 url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=te|ta|ml|kn`;
