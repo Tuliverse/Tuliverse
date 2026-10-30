@@ -32,7 +32,7 @@ def scrape_show(show_key, category_url):
                 count = 1
                 for iframe in post_soup.find_all('iframe'):
                     src = iframe.get('src', '')
-                    if any(server in src for server in ['streamwish', 'dood', 'filelions', 'voesx', 'mixdrop']):
+                    if src.startswith('http'):
                         episodes[f"ep_{count}"] = {
                             "title": f"Episode {count}",
                             "stream_link": src
@@ -40,8 +40,10 @@ def scrape_show(show_key, category_url):
                         count += 1
                 
                 if episodes:
-                    requests.patch(f"{FIREBASE_URL}/{show_key}.json", json={"episodes": episodes})
-                    print(f"Successfully scraped {show_key}")
+                    response = requests.patch(f"{FIREBASE_URL}/{show_key}.json", json={"episodes": episodes})
+                    print(f"Successfully updated {show_key}: {response.status_code}")
+                else:
+                    print(f"No iframes found for {show_key}")
     except Exception as e:
         print(f"Error scraping {show_key}: {e}")
 
