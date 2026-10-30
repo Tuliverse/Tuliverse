@@ -10,8 +10,8 @@
 
     <!-- GOOGLE SEARCH ENGINE OPTIMIZATION (SEO) META TAGS -->
     <title>Tuliverse - Stream Free Movies & Web Series Online</title>
-    <meta name="description" content="Watch trending Hollywood, Bollywood, Tollywood, Hindi Dubbed movies and web series online for free on Tuliverse.">
-    <meta name="keywords" content="Tuliverse, Stream Movies, Watch Web Series, Hindi Dubbed Movies, Hollywood Movies, Free Streaming">
+    <meta name="description" content="Watch trending Hollywood, Bollywood, Tollywood, Hindi Dubbed movies, Asian Dramas and web series online for free on Tuliverse.">
+    <meta name="keywords" content="Tuliverse, Stream Movies, Watch Web Series, Hindi Dubbed Movies, Korean Drama, Chinese Drama, Anime Movies">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://tuliverse.cyou/">
 
@@ -28,14 +28,19 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: #0b0f19; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
         
+        /* STICKY HEADER WITH SMOOTH TRANSITION */
         header { 
-            background: #111827; 
+            background: rgba(17, 24, 39, 0.95); 
+            backdrop-filter: blur(8px);
             border-bottom: 1px solid #1f2937;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
             padding: 16px 4%;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
+
         .top-bar {
             display: flex;
             justify-content: space-between;
@@ -103,7 +108,7 @@
             pointer-events: none;
         }
 
-        /* Prominent & Larger Menu Buttons */
+        /* Menu Buttons Layout */
         .filters-container {
             display: flex;
             align-items: center;
@@ -148,17 +153,17 @@
             top: 100%;
             left: 0;
             background-color: #1f2937;
-            min-width: 210px;
+            min-width: 220px;
             box-shadow: 0px 10px 25px 0px rgba(0,0,0,0.7);
             border: 1px solid #374151;
             border-radius: 14px;
-            z-index: 200;
+            z-index: 2000;
             margin-top: 6px;
             overflow: hidden;
         }
         .dropdown-content button {
             color: #e5e7eb;
-            padding: 14px 18px;
+            padding: 12px 18px;
             text-decoration: none;
             display: block;
             width: 100%;
@@ -195,6 +200,10 @@
                 padding: 8px 16px; 
                 font-size: 13px; 
             }
+            /* MOBILE DISPLAY LARGER MODAL FIX */
+            .modal { padding: 4px !important; }
+            .modal-content { margin: 5px 0 !important; border-radius: 8px !important; }
+            .iframe-container { padding-bottom: 62% !important; }
         }
 
         @media (min-width: 481px) and (max-width: 767px) {
@@ -277,7 +286,7 @@
             top: 0; left: 0; 
             width: 100%; height: 100%; 
             background: rgba(0, 0, 0, 0.93); 
-            z-index: 1000; 
+            z-index: 3000; 
             padding: 10px;
             overflow-y: auto;
         }
@@ -456,7 +465,7 @@
 </head>
 <body>
 
-    <header>
+    <header id="mainHeader">
         <div class="top-bar">
             <div class="logo" onclick="setCategory('all')">
                 <span class="logo-big-t">T</span>
@@ -474,20 +483,29 @@
             <button class="cat-btn" id="btn-hollywood" onclick="setCategory('hollywood')">🎬 Hollywood</button>
             <button class="cat-btn" id="btn-bengali" onclick="setCategory('bengali')">🪕 Tollywood / Bengali</button>
 
-            <!-- Hindi Dubbed Dropdown -->
+            <!-- HINDI DUBBED DROPDOWN -->
             <div class="dropdown">
                 <button class="cat-btn" id="btn-hindi_dubbed">🎧 Hindi Dubbed ▾</button>
                 <div class="dropdown-content">
-                    <button onclick="setCategory('hindi_dubbed_movie')">🎥 Hindi Dubbed Movies</button>
-                    <button onclick="setCategory('hindi_dubbed_series')">📺 Hindi Dubbed Series</button>
-                    <button onclick="setCategory('hindi_dubbed_anime')">⛩️ Hindi Dubbed Anime</button>
+                    <button onclick="setCategory('hindi_dubbed_anime_movie')">⛩️ Hindi Dubbed Anime Movies</button>
+                    <button onclick="setCategory('hindi_dubbed_anime_series')">⛩️ Hindi Dubbed Anime Series</button>
                 </div>
             </div>
 
-            <button class="cat-btn" id="btn-webseries" onclick="setCategory('webseries')">📺 Web Series</button>
+            <!-- WEB SERIES DROPDOWN -->
+            <div class="dropdown">
+                <button class="cat-btn" id="btn-webseries">📺 Web Series ▾</button>
+                <div class="dropdown-content">
+                    <button onclick="setCategory('webseries')">📺 All Web Series</button>
+                    <button onclick="setCategory('indian_webseries')">🇮🇳 Indian Web Series</button>
+                    <button onclick="setCategory('kdrama')">🇰🇷 Korean Drama (K-Drama)</button>
+                    <button onclick="setCategory('cdrama')">🇨🇳 Chinese Drama (C-Drama)</button>
+                </div>
+            </div>
+
             <button class="cat-btn" id="btn-south_indian" onclick="setCategory('south_indian')">🍿 South Indian Dubbed</button>
 
-            <!-- Hot Series Dropdown with Sub menu -->
+            <!-- Hot Series Dropdown -->
             <div class="dropdown">
                 <button class="cat-btn" id="btn-hot_series">🔥 Hot Web Series ▾</button>
                 <div class="dropdown-content">
@@ -536,10 +554,11 @@
                     <span class="close-btn" onclick="closePlayer()">&times;</span>
                 </div>
 
+                <!-- UPDATED SERVER NAMES -->
                 <div class="server-top-bar">
-                    <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 1</button>
-                    <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server 2</button>
-                    <button class="srv-btn" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ Server 3</button>
+                    <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 1 Fast</button>
+                    <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server 2 Fast</button>
+                    <button class="srv-btn" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ Server 3 All Languages</button>
                     <span class="status-badge" id="statusBadge">Connecting...</span>
                 </div>
 
@@ -617,14 +636,18 @@
                 url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=en`;
             } else if (currentCategory === 'bengali') {
                 url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=bn`;
-            } else if (currentCategory === 'hindi_dubbed_movie') {
-                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_keywords=210024|155239&without_original_language=hi`;
-            } else if (currentCategory === 'hindi_dubbed_series') {
-                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_keywords=210024|155239&without_original_language=hi`;
-            } else if (currentCategory === 'hindi_dubbed_anime') {
+            } else if (currentCategory === 'hindi_dubbed_anime_movie') {
+                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=16&with_original_language=ja`;
+            } else if (currentCategory === 'hindi_dubbed_anime_series') {
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=16&with_original_language=ja`;
             } else if (currentCategory === 'webseries') {
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc`;
+            } else if (currentCategory === 'indian_webseries') {
+                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=hi`;
+            } else if (currentCategory === 'kdrama') {
+                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=ko`;
+            } else if (currentCategory === 'cdrama') {
+                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=zh`;
             } else if (currentCategory === 'south_indian') {
                 url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=te|ta|ml|kn`;
             } else if (currentCategory === 'hot_series') {
@@ -640,7 +663,7 @@
             }
 
             if (currentYear) {
-                const isTvCategory = ['webseries', 'hindi_dubbed_series', 'hindi_dubbed_anime', 'hot_series', 'indian_hot_series'].includes(currentCategory);
+                const isTvCategory = ['webseries', 'indian_webseries', 'kdrama', 'cdrama', 'hindi_dubbed_anime_series', 'hot_series', 'indian_hot_series'].includes(currentCategory);
                 url += isTvCategory ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`;
             }
 
@@ -675,7 +698,7 @@
                 if(!poster_path) return;
                 
                 const itemTitle = title || name;
-                const isTvSeries = (media_type === 'tv') || ['webseries', 'hindi_dubbed_series', 'hindi_dubbed_anime', 'hot_series', 'indian_hot_series'].includes(currentCategory);
+                const isTvSeries = (media_type === 'tv') || ['webseries', 'indian_webseries', 'kdrama', 'cdrama', 'hindi_dubbed_anime_series', 'hot_series', 'indian_hot_series'].includes(currentCategory);
                 const type = isTvSeries ? 'tv' : 'movie';
 
                 const card = document.createElement('div');
@@ -700,7 +723,7 @@
             if(category === 'hollywood') document.getElementById('btn-hollywood')?.classList.add('active');
             if(category === 'bollywood') document.getElementById('btn-bollywood')?.classList.add('active');
             if(category === 'bengali') document.getElementById('btn-bengali')?.classList.add('active');
-            if(category === 'webseries') document.getElementById('btn-webseries')?.classList.add('active');
+            if(category.includes('webseries') || category === 'kdrama' || category === 'cdrama') document.getElementById('btn-webseries')?.classList.add('active');
             if(category === 'south_indian') document.getElementById('btn-south_indian')?.classList.add('active');
             if(category.includes('hot_series')) document.getElementById('btn-hot_series')?.classList.add('active');
             if(category.startsWith('hindi_dubbed')) document.getElementById('btn-hindi_dubbed')?.classList.add('active');
@@ -710,13 +733,15 @@
                 'hollywood': '🎬 Hollywood Movies',
                 'bollywood': '🎭 Bollywood Movies',
                 'bengali': '🪕 Tollywood / Bengali Movies',
-                'webseries': '📺 Web Series',
+                'webseries': '📺 All Web Series',
+                'indian_webseries': '🇮🇳 Indian Web Series',
+                'kdrama': '🇰🇷 Korean Drama (K-Drama)',
+                'cdrama': '🇨🇳 Chinese Drama (C-Drama)',
                 'south_indian': '🍿 South Indian Dubbed Movies',
                 'hot_series': '🔥 Hot Web Series',
                 'indian_hot_series': '🇮🇳 Indian Hot Web Series',
-                'hindi_dubbed_movie': '🎥 Hindi Dubbed Movies',
-                'hindi_dubbed_series': '📺 Hindi Dubbed Web Series',
-                'hindi_dubbed_anime': '⛩️ Hindi Dubbed Anime'
+                'hindi_dubbed_anime_movie': '⛩️ Hindi Dubbed Anime Movies',
+                'hindi_dubbed_anime_series': '⛩️ Hindi Dubbed Anime Series'
             };
 
             sectionTitle.innerText = titleMap[category] || 'Explore Movies & Series';
@@ -880,7 +905,6 @@
             statusBadge.style.color = '#fbbf24';
             statusBadge.innerText = `Connecting Server ${currentServerIndex + 1}...`;
 
-            // Server 3 (VidCore) chara Baki Server 1 o 2 te Sandbox soriya dewa hoyeche
             if (serverName === 'vidcore') {
                 videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
             } else {
