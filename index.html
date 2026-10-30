@@ -200,6 +200,7 @@
                 padding: 8px 16px; 
                 font-size: 13px; 
             }
+            /* MOBILE DISPLAY LARGER MODAL FIX */
             .modal { padding: 4px !important; }
             .modal-content { margin: 5px 0 !important; border-radius: 8px !important; }
             .iframe-container { padding-bottom: 62% !important; }
@@ -332,16 +333,23 @@
         }
         .close-btn:hover { color: #e11d48; }
 
+        /* SERVER BAR TWO-LINE FLEXBOX LAYOUT */
         .server-top-bar {
             display: flex;
+            flex-direction: column;
             gap: 8px;
             padding: 10px 14px;
             background: #111827;
             border-bottom: 1px solid #1f2937;
+        }
+        .server-line {
+            display: flex;
+            gap: 8px;
+            align-items: center;
             overflow-x: auto;
             white-space: nowrap;
-            align-items: center;
         }
+
         .srv-btn {
             background: #1f2937;
             color: #d1d5db;
@@ -553,13 +561,17 @@
                     <span class="close-btn" onclick="closePlayer()">&times;</span>
                 </div>
 
-                <!-- UPDATED SERVER BUTTONS -->
+                <!-- UPDATED SERVER BAR WITH 2 LINES -->
                 <div class="server-top-bar">
-                    <button class="srv-btn active" id="btn-vidsrcpro" onclick="userSelectServer('vidsrcpro')">⚡ Server 1 (Netmirror Ultra Fast)</button>
-                    <button class="srv-btn" id="btn-autoembed" onclick="userSelectServer('autoembed')">⚡ Server 2 (Auto Multi-Lang)</button>
-                    <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server 3 (Multi-Server)</button>
-                    <button class="srv-btn" id="btn-vidlink" onclick="userSelectServer('vidlink')">⚡ Server 4 (Hindi Audio Forced)</button>
-                    <span class="status-badge" id="statusBadge">Connecting...</span>
+                    <div class="server-line">
+                        <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 1 Fast</button>
+                    </div>
+                    <div class="server-line">
+                        <button class="srv-btn" id="btn-vidlink" onclick="userSelectServer('vidlink')">⚡ Server 4 Vidlink</button>
+                        <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server 2 Fast</button>
+                        <button class="srv-btn" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ Server 3 Multi Languages</button>
+                        <span class="status-badge" id="statusBadge">Connecting...</span>
+                    </div>
                 </div>
 
                 <div class="iframe-container">
@@ -611,8 +623,8 @@
         let currentMediaId = null;
         let currentMediaType = 'movie';
 
-        // VidLink-কে Server 4-এ রাখার জন্য Array রি-অর্ডার করা হয়েছে
-        const serverList = ['vidsrcpro', 'autoembed', 'multiembed', 'vidlink'];
+        /* SERVER LIST UPDATED WITH VIDLINK */
+        const serverList = ['2embed', 'vidlink', 'multiembed', 'vidcore'];
         let currentServerIndex = 0;
         let fallbackTimer = null;
         
@@ -906,52 +918,50 @@
             statusBadge.style.color = '#fbbf24';
             statusBadge.innerText = `Connecting Server ${currentServerIndex + 1}...`;
 
-            videoFrame.removeAttribute('sandbox');
-            videoFrame.setAttribute("referrerpolicy", "no-referrer");
+            if (serverName === 'vidcore') {
+                videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
+            } else {
+                videoFrame.removeAttribute('sandbox');
+            }
 
             let srcUrl = '';
 
+            /* SERVER URL LOGIC UPDATED FOR VIDLINK */
             if (currentMediaType === 'tv') {
-                if (serverName === 'vidsrcpro') {
-                    // Netmirror Ultra Fast HLS
-                    srcUrl = `https://vidsrc.pro/embed/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
-                } else if (serverName === 'autoembed') {
-                    // AutoEmbed Multi Language
-                    srcUrl = `https://player.autoembed.cc/embed/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
-                } else if (serverName === 'multiembed') {
-                    // MultiEmbed Mirror
-                    srcUrl = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1&s=${currentSeason}&e=${currentEpisode}`;
+                if (serverName === '2embed') {
+                    srcUrl = `https://www.2embed.cc/embedtv/${currentMediaId}&s=${currentSeason}&e=${currentEpisode}`;
                 } else if (serverName === 'vidlink') {
-                    // Server 4: VidLink Forced Hindi Audio
-                    srcUrl = `https://vidlink.pro/tv/${currentMediaId}/${currentSeason}/${currentEpisode}?primaryColor=e11d48&lang=hi&audio=hi`;
+                    srcUrl = `https://vidlink.pro/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
+                } else if (serverName === 'multiembed') {
+                    srcUrl = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1&s=${currentSeason}&e=${currentEpisode}`;
+                } else if (serverName === 'vidcore') {
+                    srcUrl = `https://vidcore.org/embed/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
                 }
             } else {
-                if (serverName === 'vidsrcpro') {
-                    srcUrl = `https://vidsrc.pro/embed/movie/${currentMediaId}`;
-                } else if (serverName === 'autoembed') {
-                    srcUrl = `https://player.autoembed.cc/embed/movie/${currentMediaId}`;
+                if (serverName === '2embed') {
+                    srcUrl = `https://www.2embed.cc/embed/${currentMediaId}`;
+                } else if (serverName === 'vidlink') {
+                    srcUrl = `https://vidlink.pro/movie/${currentMediaId}`;
                 } else if (serverName === 'multiembed') {
                     srcUrl = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1`;
-                } else if (serverName === 'vidlink') {
-                    // Server 4: VidLink Forced Hindi Audio
-                    srcUrl = `https://vidlink.pro/movie/${currentMediaId}?primaryColor=e11d48&lang=hi&audio=hi`;
+                } else if (serverName === 'vidcore') {
+                    srcUrl = `https://vidcore.org/embed/movie/${currentMediaId}`;
                 }
             }
 
             videoFrame.src = srcUrl;
 
-            // Auto Failover 4 Seconds Timer
             fallbackTimer = setTimeout(() => {
                 if (currentServerIndex < serverList.length - 1) {
                     statusBadge.style.color = '#ef4444';
-                    statusBadge.innerText = `Switching to next server...`;
+                    statusBadge.innerText = `Server ${currentServerIndex + 1} Offline! Auto Redirecting...`;
                     currentServerIndex++;
-                    setTimeout(() => loadVideoSource(), 500);
+                    setTimeout(() => loadVideoSource(), 1000);
                 } else {
                     statusBadge.style.color = '#10b981';
                     statusBadge.innerText = `Connected`;
                 }
-            }, 4000);
+            }, 5000);
         }
 
         videoFrame.onload = function() {
