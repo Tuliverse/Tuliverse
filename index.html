@@ -201,10 +201,9 @@
                 font-size: 13px; 
             }
             /* MOBILE DISPLAY LARGER MODAL FIX */
-            .modal { padding: 0 !important; }
-            .modal-content { margin: 0 !important; border-radius: 0 !important; min-height: 100vh; }
-            .iframe-container { padding-bottom: 70% !important; }
-            .srv-btn { padding: 6px 10px !important; font-size: 11px !important; }
+            .modal { padding: 4px !important; }
+            .modal-content { margin: 5px 0 !important; border-radius: 8px !important; }
+            .iframe-container { padding-bottom: 62% !important; }
         }
 
         @media (min-width: 481px) and (max-width: 767px) {
@@ -334,28 +333,25 @@
         }
         .close-btn:hover { color: #e11d48; }
 
-        /* CENTERED SERVER TOP BAR */
         .server-top-bar {
             display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
             gap: 8px;
-            padding: 12px 14px;
+            padding: 10px 14px;
             background: #111827;
             border-bottom: 1px solid #1f2937;
+            overflow-x: auto;
+            white-space: nowrap;
             align-items: center;
-            text-align: center;
         }
         .srv-btn {
             background: #1f2937;
             color: #d1d5db;
             border: 1px solid #374151;
-            padding: 7px 15px;
+            padding: 6px 14px;
             border-radius: 8px;
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
         }
         .srv-btn.active {
             background: #e11d48;
@@ -366,10 +362,8 @@
         .status-badge {
             font-size: 12px;
             color: #fbbf24;
+            margin-left: auto;
             font-weight: 600;
-            width: 100%;
-            margin-top: 4px;
-            text-align: center;
         }
 
         .iframe-container {
@@ -560,7 +554,7 @@
                     <span class="close-btn" onclick="closePlayer()">&times;</span>
                 </div>
 
-                <!-- UPDATED CENTERED SERVER NAMES -->
+                <!-- UPDATED SERVER NAMES -->
                 <div class="server-top-bar">
                     <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 1 Fast</button>
                     <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server 2 Fast</button>
