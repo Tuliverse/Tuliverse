@@ -6,7 +6,7 @@
     <meta name="referrer" content="no-referrer">
     
     <!-- GOOGLE SITE VERIFICATION META TAG -->
-    <meta name="google-site-verification" content="google245f19f59d08c608" />
+    <meta name="google-site-verification" content="google245f19f59d08c608" /> 
 
     <!-- GOOGLE SEARCH ENGINE OPTIMIZATION (SEO) META TAGS -->
     <title>Tuliverse - Stream Free Movies & Web Series Online</title>
@@ -200,7 +200,6 @@
                 padding: 8px 16px; 
                 font-size: 13px; 
             }
-            /* MOBILE DISPLAY LARGER MODAL FIX */
             .modal { padding: 4px !important; }
             .modal-content { margin: 5px 0 !important; border-radius: 8px !important; }
             .iframe-container { padding-bottom: 62% !important; }
@@ -556,9 +555,9 @@
 
                 <!-- UPDATED SERVER NAMES -->
                 <div class="server-top-bar">
-                    <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 1 Fast</button>
-                    <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server 2 Fast</button>
-                    <button class="srv-btn" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ Server 3 All Languages</button>
+                    <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server-1 Fast</button>
+                    <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server-2 Fast</button>
+                    <button class="srv-btn" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ Server-3 All language</button>
                     <span class="status-badge" id="statusBadge">Connecting...</span>
                 </div>
 
@@ -905,6 +904,7 @@
             statusBadge.style.color = '#fbbf24';
             statusBadge.innerText = `Connecting Server ${currentServerIndex + 1}...`;
 
+            // SERVER-1 & SERVER-2 TE SANDBOX OFF, SHUDHU SERVER-3 (VIDCORE) TE ON
             if (serverName === 'vidcore') {
                 videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
             } else {
