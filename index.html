@@ -200,8 +200,18 @@
             gap: 10px; 
         }
 
+        /* মোবাইলের জন্য বড় ডিসপ্লে রেসপনসিভ স্টাইল */
         @media (max-width: 480px) {
-            .grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+            .grid { 
+                grid-template-columns: repeat(2, 1fr) !important; 
+                gap: 12px !important; 
+            }
+            .card img { 
+                height: 220px !important; 
+            }
+            .card-title { 
+                font-size: 13px !important; 
+            }
             .logo .logo-big-t { font-size: 42px; }
             .logo .logo-text { font-size: 22px; }
             .cat-btn, .year-dropdown-btn { 
@@ -214,7 +224,8 @@
         }
 
         @media (min-width: 481px) and (max-width: 767px) {
-            .grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+            .grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+            .card img { height: 210px; }
         }
 
         @media (min-width: 768px) {
@@ -581,7 +592,8 @@
                 </div>
 
                 <div class="iframe-container">
-                    <iframe id="videoFrame" src="" allowfullscreen></iframe>
+                    <!-- অ্যাডস ও পপ-আপ ব্লক করার জন্য sandbox প্রটেকশন যোগ করা হয়েছে -->
+                    <iframe id="videoFrame" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
                 </div>
 
                 <div class="episodes-section" id="episodesSection">
@@ -730,6 +742,13 @@
                 }
 
                 const showMetadata = {
+                    "star_plus": { title: "Star Plus Shows", poster: "https://m.media-amazon.com/images/M/MV5BYzA2N2E0NTgtY2QwNi00ZmMyLTg2MDUtYmRkMDNhYmExZTkzXkEyXkFqcGc@._V1_.jpg" },
+                    "colors_tv": { title: "Colors TV Shows", poster: "https://m.media-amazon.com/images/M/MV5BN2EwOTllODctNzc2MS00NDlhLTg2M2ItNWFiNDBmYzYxNzk5XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" },
+                    "zee_tv": { title: "Zee TV Shows", poster: "https://m.media-amazon.com/images/M/MV5BMDYyMmE1YjYtYmExNC00M2VmLTkyYzAtYWZhZTFmNmU1NjAxXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" },
+                    "sony_tv": { title: "Sony TV Shows", poster: "https://m.media-amazon.com/images/M/MV5BMDg1MDdlNjQtNTQyMC00Njg3LTk0MDgtODlmZTllMWRlYTI1XkEyXkFqcGc@._V1_.jpg" },
+                    "mtv_india": { title: "MTV India Shows", poster: "https://m.media-amazon.com/images/M/MV5BMjA4NjM0MDg0M15BMl5BanBnXkFtZTgwNjA2NjkyODE@._V1_FMjpg_UX1000_.jpg" },
+                    "netflix": { title: "Netflix Originals", poster: "https://m.media-amazon.com/images/M/MV5BMDYyMmE1YjYtYmExNC00M2VmLTkyYzAtYWZhZTFmNmU1NjAxXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" },
+                    "prime_video": { title: "Prime Video Shows", poster: "https://m.media-amazon.com/images/M/MV5BMDg1MDdlNjQtNTQyMC00Njg3LTk0MDgtODlmZTllMWRlYTI1XkEyXkFqcGc@._V1_.jpg" },
                     "bigg_boss": { title: "Bigg Boss", poster: "https://m.media-amazon.com/images/M/MV5BN2EwOTllODctNzc2MS00NDlhLTg2M2ItNWFiNDBmYzYxNzk5XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" },
                     "splitsvilla": { title: "MTV Splitsvilla", poster: "https://m.media-amazon.com/images/M/MV5BMjA4NjM0MDg0M15BMl5BanBnXkFtZTgwNjA2NjkyODE@._V1_FMjpg_UX1000_.jpg" },
                     "roadies": { title: "MTV Roadies", poster: "https://m.media-amazon.com/images/M/MV5BMDYyMmE1YjYtYmExNC00M2VmLTkyYzAtYWZhZTFmNmU1NjAxXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" },
