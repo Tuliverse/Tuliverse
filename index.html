@@ -200,9 +200,11 @@
                 padding: 8px 16px; 
                 font-size: 13px; 
             }
-            .modal { padding: 4px !important; }
-            .modal-content { margin: 5px 0 !important; border-radius: 8px !important; }
-            .iframe-container { padding-bottom: 62% !important; }
+            /* MOBILE DISPLAY LARGER MODAL FIX */
+            .modal { padding: 0 !important; }
+            .modal-content { margin: 0 !important; border-radius: 0 !important; min-height: 100vh; }
+            .iframe-container { padding-bottom: 70% !important; }
+            .srv-btn { padding: 6px 10px !important; font-size: 11px !important; }
         }
 
         @media (min-width: 481px) and (max-width: 767px) {
@@ -279,12 +281,11 @@
         .page-btn:hover { background: #e11d48; border-color: #e11d48; }
         .page-info { font-size: 15px; font-weight: bold; color: #e11d48; }
 
-        /* FIXED MODAL NO OVERLAY SCROLL */
         .modal { 
             display: none; 
             position: fixed; 
             top: 0; left: 0; 
-            width: 100vw; height: 100vh; 
+            width: 100%; height: 100%; 
             background: rgba(0, 0, 0, 0.93); 
             z-index: 3000; 
             padding: 10px;
@@ -293,7 +294,7 @@
         .modal-dialog {
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             min-height: 100%;
         }
         .modal-content { 
@@ -305,7 +306,7 @@
             overflow: hidden; 
             border: 1px solid #1e293b;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
-            margin: auto;
+            margin: 15px 0;
         }
         .player-header {
             display: flex;
@@ -333,25 +334,28 @@
         }
         .close-btn:hover { color: #e11d48; }
 
+        /* CENTERED SERVER TOP BAR */
         .server-top-bar {
             display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
             gap: 8px;
-            padding: 10px 14px;
+            padding: 12px 14px;
             background: #111827;
             border-bottom: 1px solid #1f2937;
-            overflow-x: auto;
-            white-space: nowrap;
             align-items: center;
+            text-align: center;
         }
         .srv-btn {
             background: #1f2937;
             color: #d1d5db;
             border: 1px solid #374151;
-            padding: 6px 14px;
+            padding: 7px 15px;
             border-radius: 8px;
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
         .srv-btn.active {
             background: #e11d48;
@@ -362,8 +366,10 @@
         .status-badge {
             font-size: 12px;
             color: #fbbf24;
-            margin-left: auto;
             font-weight: 600;
+            width: 100%;
+            margin-top: 4px;
+            text-align: center;
         }
 
         .iframe-container {
@@ -438,8 +444,6 @@
             font-size: 13px;
             color: #94a3b8;
             line-height: 1.6;
-            max-height: 200px;
-            overflow-y: auto;
         }
         .omdb-meta {
             display: flex;
@@ -556,11 +560,11 @@
                     <span class="close-btn" onclick="closePlayer()">&times;</span>
                 </div>
 
-                <!-- UPDATED SERVER NAMES -->
+                <!-- UPDATED CENTERED SERVER NAMES -->
                 <div class="server-top-bar">
-                    <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server-1 Fast</button>
-                    <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server-2 Fast</button>
-                    <button class="srv-btn" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ Server-3 All Languages</button>
+                    <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 1 Fast</button>
+                    <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server 2 Fast</button>
+                    <button class="srv-btn" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ Server 3 All Languages</button>
                     <span class="status-badge" id="statusBadge">Connecting...</span>
                 </div>
 
