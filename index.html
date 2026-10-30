@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="referrer" content="no-referrer">
+    <meta name="referrer" content="origin-when-cross-origin">
     
     <!-- GOOGLE SITE VERIFICATION META TAG -->
     <meta name="google-site-verification" content="google245f19f59d08c608" />
@@ -26,18 +26,20 @@
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #0b0f19; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
+        body { 
+            background-color: #0b0f19; 
+            color: #fff; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            min-height: 100vh;
+        }
         
-        /* STICKY HEADER WITH SMOOTH TRANSITION */
+        /* HEADER (NORMAL SCROLLING - NO FIXED/OVERLAY) */
         header { 
-            background: rgba(17, 24, 39, 0.95); 
-            backdrop-filter: blur(8px);
+            background: #111827; 
             border-bottom: 1px solid #1f2937;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 16px 4%;
-            transition: all 0.3s ease-in-out;
+            padding: 14px 4%;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
 
@@ -46,11 +48,11 @@
             justify-content: space-between;
             align-items: center;
             gap: 15px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             flex-wrap: wrap;
         }
         
-        /* Boro Styled Logo */
+        /* Logo Styling */
         .logo { 
             display: flex;
             align-items: baseline;
@@ -58,7 +60,7 @@
             user-select: none;
         }
         .logo .logo-big-t { 
-            font-size: 52px; 
+            font-size: 42px; 
             font-weight: 900; 
             font-family: 'Times New Roman', Times, serif;
             color: #ffffff;
@@ -69,7 +71,7 @@
             -webkit-text-fill-color: transparent;
         }
         .logo .logo-text { 
-            font-size: 28px; 
+            font-size: 24px; 
             font-weight: 800; 
             letter-spacing: 1px;
             color: #ffffff;
@@ -81,17 +83,17 @@
         .search-box { 
             position: relative;
             width: 100%; 
-            max-width: 320px; 
+            max-width: 300px; 
         }
         .search-box input { 
             width: 100%;
-            padding: 12px 18px 12px 45px; 
+            padding: 10px 16px 10px 42px; 
             border-radius: 30px; 
             border: 1px solid #374151; 
             background: #1f2937;
             color: #fff;
             outline: none; 
-            font-size: 15px;
+            font-size: 14px;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
         .search-box input:focus { 
@@ -100,10 +102,10 @@
         }
         .search-box .search-icon {
             position: absolute;
-            left: 16px;
+            left: 14px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 18px;
+            font-size: 16px;
             color: #9ca3af;
             pointer-events: none;
         }
@@ -112,18 +114,26 @@
         .filters-container {
             display: flex;
             align-items: center;
-            gap: 12px;
-            flex-wrap: wrap; 
+            gap: 10px;
+            overflow-x: auto;
+            white-space: nowrap;
             padding-bottom: 4px;
+        }
+        .filters-container::-webkit-scrollbar {
+            height: 3px;
+        }
+        .filters-container::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
         }
         
         .cat-btn, .year-dropdown-btn {
             background: #1f2937;
             color: #f3f4f6;
             border: 1px solid #374151;
-            padding: 10px 22px;
+            padding: 8px 18px;
             border-radius: 25px; 
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.25s ease;
@@ -131,15 +141,14 @@
             box-shadow: 0 3px 6px rgba(0,0,0,0.3);
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         
         .cat-btn.active, .cat-btn:hover, .year-dropdown-btn:hover {
             background: #e11d48;
             color: #ffffff;
             border-color: #e11d48;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(225, 29, 72, 0.45);
+            box-shadow: 0 4px 12px rgba(225, 29, 72, 0.45);
         }
 
         /* Dropdown Styling */
@@ -156,21 +165,21 @@
             min-width: 220px;
             box-shadow: 0px 10px 25px 0px rgba(0,0,0,0.7);
             border: 1px solid #374151;
-            border-radius: 14px;
+            border-radius: 12px;
             z-index: 2000;
             margin-top: 6px;
             overflow: hidden;
         }
         .dropdown-content button {
             color: #e5e7eb;
-            padding: 12px 18px;
+            padding: 10px 16px;
             text-decoration: none;
             display: block;
             width: 100%;
             text-align: left;
             background: none;
             border: none;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: background 0.2s;
@@ -194,16 +203,12 @@
 
         @media (max-width: 480px) {
             .grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
-            .logo .logo-big-t { font-size: 42px; }
-            .logo .logo-text { font-size: 22px; }
+            .logo .logo-big-t { font-size: 36px; }
+            .logo .logo-text { font-size: 20px; }
             .cat-btn, .year-dropdown-btn { 
-                padding: 8px 16px; 
-                font-size: 13px; 
+                padding: 6px 12px; 
+                font-size: 12px; 
             }
-            /* MOBILE DISPLAY LARGER MODAL FIX */
-            .modal { padding: 4px !important; }
-            .modal-content { margin: 5px 0 !important; border-radius: 8px !important; }
-            .iframe-container { padding-bottom: 62% !important; }
         }
 
         @media (min-width: 481px) and (max-width: 767px) {
@@ -211,7 +216,6 @@
         }
 
         @media (min-width: 768px) {
-            header { padding: 18px 5%; }
             .container { padding: 25px 4%; }
             .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 18px; }
         }
@@ -280,14 +284,15 @@
         .page-btn:hover { background: #e11d48; border-color: #e11d48; }
         .page-info { font-size: 15px; font-weight: bold; color: #e11d48; }
 
+        /* MODAL & VIDEO PLAYER FOR MOBILE BIG SCREEN */
         .modal { 
             display: none; 
             position: fixed; 
             top: 0; left: 0; 
             width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.93); 
+            background: rgba(0, 0, 0, 0.95); 
             z-index: 3000; 
-            padding: 10px;
+            padding: 8px;
             overflow-y: auto;
         }
         .modal-dialog {
@@ -299,13 +304,13 @@
         .modal-content { 
             position: relative; 
             width: 100%; 
-            max-width: 920px; 
+            max-width: 960px; 
             background: #0f172a; 
             border-radius: 12px; 
             overflow: hidden; 
             border: 1px solid #1e293b;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
-            margin: 15px 0;
+            margin: 10px 0;
         }
         .player-header {
             display: flex;
@@ -333,25 +338,41 @@
         }
         .close-btn:hover { color: #e11d48; }
 
-        .server-top-bar {
+        /* VERTICAL SERVER LIST CONTAINER */
+        .server-list-container {
             display: flex;
+            flex-direction: column;
             gap: 8px;
-            padding: 10px 14px;
+            padding: 12px;
             background: #111827;
             border-bottom: 1px solid #1f2937;
-            overflow-x: auto;
-            white-space: nowrap;
+        }
+        .server-list-header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
+            padding-bottom: 4px;
+        }
+        .server-list-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #9ca3af;
+            text-transform: uppercase;
         }
         .srv-btn {
             background: #1f2937;
             color: #d1d5db;
             border: 1px solid #374151;
-            padding: 6px 14px;
+            padding: 10px 14px;
             border-radius: 8px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
         }
         .srv-btn.active {
             background: #e11d48;
@@ -362,16 +383,22 @@
         .status-badge {
             font-size: 12px;
             color: #fbbf24;
-            margin-left: auto;
             font-weight: 600;
         }
 
+        /* BIG SCREEN VIDEO CONTAINER FOR MOBILE */
         .iframe-container {
             position: relative;
             width: 100%;
             padding-bottom: 56.25%;
             height: 0;
             background: #000;
+        }
+        @media (max-width: 600px) {
+            .iframe-container {
+                padding-bottom: 75%;
+                min-height: 280px;
+            }
         }
         .iframe-container iframe {
             position: absolute;
@@ -554,12 +581,21 @@
                     <span class="close-btn" onclick="closePlayer()">&times;</span>
                 </div>
 
-                <!-- UPDATED SERVER NAMES -->
-                <div class="server-top-bar">
-                    <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 1 Fast</button>
-                    <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server 2 Fast</button>
-                    <button class="srv-btn" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ Server 3 All Languages</button>
-                    <span class="status-badge" id="statusBadge">Connecting...</span>
+                <!-- VERTICAL SERVER SELECTION LIST -->
+                <div class="server-list-container">
+                    <div class="server-list-header">
+                        <span class="server-list-title">Select Server:</span>
+                        <span class="status-badge" id="statusBadge">Connecting...</span>
+                    </div>
+                    <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">
+                        ⚡ Server 1 Fast
+                    </button>
+                    <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">
+                        ⚡ Server 2 Fast
+                    </button>
+                    <button class="srv-btn" id="btn-vidcore" onclick="userSelectServer('vidcore')">
+                        ⚡ Server 3 All Languages
+                    </button>
                 </div>
 
                 <div class="iframe-container">
@@ -915,7 +951,7 @@
 
             if (currentMediaType === 'tv') {
                 if (serverName === '2embed') {
-                    srcUrl = `https://www.2embed.cc/embedtv/${currentMediaId}&s=${currentSeason}&e=${currentEpisode}`;
+                    srcUrl = `https://www.2embed.cc/embedtv/${currentMediaId}?s=${currentSeason}&e=${currentEpisode}`;
                 } else if (serverName === 'multiembed') {
                     srcUrl = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1&s=${currentSeason}&e=${currentEpisode}`;
                 } else if (serverName === 'vidcore') {
