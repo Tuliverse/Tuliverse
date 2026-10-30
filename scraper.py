@@ -38,19 +38,22 @@ def scrape_show(show_key, category_url):
                 
                 links = []
                 
-                # Filter iframe sources (ignore embed scripts/js/json)
+                # 1. Look for valid video player links inside 'a' tags
+                for a in post_soup.find_all('a', href=True):
+                    href = a['href']
+                    if any(server in href.lower() for server in ['streamwish', 'dood', 'filelions', 'voesx', 'mixdrop', 'vidsrc', 'dailymotion', 'vk.com', 'mbed']):
+                        if 'wp-embed' not in href and 'desirulez' not in href:
+                            links.append(href)
+
+                # 2. Extract embedded iframe sources directly
                 for iframe in post_soup.find_all('iframe'):
                     src = iframe.get('src') or iframe.get('data-src', '')
-                    if src and src.startswith('http') and 'wp-embed' not in src and 'json' not in src:
+                    if src and src.startswith('http') and 'wp-embed' not in src and 'wp-includes' not in src:
                         links.append(src)
-                
-                # Match streaming host links directly
-                content_text = str(post_soup)
-                found_urls = re.findall(r'https?://[^\s\'"]+', content_text)
-                for url in found_urls:
-                    if any(server in url.lower() for server in ['streamwish', 'dood', 'filelions', 'voesx', 'mixdrop', 'vidsrc', 'embed', 'dailymotion']):
-                        if 'wp-embed' not in url and 'json' not in url and 'wp-includes' not in url:
-                            links.append(url)
+
+                # Fallback: if no stream hosts matched, use the direct post page link
+                if not links:
+                    links.append(post_url)
 
                 unique_links = list(dict.fromkeys(links))
                 
@@ -61,11 +64,9 @@ def scrape_show(show_key, category_url):
                         "stream_link": link
                     }
 
-                if episodes:
-                    requests.patch(f"{FIREBASE_URL}/{show_key}.json", json={"episodes": episodes})
-                    print(f"Updated {show_key} successfully.")
-                else:
-                    print(f"No valid video links found for {show_key}")
+                patch_res = requests.patch(f"{FIREBASE_URL}/{show_key}.json", json={"episodes": episodes})
+                print(f"Updated {show_key} successfully: {patch_res.status_code}")
+                
     except Exception as e:
         print(f"Error scraping {show_key}: {e}")
 
