@@ -549,7 +549,7 @@
         <h2 id="sectionTitle">Trending Movies & Series</h2>
         <div class="grid" id="movieGrid"></div>
 
-        <div class="pagination">
+        <div class="pagination" id="paginationSection">
             <button class="page-btn" onclick="changePage(-1)">❮ Prev</button>
             <span class="page-info" id="pageNumber">Page 1</span>
             <button class="page-btn" onclick="changePage(1)">Next ❯</button>
@@ -568,7 +568,7 @@
                     <span class="close-btn" onclick="closePlayer()">&times;</span>
                 </div>
 
-                <div class="server-top-bar">
+                <div class="server-top-bar" id="serverTopBar">
                     <div class="server-line">
                         <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 1 Fast</button>
                         <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server 2 Fast</button>
@@ -586,7 +586,7 @@
 
                 <div class="episodes-section" id="episodesSection">
                     <div class="ep-controls">
-                        <span class="episodes-title">Season:</span>
+                        <span class="episodes-title" id="epControlsTitle">Season:</span>
                         <select class="season-select" id="seasonSelect" onchange="onSeasonChange()"></select>
                     </div>
                     <div class="episode-grid" id="episodeGrid"></div>
@@ -605,6 +605,7 @@
         const API_KEY = 'e64b892cb94d9ddd0616e9998422ed9a';
         const READ_ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNjRiODkyY2I5NGQ5ZGRkMDYxNmU5OTk4NDIyZWQ5YSIsIm5iZiI6MTc5MzAwNTc1MS40MjIwMDAyLCJzdWIiOiI2YWRmMThiNzA4OWFmMWY4ODFlMWUxM2QiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.AAGzkIhl_V950fMfxr35gfw3Cf9qdVZLOo9pwUAgqwo';
         const OMDB_API_KEY = '17fc936b';
+        const FIREBASE_URL = "https://tuliverse-default-rtdb.firebaseio.com/shows";
         const IMG_PATH = 'https://image.tmdb.org/t/p/w500';
 
         const movieGrid = document.getElementById('movieGrid');
@@ -617,6 +618,9 @@
         const episodeGrid = document.getElementById('episodeGrid');
         const seasonSelect = document.getElementById('seasonSelect');
         const statusBadge = document.getElementById('statusBadge');
+        const paginationSection = document.getElementById('paginationSection');
+        const serverTopBar = document.getElementById('serverTopBar');
+        const epControlsTitle = document.getElementById('epControlsTitle');
         
         const omdbInfoSection = document.getElementById('omdbInfoSection');
         const omdbMeta = document.getElementById('omdbMeta');
@@ -628,6 +632,7 @@
         let currentYear = '';
         let currentMediaId = null;
         let currentMediaType = 'movie';
+        let isFirebaseShow = false;
 
         const serverList = ['2embed', 'multiembed', 'vidcore', 'vidlink'];
         let currentServerIndex = 0;
@@ -662,8 +667,6 @@
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc`;
             } else if (currentCategory === 'indian_webseries') {
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=hi`;
-            } else if (currentCategory === 'indian_reality_shows') {
-                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=10764&with_original_language=hi`;
             } else if (currentCategory === 'kdrama') {
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=ko`;
             } else if (currentCategory === 'cdrama') {
@@ -683,7 +686,7 @@
             }
 
             if (currentYear) {
-                const isTvCategory = ['webseries', 'indian_webseries', 'indian_reality_shows', 'kdrama', 'cdrama', 'hindi_dubbed_anime_series', 'hot_series', 'indian_hot_series'].includes(currentCategory);
+                const isTvCategory = ['webseries', 'indian_webseries', 'kdrama', 'cdrama', 'hindi_dubbed_anime_series', 'hot_series', 'indian_hot_series'].includes(currentCategory);
                 url += isTvCategory ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`;
             }
 
@@ -691,6 +694,12 @@
         }
 
         async function getContent() {
+            if (currentCategory === 'indian_reality_shows') {
+                fetchFirebaseRealityShows();
+                return;
+            }
+            paginationSection.style.display = 'flex';
+
             try {
                 const apiPageStart = (currentPage - 1) * 2 + 1;
                 const p1 = fetch(buildApiUrl(apiPageStart), fetchOptions).then(r => r.json());
@@ -706,6 +715,53 @@
             }
         }
 
+        async function fetchFirebaseRealityShows() {
+            movieGrid.innerHTML = '<p style="color: #fbbf24; grid-column: 1/-1; padding: 20px;">Loading Reality Shows from Database...</p>';
+            paginationSection.style.display = 'none';
+
+            try {
+                const res = await fetch(`${FIREBASE_URL}.json`);
+                const data = await res.json();
+                
+                movieGrid.innerHTML = '';
+                if (!data) {
+                    movieGrid.innerHTML = '<p style="color: #9ca3af; grid-column: 1/-1; padding: 20px;">No shows available right now.</p>';
+                    return;
+                }
+
+                const showMetadata = {
+                    "bigg_boss": { title: "Bigg Boss", poster: "https://image.tmdb.org/t/p/w500/oO34iO3J88kZllfO6wNlKInG0E9.jpg" },
+                    "splitsvilla": { title: "MTV Splitsvilla", poster: "https://image.tmdb.org/t/p/w500/8X2cK5E25uS4sM6iJ2zYkY9u48z.jpg" },
+                    "roadies": { title: "MTV Roadies", poster: "https://image.tmdb.org/t/p/w500/A31f4oR57Jk7j72061g866e4a6y.jpg" },
+                    "mtv_hustle": { title: "MTV Hustle", poster: "https://image.tmdb.org/t/p/w500/yZ4O0Gf01v51859w7vC3fKInG0E.jpg" },
+                    "bigg_boss_bangla": { title: "Bigg Boss Bangla", poster: "https://image.tmdb.org/t/p/w500/oO34iO3J88kZllfO6wNlKInG0E9.jpg" },
+                    "anupama": { title: "Anupamaa", poster: "https://image.tmdb.org/t/p/w500/9R38L4v33g4kI09g8zY2Z15K3k4.jpg" }
+                };
+
+                Object.keys(data).forEach(showKey => {
+                    const showData = data[showKey];
+                    const meta = showMetadata[showKey] || { title: showKey.replace(/_/g, ' ').toUpperCase(), poster: 'https://via.placeholder.com/500x750?text=No+Poster' };
+
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    card.innerHTML = `
+                        <span class="type-badge">Reality Show</span>
+                        <img src="${meta.poster}" alt="${meta.title}" onerror="this.src='https://via.placeholder.com/500x750?text=${meta.title}'">
+                        <div class="card-info">
+                            <div class="card-title">${meta.title}</div>
+                            <div class="card-rating">⭐ Latest Episodes</div>
+                        </div>
+                    `;
+                    card.onclick = () => openFirebasePlayer(showKey, meta.title, showData.episodes);
+                    movieGrid.appendChild(card);
+                });
+
+            } catch (err) {
+                console.error("Firebase fetch error:", err);
+                movieGrid.innerHTML = '<p style="color: #ef4444; grid-column: 1/-1; padding: 20px;">Failed to load shows.</p>';
+            }
+        }
+
         function showContent(items) {
             movieGrid.innerHTML = '';
             if(!items || items.length === 0) {
@@ -718,7 +774,7 @@
                 if(!poster_path) return;
                 
                 const itemTitle = title || name;
-                const isTvSeries = (media_type === 'tv') || ['webseries', 'indian_webseries', 'indian_reality_shows', 'kdrama', 'cdrama', 'hindi_dubbed_anime_series', 'hot_series', 'indian_hot_series'].includes(currentCategory);
+                const isTvSeries = (media_type === 'tv') || ['webseries', 'indian_webseries', 'kdrama', 'cdrama', 'hindi_dubbed_anime_series', 'hot_series', 'indian_hot_series'].includes(currentCategory);
                 const type = isTvSeries ? 'tv' : 'movie';
 
                 const card = document.createElement('div');
@@ -831,7 +887,49 @@
             }
         }
 
+        function openFirebasePlayer(showKey, title, episodes) {
+            isFirebaseShow = true;
+            serverTopBar.style.display = 'none';
+            playerMediaTitle.innerText = title;
+            episodesSection.style.display = 'block';
+            seasonSelect.style.display = 'none';
+            epControlsTitle.innerText = "Available Episode Servers / Parts:";
+            
+            episodeGrid.innerHTML = '';
+            
+            if (episodes) {
+                Object.keys(episodes).forEach((epKey, index) => {
+                    const ep = episodes[epKey];
+                    const btn = document.createElement('button');
+                    btn.classList.add('ep-btn');
+                    if (index === 0) btn.classList.add('active');
+                    btn.innerText = ep.title || `Part ${index + 1}`;
+                    btn.onclick = () => {
+                        document.querySelectorAll('.ep-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        videoFrame.src = ep.stream_link;
+                    };
+                    episodeGrid.appendChild(btn);
+
+                    if (index === 0) {
+                        videoFrame.src = ep.stream_link;
+                    }
+                });
+            } else {
+                episodeGrid.innerText = "No episodes currently available.";
+            }
+
+            fetchOmdbDataByQuery(title);
+            playerModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
         async function openPlayer(id, type, title) {
+            isFirebaseShow = false;
+            serverTopBar.style.display = 'flex';
+            seasonSelect.style.display = 'inline-block';
+            epControlsTitle.innerText = "Season:";
+
             currentMediaId = id;
             currentMediaType = type;
             currentSeason = 1;
@@ -918,6 +1016,7 @@
         }
 
         function loadVideoSource() {
+            if (isFirebaseShow) return;
             if (fallbackTimer) clearTimeout(fallbackTimer);
             
             const serverName = serverList[currentServerIndex];
