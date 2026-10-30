@@ -730,12 +730,12 @@
                 }
 
                 const showMetadata = {
-                    "bigg_boss": { title: "Bigg Boss", poster: "https://image.tmdb.org/t/p/w500/oO34iO3J88kZllfO6wNlKInG0E9.jpg" },
-                    "splitsvilla": { title: "MTV Splitsvilla", poster: "https://image.tmdb.org/t/p/w500/8X2cK5E25uS4sM6iJ2zYkY9u48z.jpg" },
-                    "roadies": { title: "MTV Roadies", poster: "https://image.tmdb.org/t/p/w500/A31f4oR57Jk7j72061g866e4a6y.jpg" },
-                    "mtv_hustle": { title: "MTV Hustle", poster: "https://image.tmdb.org/t/p/w500/yZ4O0Gf01v51859w7vC3fKInG0E.jpg" },
-                    "bigg_boss_bangla": { title: "Bigg Boss Bangla", poster: "https://image.tmdb.org/t/p/w500/oO34iO3J88kZllfO6wNlKInG0E9.jpg" },
-                    "anupama": { title: "Anupamaa", poster: "https://image.tmdb.org/t/p/w500/9R38L4v33g4kI09g8zY2Z15K3k4.jpg" }
+                    "bigg_boss": { title: "Bigg Boss", poster: "https://m.media-amazon.com/images/M/MV5BN2EwOTllODctNzc2MS00NDlhLTg2M2ItNWFiNDBmYzYxNzk5XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" },
+                    "splitsvilla": { title: "MTV Splitsvilla", poster: "https://m.media-amazon.com/images/M/MV5BMjA4NjM0MDg0M15BMl5BanBnXkFtZTgwNjA2NjkyODE@._V1_FMjpg_UX1000_.jpg" },
+                    "roadies": { title: "MTV Roadies", poster: "https://m.media-amazon.com/images/M/MV5BMDYyMmE1YjYtYmExNC00M2VmLTkyYzAtYWZhZTFmNmU1NjAxXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" },
+                    "mtv_hustle": { title: "MTV Hustle", poster: "https://m.media-amazon.com/images/M/MV5BMDg1MDdlNjQtNTQyMC00Njg3LTk0MDgtODlmZTllMWRlYTI1XkEyXkFqcGc@._V1_.jpg" },
+                    "bigg_boss_bangla": { title: "Bigg Boss Bangla", poster: "https://m.media-amazon.com/images/M/MV5BN2EwOTllODctNzc2MS00NDlhLTg2M2ItNWFiNDBmYzYxNzk5XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" },
+                    "anupama": { title: "Anupamaa", poster: "https://m.media-amazon.com/images/M/MV5BYzA2N2E0NTgtY2QwNi00ZmMyLTg2MDUtYmRkMDNhYmExZTkzXkEyXkFqcGc@._V1_.jpg" }
                 };
 
                 Object.keys(data).forEach(showKey => {
@@ -893,7 +893,7 @@
             playerMediaTitle.innerText = title;
             episodesSection.style.display = 'block';
             seasonSelect.style.display = 'none';
-            epControlsTitle.innerText = "Available Episode Servers / Parts:";
+            epControlsTitle.innerText = "Available Episode Links / Parts:";
             
             episodeGrid.innerHTML = '';
             
@@ -903,7 +903,7 @@
                     const btn = document.createElement('button');
                     btn.classList.add('ep-btn');
                     if (index === 0) btn.classList.add('active');
-                    btn.innerText = ep.title || `Part ${index + 1}`;
+                    btn.innerText = ep.title || `Link ${index + 1}`;
                     btn.onclick = () => {
                         document.querySelectorAll('.ep-btn').forEach(b => b.classList.remove('active'));
                         btn.classList.add('active');
