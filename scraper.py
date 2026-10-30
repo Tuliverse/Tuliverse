@@ -1,7 +1,6 @@
 import cloudscraper
 from bs4 import BeautifulSoup
 import requests
-import json
 import re
 
 FIREBASE_URL = "https://tuliverse-default-rtdb.firebaseio.com/shows"
@@ -16,11 +15,7 @@ SHOWS = {
 }
 
 scraper = cloudscraper.create_scraper(
-    browser={
-        'browser': 'chrome',
-        'platform': 'windows',
-        'desktop': True
-    }
+    browser={'browser': 'chrome', 'platform': 'windows', 'desktop': True}
 )
 
 def scrape_show(show_key, category_url):
@@ -29,39 +24,33 @@ def scrape_show(show_key, category_url):
         if res.status_code == 200:
             soup = BeautifulSoup(res.text, 'html.parser')
             
-            # Find latest episode post
-            latest_post = soup.find('a', href=re.compile(r'https://desiruleztv\.net/.*'))
-            
-            # Find entry link
             posts = soup.find_all('article')
             post_url = None
             if posts:
                 a_tag = posts[0].find('a', href=True)
                 if a_tag:
                     post_url = a_tag['href']
-            
-            if not post_url and latest_post:
-                post_url = latest_post['href']
 
             if post_url:
-                print(f"Fetching post for {show_key}: {post_url}")
+                print(f"Scraping post for {show_key}: {post_url}")
                 post_res = scraper.get(post_url)
                 post_soup = BeautifulSoup(post_res.text, 'html.parser')
                 
                 links = []
                 
-                # Extract iframe sources
+                # Filter iframe sources (ignore embed scripts/js/json)
                 for iframe in post_soup.find_all('iframe'):
                     src = iframe.get('src') or iframe.get('data-src', '')
-                    if src and src.startswith('http'):
+                    if src and src.startswith('http') and 'wp-embed' not in src and 'json' not in src:
                         links.append(src)
                 
-                # Extract regex match links inside post content
+                # Match streaming host links directly
                 content_text = str(post_soup)
                 found_urls = re.findall(r'https?://[^\s\'"]+', content_text)
                 for url in found_urls:
                     if any(server in url.lower() for server in ['streamwish', 'dood', 'filelions', 'voesx', 'mixdrop', 'vidsrc', 'embed', 'dailymotion']):
-                        links.append(url)
+                        if 'wp-embed' not in url and 'json' not in url and 'wp-includes' not in url:
+                            links.append(url)
 
                 unique_links = list(dict.fromkeys(links))
                 
@@ -71,21 +60,12 @@ def scrape_show(show_key, category_url):
                         "title": f"Episode Link {idx}",
                         "stream_link": link
                     }
-                
-                # Fallback if no specific player link found
-                if not episodes:
-                    episodes["ep_1"] = {
-                        "title": "Watch Full Episode",
-                        "stream_link": post_url
-                    }
 
-                patch_res = requests.patch(f"{FIREBASE_URL}/{show_key}.json", json={"episodes": episodes})
-                print(f"Updated {show_key} -> Status Code: {patch_res.status_code}")
-            else:
-                print(f"No post found for {show_key}")
-        else:
-            print(f"Failed category fetch for {show_key}: {res.status_code}")
-
+                if episodes:
+                    requests.patch(f"{FIREBASE_URL}/{show_key}.json", json={"episodes": episodes})
+                    print(f"Updated {show_key} successfully.")
+                else:
+                    print(f"No valid video links found for {show_key}")
     except Exception as e:
         print(f"Error scraping {show_key}: {e}")
 
