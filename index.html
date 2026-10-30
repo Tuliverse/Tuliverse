@@ -15,13 +15,7 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://tuliverse.cyou/">
 
-    <!-- OPEN GRAPH FOR SOCIAL MEDIA & GOOGLE INDEXING -->
-    <meta property="og:title" content="Tuliverse - Stream Movies & Series">
-    <meta property="og:description" content="Watch trending movies and web series online for free.">
-    <meta property="og:url" content="https://tuliverse.cyou/">
-    <meta property="og:type" content="website">
-
-    <!-- FAST GLOBAL DNS & PRECONNECT OPTIMIZATIONS FOR ULTRA-FAST STREAMING ON SMART TV & WORLDWIDE -->
+    <!-- FAST GLOBAL DNS & PRECONNECT OPTIMIZATIONS -->
     <link rel="dns-prefetch" href="//1.1.1.1">
     <link rel="dns-prefetch" href="//1.0.0.1">
     <link rel="dns-prefetch" href="//8.8.8.8">
@@ -40,14 +34,12 @@
     <link rel="preconnect" href="https://multiembed.mov" crossorigin>
     <link rel="preconnect" href="https://vidcore.org" crossorigin>
 
-    <!-- LARGER & PURE WHITE CIRCULAR T-FAVICON -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23111827'/><text x='50%25' y='75%25' dominant-baseline='middle' text-anchor='middle' font-family='Times New Roman, serif' font-weight='900' font-size='85' fill='%23ffffff'>T</text></svg>">
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: #0b0f19; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
         
-        /* STICKY HEADER WITH SMOOTH TRANSITION */
         header { 
             background: rgba(17, 24, 39, 0.95); 
             backdrop-filter: blur(8px);
@@ -69,7 +61,6 @@
             flex-wrap: wrap;
         }
         
-        /* Boro Styled Logo */
         .logo { 
             display: flex;
             align-items: baseline;
@@ -127,7 +118,6 @@
             pointer-events: none;
         }
 
-        /* Menu Buttons Layout */
         .filters-container {
             display: flex;
             align-items: center;
@@ -161,7 +151,6 @@
             box-shadow: 0 5px 15px rgba(225, 29, 72, 0.45);
         }
 
-        /* Dropdown Styling */
         .dropdown {
             position: relative;
             display: inline-block;
@@ -351,7 +340,6 @@
         }
         .close-btn:hover { color: #e11d48; }
 
-        /* MULTI-LINE SERVER BAR LAYOUT */
         .server-top-bar {
             display: flex;
             flex-direction: column;
@@ -517,12 +505,13 @@
                 </div>
             </div>
 
-            <!-- WEB SERIES DROPDOWN -->
+            <!-- WEB SERIES & REALITY SHOW DROPDOWN -->
             <div class="dropdown">
                 <button class="cat-btn" id="btn-webseries">📺 Web Series ▾</button>
                 <div class="dropdown-content">
                     <button onclick="setCategory('webseries')">📺 All Web Series</button>
                     <button onclick="setCategory('indian_webseries')">🇮🇳 Indian Web Series</button>
+                    <button onclick="setCategory('indian_reality_shows')">🎙️ Indian Reality Shows</button>
                     <button onclick="setCategory('kdrama')">🇰🇷 Korean Drama (K-Drama)</button>
                     <button onclick="setCategory('cdrama')">🇨🇳 Chinese Drama (C-Drama)</button>
                 </div>
@@ -579,7 +568,6 @@
                     <span class="close-btn" onclick="closePlayer()">&times;</span>
                 </div>
 
-                <!-- SERVER TOP BAR: LINE 1 (SERVER 1 & SERVER 2), LINE 2 (SERVER 3 & SERVER 4) -->
                 <div class="server-top-bar">
                     <div class="server-line">
                         <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 1 Fast</button>
@@ -641,7 +629,6 @@
         let currentMediaId = null;
         let currentMediaType = 'movie';
 
-        /* REORDERED SERVER LIST MATCHING BUTTON ORDER */
         const serverList = ['2embed', 'multiembed', 'vidcore', 'vidlink'];
         let currentServerIndex = 0;
         let fallbackTimer = null;
@@ -675,6 +662,8 @@
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc`;
             } else if (currentCategory === 'indian_webseries') {
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=hi`;
+            } else if (currentCategory === 'indian_reality_shows') {
+                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=10764&with_original_language=hi`;
             } else if (currentCategory === 'kdrama') {
                 url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=ko`;
             } else if (currentCategory === 'cdrama') {
@@ -694,7 +683,7 @@
             }
 
             if (currentYear) {
-                const isTvCategory = ['webseries', 'indian_webseries', 'kdrama', 'cdrama', 'hindi_dubbed_anime_series', 'hot_series', 'indian_hot_series'].includes(currentCategory);
+                const isTvCategory = ['webseries', 'indian_webseries', 'indian_reality_shows', 'kdrama', 'cdrama', 'hindi_dubbed_anime_series', 'hot_series', 'indian_hot_series'].includes(currentCategory);
                 url += isTvCategory ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`;
             }
 
@@ -729,7 +718,7 @@
                 if(!poster_path) return;
                 
                 const itemTitle = title || name;
-                const isTvSeries = (media_type === 'tv') || ['webseries', 'indian_webseries', 'kdrama', 'cdrama', 'hindi_dubbed_anime_series', 'hot_series', 'indian_hot_series'].includes(currentCategory);
+                const isTvSeries = (media_type === 'tv') || ['webseries', 'indian_webseries', 'indian_reality_shows', 'kdrama', 'cdrama', 'hindi_dubbed_anime_series', 'hot_series', 'indian_hot_series'].includes(currentCategory);
                 const type = isTvSeries ? 'tv' : 'movie';
 
                 const card = document.createElement('div');
@@ -754,7 +743,7 @@
             if(category === 'hollywood') document.getElementById('btn-hollywood')?.classList.add('active');
             if(category === 'bollywood') document.getElementById('btn-bollywood')?.classList.add('active');
             if(category === 'bengali') document.getElementById('btn-bengali')?.classList.add('active');
-            if(category.includes('webseries') || category === 'kdrama' || category === 'cdrama') document.getElementById('btn-webseries')?.classList.add('active');
+            if(category.includes('webseries') || category.includes('reality_shows') || category === 'kdrama' || category === 'cdrama') document.getElementById('btn-webseries')?.classList.add('active');
             if(category === 'south_indian') document.getElementById('btn-south_indian')?.classList.add('active');
             if(category.includes('hot_series')) document.getElementById('btn-hot_series')?.classList.add('active');
             if(category.startsWith('hindi_dubbed')) document.getElementById('btn-hindi_dubbed')?.classList.add('active');
@@ -766,6 +755,7 @@
                 'bengali': '🪕 Tollywood / Bengali Movies',
                 'webseries': '📺 All Web Series',
                 'indian_webseries': '🇮🇳 Indian Web Series',
+                'indian_reality_shows': '🎙️ Indian Reality Shows',
                 'kdrama': '🇰🇷 Korean Drama (K-Drama)',
                 'cdrama': '🇨🇳 Chinese Drama (C-Drama)',
                 'south_indian': '🍿 South Indian Dubbed Movies',
