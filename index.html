@@ -21,28 +21,23 @@
     <link rel="apple-touch-icon" href="https://tuliverse.cyou/favicon.png">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23111827'/><text x='50%25' y='52%25' dominant-baseline='central' text-anchor='middle' font-family='Times New Roman, serif' font-weight='900' font-size='72' fill='%23ffffff'>T</text></svg>">
 
-    <!-- OLD SMART TV & BROWSER COMPATIBILITY POLYFILLS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.12.1/polyfill.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.6.2/fetch.min.js"></script>
-
     <!-- FAST GLOBAL DNS & PRECONNECT OPTIMIZATIONS -->
-    <link rel="dns-prefetch" href="//1.1.1.1">
-    <link rel="dns-prefetch" href="//1.0.0.1">
-    <link rel="dns-prefetch" href="//8.8.8.8">
-    <link rel="dns-prefetch" href="//api.themoviedb.org">
-    <link rel="dns-prefetch" href="//image.tmdb.org">
-    <link rel="dns-prefetch" href="//www.omdbapi.com">
-    <link rel="dns-prefetch" href="//www.2embed.cc">
-    <link rel="dns-prefetch" href="//vidlink.pro">
-    <link rel="dns-prefetch" href="//multiembed.mov">
-    <link rel="dns-prefetch" href="//vidcore.org">
-
+    <link rel="preconnect" href="https://1.1.1.1" crossorigin>
     <link rel="preconnect" href="https://api.themoviedb.org" crossorigin>
     <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
+    <link rel="preconnect" href="https://www.omdbapi.com" crossorigin>
     <link rel="preconnect" href="https://www.2embed.cc" crossorigin>
     <link rel="preconnect" href="https://vidlink.pro" crossorigin>
     <link rel="preconnect" href="https://multiembed.mov" crossorigin>
     <link rel="preconnect" href="https://vidcore.org" crossorigin>
+
+    <!-- CONDITIONAL POLYFILLS FOR OLD BROWSER/TV ONLY (Non-blocking) -->
+    <script>
+        if (!window.fetch || !window.Promise) {
+            document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.12.1/polyfill.min.js"><\/script>');
+            document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.6.2/fetch.min.js"><\/script>');
+        }
+    </script>
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -231,6 +226,22 @@
             .modal { padding: 4px !important; }
             .modal-content { margin: 5px 0 !important; border-radius: 8px !important; }
             .iframe-container { padding-bottom: 62% !important; }
+            
+            /* MOBILE STATUS BADGE POSITION FIX */
+            .server-top-bar {
+                flex-direction: column;
+                position: relative;
+            }
+            .status-badge {
+                order: -1; /* Keep status on top in Mobile */
+                margin-left: 0 !important;
+                margin-bottom: 4px;
+                display: inline-block;
+                width: fit-content;
+                background: rgba(0, 0, 0, 0.4);
+                padding: 2px 8px;
+                border-radius: 4px;
+            }
         }
 
         @media (min-width: 481px) and (max-width: 767px) {
@@ -253,6 +264,8 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            content-visibility: auto;
+            contain-intrinsic-size: 240px;
         }
         .card:hover, .card:focus { 
             transform: translateY(-4px); 
@@ -400,6 +413,7 @@
             color: #fbbf24;
             margin-left: auto;
             font-weight: 600;
+            transition: color 0.3s ease;
         }
 
         .iframe-container {
@@ -593,6 +607,7 @@
                 </div>
 
                 <div class="server-top-bar" id="serverTopBar">
+                    <span class="status-badge" id="statusBadge">Connecting...</span>
                     <div class="server-line">
                         <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 1 Fast</button>
                         <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server 2 Fast</button>
@@ -600,7 +615,6 @@
                     <div class="server-line">
                         <button class="srv-btn" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ Server 3 Multi Languages</button>
                         <button class="srv-btn" id="btn-vidlink" onclick="userSelectServer('vidlink')">⚡ Server 4 Vidlink</button>
-                        <span class="status-badge" id="statusBadge">Connecting...</span>
                     </div>
                 </div>
 
@@ -726,12 +740,12 @@
 
             try {
                 const apiPageStart = (currentPage - 1) * 2 + 1;
-                const p1 = fetch(buildApiUrl(apiPageStart), fetchOptions).then(r => r.json());
-                const p2 = fetch(buildApiUrl(apiPageStart + 1), fetchOptions).then(r => r.json());
+                const [d1, d2] = await Promise.all([
+                    fetch(buildApiUrl(apiPageStart), fetchOptions).then(r => r.json()),
+                    fetch(buildApiUrl(apiPageStart + 1), fetchOptions).then(r => r.json())
+                ]);
 
-                const [d1, d2] = await Promise.all([p1, p2]);
                 let combined = [...(d1.results || []), ...(d2.results || [])];
-                
                 showContent(combined.slice(0, 50));
                 pageNumber.innerText = `Page ${currentPage}`;
             } catch (error) {
@@ -769,13 +783,14 @@
                     "anupama": { title: "Anupamaa", poster: "https://m.media-amazon.com/images/M/MV5BYzA2N2E0NTgtY2QwNi00ZmMyLTg2MDUtYmRkMDNhYmExZTkzXkEyXkFqcGc@._V1_.jpg" }
                 };
 
+                const fragment = document.createDocumentFragment();
                 Object.keys(data).forEach(showKey => {
                     const showData = data[showKey];
                     const meta = showMetadata[showKey] || { title: showKey.replace(/_/g, ' ').toUpperCase(), poster: 'https://via.placeholder.com/500x750?text=No+Poster' };
 
                     const card = document.createElement('div');
                     card.classList.add('card');
-                    card.setAttribute('tabindex', '0'); // Smart TV Remote Access
+                    card.setAttribute('tabindex', '0');
                     card.innerHTML = `
                         <span class="type-badge">Reality Show</span>
                         <img src="${meta.poster}" alt="${meta.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/500x750?text=${meta.title}'">
@@ -786,8 +801,9 @@
                     `;
                     card.onclick = () => openFirebasePlayer(showKey, meta.title, showData.episodes);
                     card.onkeydown = (e) => { if(e.key === 'Enter') openFirebasePlayer(showKey, meta.title, showData.episodes); };
-                    movieGrid.appendChild(card);
+                    fragment.appendChild(card);
                 });
+                movieGrid.appendChild(fragment);
 
             } catch (err) {
                 console.error("Firebase fetch error:", err);
@@ -802,6 +818,7 @@
                 return;
             }
 
+            const fragment = document.createDocumentFragment();
             items.forEach(item => {
                 const { id, title, name, poster_path, vote_average, media_type } = item;
                 if(!poster_path) return;
@@ -812,7 +829,7 @@
 
                 const card = document.createElement('div');
                 card.classList.add('card');
-                card.setAttribute('tabindex', '0'); // Smart TV Remote Access
+                card.setAttribute('tabindex', '0');
                 card.innerHTML = `
                     <span class="type-badge">${type === 'tv' ? 'Series' : 'Movie'}</span>
                     <img src="${IMG_PATH + poster_path}" alt="${itemTitle}" loading="lazy">
@@ -823,8 +840,9 @@
                 `;
                 card.onclick = () => openPlayer(id, type, itemTitle);
                 card.onkeydown = (e) => { if(e.key === 'Enter') openPlayer(id, type, itemTitle); };
-                movieGrid.appendChild(card);
+                fragment.appendChild(card);
             });
+            movieGrid.appendChild(fragment);
         }
 
         function setCategory(category) {
