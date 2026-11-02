@@ -15,19 +15,14 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://tuliverse.cyou/">
 
-    <!-- FAVICON LINKS FOR GOOGLE & ALL BROWSERS (CENTERED 'T') -->
-    <link rel="icon" type="image/png" sizes="192x192" href="https://tuliverse.cyou/favicon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="https://tuliverse.cyou/favicon.png">
-    <link rel="apple-touch-icon" href="https://tuliverse.cyou/favicon.png">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23111827'/><text x='50%25' y='52%25' dominant-baseline='central' text-anchor='middle' font-family='Times New Roman, serif' font-weight='900' font-size='72' fill='%23ffffff'>T</text></svg>">
-
-    <!-- FAST GLOBAL CLOUDFLARE DNS & PRECONNECT OPTIMIZATIONS -->
+    <!-- FAST GLOBAL DNS PREFETCH & PRECONNECT OPTIMIZATIONS -->
     <link rel="dns-prefetch" href="//1.1.1.1">
     <link rel="dns-prefetch" href="//1.0.0.1">
-    <link rel="dns-prefetch" href="https://cloudflare-dns.com">
-    <link rel="preconnect" href="https://cloudflare-dns.com" crossorigin>
-    
+    <link rel="dns-prefetch" href="//8.8.8.8">
+    <link rel="dns-prefetch" href="//8.8.4.4">
+
     <link rel="preconnect" href="https://1.1.1.1" crossorigin>
+    <link rel="preconnect" href="https://1.0.0.1" crossorigin>
     <link rel="preconnect" href="https://api.themoviedb.org" crossorigin>
     <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
     <link rel="preconnect" href="https://www.omdbapi.com" crossorigin>
@@ -35,6 +30,12 @@
     <link rel="preconnect" href="https://vidlink.pro" crossorigin>
     <link rel="preconnect" href="https://multiembed.mov" crossorigin>
     <link rel="preconnect" href="https://vidcore.org" crossorigin>
+
+    <!-- FAVICON LINKS FOR GOOGLE & ALL BROWSERS (CENTERED 'T') -->
+    <link rel="icon" type="image/png" sizes="192x192" href="https://tuliverse.cyou/favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://tuliverse.cyou/favicon.png">
+    <link rel="apple-touch-icon" href="https://tuliverse.cyou/favicon.png">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23111827'/><text x='50%25' y='52%25' dominant-baseline='central' text-anchor='middle' font-family='Times New Roman, serif' font-weight='900' font-size='72' fill='%23ffffff'>T</text></svg>">
 
     <!-- CONDITIONAL POLYFILLS FOR OLD BROWSER/TV ONLY (Non-blocking) -->
     <script>
@@ -238,7 +239,7 @@
                 position: relative;
             }
             .status-badge {
-                order: -1;
+                order: -1; /* Keep status on top in Mobile */
                 margin-left: 0 !important;
                 margin-bottom: 4px;
                 display: inline-block;
@@ -271,10 +272,9 @@
             position: relative;
             content-visibility: auto;
             contain-intrinsic-size: 240px;
-            will-change: transform;
         }
         .card:hover, .card:focus { 
-            transform: translateY(-4px) translateZ(0); 
+            transform: translateY(-4px); 
             box-shadow: 0 6px 16px rgba(0,0,0,0.5);
             outline: 3px solid #e11d48;
         }
@@ -518,17 +518,6 @@
             color: #9ca3af;
             margin-top: auto;
         }
-        footer a {
-            color: #e11d48;
-            text-decoration: none;
-            font-weight: 600;
-            margin-left: 8px;
-            transition: color 0.2s;
-        }
-        footer a:hover {
-            color: #ffffff;
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
@@ -612,7 +601,7 @@
     </div>
 
     <footer>
-        &copy; Tuliverse - All Rights Reserved | <a href="dmca.html" target="_blank">DMCA Disclaimer</a>
+        &copy; Tuliverse - All Rights Reserved
     </footer>
 
     <div class="modal" id="playerModal">
@@ -810,7 +799,7 @@
                     card.setAttribute('tabindex', '0');
                     card.innerHTML = `
                         <span class="type-badge">Reality Show</span>
-                        <img src="${meta.poster}" alt="${meta.title}" loading="lazy" decoding="async" onerror="this.src='https://via.placeholder.com/500x750?text=${meta.title}'">
+                        <img src="${meta.poster}" alt="${meta.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/500x750?text=${meta.title}'">
                         <div class="card-info">
                             <div class="card-title">${meta.title}</div>
                             <div class="card-rating">⭐ Latest Episodes</div>
@@ -849,7 +838,7 @@
                 card.setAttribute('tabindex', '0');
                 card.innerHTML = `
                     <span class="type-badge">${type === 'tv' ? 'Series' : 'Movie'}</span>
-                    <img src="${IMG_PATH + poster_path}" alt="${itemTitle}" loading="lazy" decoding="async">
+                    <img src="${IMG_PATH + poster_path}" alt="${itemTitle}" loading="lazy">
                     <div class="card-info">
                         <div class="card-title">${itemTitle}</div>
                         <div class="card-rating">⭐ ${vote_average ? vote_average.toFixed(1) : 'N/A'}</div>
