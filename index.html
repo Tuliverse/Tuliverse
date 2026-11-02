@@ -517,6 +517,18 @@
             font-size: 13px;
             color: #9ca3af;
             margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+        footer a {
+            color: #e11d48;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -601,7 +613,8 @@
     </div>
 
     <footer>
-        &copy; Tuliverse - All Rights Reserved
+        <div>&copy; Tuliverse - All Rights Reserved</div>
+        <div><a href="dmca.html" target="_blank">DMCA Copyright Disclaimer</a></div>
     </footer>
 
     <div class="modal" id="playerModal">
