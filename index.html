@@ -15,6 +15,16 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://tuliverse.cyou/">
 
+    <!-- FAVICON LINKS FOR GOOGLE & ALL BROWSERS (CENTERED 'T') -->
+    <link rel="icon" type="image/png" sizes="192x192" href="https://tuliverse.cyou/favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://tuliverse.cyou/favicon.png">
+    <link rel="apple-touch-icon" href="https://tuliverse.cyou/favicon.png">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23111827'/><text x='50%25' y='52%25' dominant-baseline='central' text-anchor='middle' font-family='Times New Roman, serif' font-weight='900' font-size='72' fill='%23ffffff'>T</text></svg>">
+
+    <!-- OLD SMART TV & BROWSER COMPATIBILITY POLYFILLS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.12.1/polyfill.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.6.2/fetch.min.js"></script>
+
     <!-- FAST GLOBAL DNS & PRECONNECT OPTIMIZATIONS -->
     <link rel="dns-prefetch" href="//1.1.1.1">
     <link rel="dns-prefetch" href="//1.0.0.1">
@@ -33,8 +43,6 @@
     <link rel="preconnect" href="https://vidlink.pro" crossorigin>
     <link rel="preconnect" href="https://multiembed.mov" crossorigin>
     <link rel="preconnect" href="https://vidcore.org" crossorigin>
-
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23111827'/><text x='50%25' y='75%25' dominant-baseline='middle' text-anchor='middle' font-family='Times New Roman, serif' font-weight='900' font-size='85' fill='%23ffffff'>T</text></svg>">
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -143,12 +151,14 @@
             gap: 8px;
         }
         
-        .cat-btn.active, .cat-btn:hover, .year-dropdown-btn:hover {
+        .cat-btn.active, .cat-btn:hover, .year-dropdown-btn:hover,
+        .cat-btn:focus, .year-dropdown-btn:focus {
             background: #e11d48;
             color: #ffffff;
             border-color: #e11d48;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(225, 29, 72, 0.45);
+            outline: 2px solid #ffffff;
         }
 
         .dropdown {
@@ -183,11 +193,12 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-        .dropdown-content button:hover {
+        .dropdown-content button:hover, .dropdown-content button:focus {
             background-color: #e11d48;
             color: #fff;
+            outline: none;
         }
-        .dropdown:hover .dropdown-content {
+        .dropdown:hover .dropdown-content, .dropdown:focus-within .dropdown-content {
             display: block;
         }
 
@@ -200,7 +211,6 @@
             gap: 10px; 
         }
 
-        /* মোবাইলের জন্য বড় ডিসপ্লে রেসপনসিভ স্টাইল */
         @media (max-width: 480px) {
             .grid { 
                 grid-template-columns: repeat(2, 1fr) !important; 
@@ -239,14 +249,15 @@
             border-radius: 8px; 
             overflow: hidden; 
             cursor: pointer; 
-            transition: transform 0.25s, box-shadow 0.25s; 
+            transition: transform 0.25s, box-shadow 0.25s, outline 0.2s; 
             display: flex;
             flex-direction: column;
             position: relative;
         }
-        .card:hover { 
+        .card:hover, .card:focus { 
             transform: translateY(-4px); 
             box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+            outline: 3px solid #e11d48;
         }
         
         .card img { 
@@ -295,7 +306,7 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .page-btn:hover { background: #e11d48; border-color: #e11d48; }
+        .page-btn:hover, .page-btn:focus { background: #e11d48; border-color: #e11d48; outline: none; }
         .page-info { font-size: 15px; font-weight: bold; color: #e11d48; }
 
         .modal { 
@@ -377,10 +388,11 @@
             font-weight: 600;
             cursor: pointer;
         }
-        .srv-btn.active {
+        .srv-btn.active, .srv-btn:focus {
             background: #e11d48;
             color: #fff;
             border-color: #e11d48;
+            outline: none;
         }
 
         .status-badge {
@@ -449,10 +461,11 @@
             cursor: pointer;
             text-align: center;
         }
-        .ep-btn.active, .ep-btn:hover {
+        .ep-btn.active, .ep-btn:hover, .ep-btn:focus {
             background: #e11d48;
             color: #fff;
             border-color: #e11d48;
+            outline: none;
         }
 
         .omdb-info-section {
@@ -491,7 +504,7 @@
 
     <header id="mainHeader">
         <div class="top-bar">
-            <div class="logo" onclick="setCategory('all')">
+            <div class="logo" onclick="setCategory('all')" tabindex="0">
                 <span class="logo-big-t">T</span>
                 <span class="logo-text">uli<span>verse</span></span>
             </div>
@@ -576,7 +589,7 @@
             <div class="modal-content">
                 <div class="player-header">
                     <div class="player-title" id="playerMediaTitle">Watch Online</div>
-                    <span class="close-btn" onclick="closePlayer()">&times;</span>
+                    <span class="close-btn" onclick="closePlayer()" tabindex="0">&times;</span>
                 </div>
 
                 <div class="server-top-bar" id="serverTopBar">
@@ -592,7 +605,6 @@
                 </div>
 
                 <div class="iframe-container">
-                    <!-- অ্যাডস ও পপ-আপ ব্লক করার জন্য sandbox প্রটেকশন যোগ করা হয়েছে -->
                     <iframe id="videoFrame" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
                 </div>
 
@@ -763,15 +775,17 @@
 
                     const card = document.createElement('div');
                     card.classList.add('card');
+                    card.setAttribute('tabindex', '0'); // Smart TV Remote Access
                     card.innerHTML = `
                         <span class="type-badge">Reality Show</span>
-                        <img src="${meta.poster}" alt="${meta.title}" onerror="this.src='https://via.placeholder.com/500x750?text=${meta.title}'">
+                        <img src="${meta.poster}" alt="${meta.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/500x750?text=${meta.title}'">
                         <div class="card-info">
                             <div class="card-title">${meta.title}</div>
                             <div class="card-rating">⭐ Latest Episodes</div>
                         </div>
                     `;
                     card.onclick = () => openFirebasePlayer(showKey, meta.title, showData.episodes);
+                    card.onkeydown = (e) => { if(e.key === 'Enter') openFirebasePlayer(showKey, meta.title, showData.episodes); };
                     movieGrid.appendChild(card);
                 });
 
@@ -798,6 +812,7 @@
 
                 const card = document.createElement('div');
                 card.classList.add('card');
+                card.setAttribute('tabindex', '0'); // Smart TV Remote Access
                 card.innerHTML = `
                     <span class="type-badge">${type === 'tv' ? 'Series' : 'Movie'}</span>
                     <img src="${IMG_PATH + poster_path}" alt="${itemTitle}" loading="lazy">
@@ -807,6 +822,7 @@
                     </div>
                 `;
                 card.onclick = () => openPlayer(id, type, itemTitle);
+                card.onkeydown = (e) => { if(e.key === 'Enter') openPlayer(id, type, itemTitle); };
                 movieGrid.appendChild(card);
             });
         }
