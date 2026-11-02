@@ -9,9 +9,9 @@
     <meta name="google-site-verification" content="google245f19f59d08c608" />
 
     <!-- GOOGLE SEARCH ENGINE OPTIMIZATION (SEO) META TAGS -->
-    <title>Tuliverse - Stream & Download Free Movies & Web Series</title>
-    <meta name="description" content="Watch and download trending Hollywood, Bollywood, Tollywood, Hindi Dubbed movies, Asian Dramas and web series online for free on Tuliverse.">
-    <meta name="keywords" content="Tuliverse, Stream Movies, Download Movies, Watch Web Series, Hindi Dubbed Movies, Korean Drama, Chinese Drama, Anime Movies">
+    <title>Tuliverse - Stream Free Movies & Web Series Online</title>
+    <meta name="description" content="Watch trending Hollywood, Bollywood, Tollywood, Hindi Dubbed movies, Asian Dramas and web series online for free on Tuliverse.">
+    <meta name="keywords" content="Tuliverse, Stream Movies, Watch Web Series, Hindi Dubbed Movies, Korean Drama, Chinese Drama, Anime Movies">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://tuliverse.cyou/">
 
@@ -227,12 +227,13 @@
             .modal-content { margin: 5px 0 !important; border-radius: 8px !important; }
             .iframe-container { padding-bottom: 62% !important; }
             
+            /* MOBILE STATUS BADGE POSITION FIX */
             .server-top-bar {
                 flex-direction: column;
                 position: relative;
             }
             .status-badge {
-                order: -1;
+                order: -1; /* Keep status on top in Mobile */
                 margin-left: 0 !important;
                 margin-bottom: 4px;
                 display: inline-block;
@@ -405,18 +406,6 @@
             color: #fff;
             border-color: #e11d48;
             outline: none;
-        }
-
-        /* DOWNLOAD BUTTON STYLING */
-        .dl-btn {
-            background: #10b981 !important;
-            color: #ffffff !important;
-            border-color: #059669 !important;
-            font-weight: bold;
-        }
-        .dl-btn:hover {
-            background: #059669 !important;
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
         }
 
         .status-badge {
@@ -626,7 +615,6 @@
                     <div class="server-line">
                         <button class="srv-btn" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ Server 3 Multi Languages</button>
                         <button class="srv-btn" id="btn-vidlink" onclick="userSelectServer('vidlink')">⚡ Server 4 Vidlink</button>
-                        <button class="srv-btn dl-btn" onclick="downloadCurrentMedia()">⬇️ Download</button>
                     </div>
                 </div>
 
@@ -1133,20 +1121,6 @@
                     statusBadge.innerText = `Connected`;
                 }
             }, 5000);
-        }
-
-        // DOWNLOAD HANDLER FUNCTION
-        function downloadCurrentMedia() {
-            if (!currentMediaId) return;
-            let downloadUrl = '';
-            
-            if (currentMediaType === 'tv') {
-                downloadUrl = `https://multiembed.mov/direct-download?video_id=${currentMediaId}&tmdb=1&s=${currentSeason}&e=${currentEpisode}`;
-            } else {
-                downloadUrl = `https://multiembed.mov/direct-download?video_id=${currentMediaId}&tmdb=1`;
-            }
-            
-            window.open(downloadUrl, '_blank');
         }
 
         videoFrame.onload = function() {
