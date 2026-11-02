@@ -239,7 +239,7 @@
                 position: relative;
             }
             .status-badge {
-                order: -1; /* Keep status on top in Mobile */
+                order: -1;
                 margin-left: 0 !important;
                 margin-bottom: 4px;
                 display: inline-block;
@@ -691,6 +691,7 @@
         let currentMediaType = 'movie';
         let isFirebaseShow = false;
 
+        // Server list with vidcore back as Server 3
         const serverList = ['2embed', 'multiembed', 'vidcore', 'vidlink'];
         let currentServerIndex = 0;
         let fallbackTimer = null;
@@ -1097,6 +1098,7 @@
             statusBadge.style.color = '#fbbf24';
             statusBadge.innerText = `Connecting Server ${currentServerIndex + 1}...`;
 
+            // STRICT ANTI-POPUP SANDBOX FOR SERVER 3 (VIDCORE) TO ENSURE SMOOTH AD-FREE PLAYBACK
             if (serverName === 'vidcore') {
                 videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
             } else {
@@ -1129,6 +1131,7 @@
 
             videoFrame.src = srcUrl;
 
+            // Optimized 7-second fallback timeout for smooth loading without false offline errors
             fallbackTimer = setTimeout(() => {
                 if (currentServerIndex < serverList.length - 1) {
                     statusBadge.style.color = '#ef4444';
@@ -1139,7 +1142,7 @@
                     statusBadge.style.color = '#10b981';
                     statusBadge.innerText = `Connected`;
                 }
-            }, 5000);
+            }, 7000);
         }
 
         videoFrame.onload = function() {
