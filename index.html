@@ -632,7 +632,7 @@
                 </div>
 
                 <div class="server-top-bar" id="serverTopBar">
-                    <span class="status-badge" id="statusBadge">Connecting...</span>
+                    <span class="status-badge" id="statusBadge">📶 Connecting...</span>
                     <div class="server-line">
                         <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 1 Fast</button>
                         <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server 2 Fast</button>
@@ -701,12 +701,13 @@
         const serverList = ['2embed', 'multiembed', 'vidcore', 'vidlink'];
         let currentServerIndex = 0;
         let fallbackTimer = null;
+        let loadStartTime = 0;
         
         let currentSeason = 1;
         let currentEpisode = 1;
         let showSeasonsData = [];
 
-        // JavaScript Level Popup Blocker Functions
+        // JavaScript Level Popup & Redirect Blocker
         const originalWindowOpen = window.open;
         function disablePopups() {
             window.open = function() {
@@ -987,7 +988,7 @@
             seasonSelect.style.display = 'none';
             epControlsTitle.innerText = "Available Episode Links / Parts:";
             
-            // Firebase Show-এর জন্য Sandbox সচল থাকবে
+            // Firebase Show-এর জন্য Sandbox সক্রিয় থাকবে
             videoFrame.removeAttribute('srcdoc');
             videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation allow-modals');
             restorePopups();
@@ -1119,11 +1120,13 @@
             const serverName = serverList[currentServerIndex];
             updateServerUI(serverName);
 
+            loadStartTime = Date.now();
             statusBadge.style.color = '#fbbf24';
-            statusBadge.innerText = `Connecting Server ${currentServerIndex + 1}...`;
+            statusBadge.innerText = `📶 Connecting Server ${currentServerIndex + 1}...`;
 
-            // স্যান্ডবক্স পুরোপুরি রিমুভ করা হলো
+            // কোনো সার্ভারে স্যান্ডবক্স রাখা হলো না, পপআপ ব্লক করা হলো
             videoFrame.removeAttribute('sandbox');
+            disablePopups();
 
             let srcUrl = '';
 
@@ -1149,39 +1152,41 @@
                 }
             }
 
-            // Server 3 (vidcore)-এর জন্য স্যান্ডবক্স ছাড়া কাস্টম srcdoc ও অটোরিডাইরেক্ট ব্লকার ফিল্টার
-            if (serverName === 'vidcore') {
-                disablePopups();
-                videoFrame.srcdoc = `
-                    <style>html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#000;}</style>
-                    <script>
-                        window.onbeforeunload = function() { return false; };
-                    <\/script>
-                    <iframe src="${srcUrl}" width="100%" height="100%" frameborder="0" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
-                `;
-            } else {
-                restorePopups();
-                videoFrame.removeAttribute('srcdoc');
-                videoFrame.src = srcUrl;
-            }
+            videoFrame.removeAttribute('srcdoc');
+            videoFrame.src = srcUrl;
 
+            // ৫ সেকেন্ডের মধ্যে সার্ভার রেসপন্স না করলে পরবর্তী সার্ভারে অটো সুইচ হবে
             fallbackTimer = setTimeout(() => {
                 if (currentServerIndex < serverList.length - 1) {
                     statusBadge.style.color = '#ef4444';
-                    statusBadge.innerText = `Server ${currentServerIndex + 1} Offline! Auto Redirecting...`;
+                    statusBadge.innerText = `📶 Server ${currentServerIndex + 1} Stalled! Switching...`;
                     currentServerIndex++;
-                    setTimeout(() => loadVideoSource(), 1000);
+                    loadVideoSource();
                 } else {
                     statusBadge.style.color = '#10b981';
-                    statusBadge.innerText = `Connected`;
+                    statusBadge.innerText = `📶 Connected`;
                 }
-            }, 7000);
+            }, 5000);
         }
 
         videoFrame.onload = function() {
             if (fallbackTimer) clearTimeout(fallbackTimer);
-            statusBadge.style.color = '#10b981';
-            statusBadge.innerText = `Connected`;
+            const loadTime = Date.now() - loadStartTime;
+            
+            let signalText = "📶 Signal: Strong";
+            let signalColor = "#10b981"; // Green
+            
+            if (loadTime > 3000) {
+                signalText = "📶 Signal: Moderate";
+                signalColor = "#fbbf24"; // Yellow
+            }
+            if (loadTime > 6000) {
+                signalText = "📶 Signal: Weak";
+                signalColor = "#ef4444"; // Red
+            }
+
+            statusBadge.style.color = signalColor;
+            statusBadge.innerText = `${signalText} (${loadTime}ms)`;
         };
 
         function closePlayer() {
