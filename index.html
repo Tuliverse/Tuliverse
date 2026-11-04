@@ -15,6 +15,13 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://tuliverse.cyou/">
 
+    <!-- OPEN GRAPH / SOCIAL MEDIA META TAGS -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tuliverse.cyou/">
+    <meta property="og:title" content="Tuliverse - Stream Free Movies & Web Series Online">
+    <meta property="og:description" content="Watch trending Hollywood, Bollywood, Tollywood, and Asian Dramas online for free.">
+    <meta property="og:image" content="https://tuliverse.cyou/favicon.png">
+
     <!-- FAST GLOBAL DNS PREFETCH & PRECONNECT OPTIMIZATIONS -->
     <link rel="dns-prefetch" href="//1.1.1.1">
     <link rel="dns-prefetch" href="//1.0.0.1">
@@ -47,7 +54,7 @@
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #0b0f19; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; min-height: 100vh; }
+        body { background-color: #0b0f19; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; min-height: 100vh; user-select: none; }
         
         header { 
             background: rgba(17, 24, 39, 0.95); 
@@ -233,7 +240,6 @@
             .modal-content { margin: 5px 0 !important; border-radius: 8px !important; }
             .iframe-container { padding-bottom: 62% !important; }
             
-            /* MOBILE STATUS BADGE POSITION FIX */
             .server-top-bar {
                 flex-direction: column;
                 position: relative;
@@ -658,6 +664,7 @@
         </div>
     </div>
 
+    <!-- MAIN APP SCRIPT -->
     <script>
         const API_KEY = 'e64b892cb94d9ddd0616e9998422ed9a';
         const READ_ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNjRiODkyY2I5NGQ5ZGRkMDYxNmU5OTk4NDIyZWQ5YSIsIm5iZiI6MTc5MzAwNTc1MS40MjIwMDAyLCJzdWIiOiI2YWRmMThiNzA4OWFmMWY4ODFlMWUxM2QiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.AAGzkIhl_V950fMfxr35gfw3Cf9qdVZLOo9pwUAgqwo';
@@ -691,7 +698,6 @@
         let currentMediaType = 'movie';
         let isFirebaseShow = false;
 
-        // Server list with vidcore back as Server 3
         const serverList = ['2embed', 'multiembed', 'vidcore', 'vidlink'];
         let currentServerIndex = 0;
         let fallbackTimer = null;
@@ -841,18 +847,18 @@
             const fragment = document.createDocumentFragment();
             items.forEach(item => {
                 const { id, title, name, poster_path, vote_average, media_type } = item;
-                if(!poster_path) return;
                 
                 const itemTitle = title || name;
                 const isTvSeries = (media_type === 'tv') || ['webseries', 'indian_webseries', 'kdrama', 'cdrama', 'hindi_dubbed_anime_series', 'hot_series', 'indian_hot_series'].includes(currentCategory);
                 const type = isTvSeries ? 'tv' : 'movie';
+                const posterSrc = poster_path ? (IMG_PATH + poster_path) : 'https://via.placeholder.com/500x750?text=No+Poster';
 
                 const card = document.createElement('div');
                 card.classList.add('card');
                 card.setAttribute('tabindex', '0');
                 card.innerHTML = `
                     <span class="type-badge">${type === 'tv' ? 'Series' : 'Movie'}</span>
-                    <img src="${IMG_PATH + poster_path}" alt="${itemTitle}" loading="lazy">
+                    <img src="${posterSrc}" alt="${itemTitle}" loading="lazy">
                     <div class="card-info">
                         <div class="card-title">${itemTitle}</div>
                         <div class="card-rating">⭐ ${vote_average ? vote_average.toFixed(1) : 'N/A'}</div>
@@ -1098,7 +1104,6 @@
             statusBadge.style.color = '#fbbf24';
             statusBadge.innerText = `Connecting Server ${currentServerIndex + 1}...`;
 
-            // STRICT ANTI-POPUP SANDBOX FOR SERVER 3 (VIDCORE) TO ENSURE SMOOTH AD-FREE PLAYBACK
             if (serverName === 'vidcore') {
                 videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
             } else {
@@ -1131,7 +1136,6 @@
 
             videoFrame.src = srcUrl;
 
-            // Optimized 7-second fallback timeout for smooth loading without false offline errors
             fallbackTimer = setTimeout(() => {
                 if (currentServerIndex < serverList.length - 1) {
                     statusBadge.style.color = '#ef4444';
@@ -1175,6 +1179,44 @@
         }
 
         getContent();
+    </script>
+
+    <!-- CUSTOM ANTI-INSPECT & KICKOUT PROTECTION SCRIPT -->
+    <script>
+        // 1. Right Click Disable
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        });
+
+        // 2. Disable Keyboard Shortcuts (F12, Ctrl+U, Ctrl+Shift+I/J/C)
+        document.addEventListener('keydown', function (e) {
+            if (
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c'].includes(e.key)) ||
+                (e.ctrlKey && ['U', 'u', 'S', 's'].includes(e.key))
+            ) {
+                e.preventDefault();
+                triggerCustomWarning();
+                return false;
+            }
+        });
+
+        // 3. Trigger Custom Warning Alert & Kick Out to Google
+        function triggerCustomWarning() {
+            alert("Mother fucker leave my page");
+            window.location.href = "https://www.google.com";
+        }
+
+        // 4. DevTools Window Resize Detector (মেনু থেকে Inspect করলে বের করে দেবে)
+        const threshold = 160;
+        setInterval(function() {
+            const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+            const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+            
+            if (widthThreshold || heightThreshold) {
+                triggerCustomWarning();
+            }
+        }, 1000);
     </script>
 </body>
 </html>
