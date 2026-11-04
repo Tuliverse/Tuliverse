@@ -735,7 +735,8 @@
 
                 <div class="iframe-container" id="iframeContainer">
                     <div class="player-overlay-shield" id="playerShield" onclick="handleShieldClick()"></div>
-                    <iframe id="videoFrame" src="" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
+                    <!-- Safe sandbox attributes added to block popups/redirects without breaking video playback -->
+                    <iframe id="videoFrame" src="" allowfullscreen referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
                 </div>
 
                 <div class="episodes-section" id="episodesSection">
@@ -848,18 +849,11 @@
             }
         }
 
-        // JavaScript Level Popup & Redirect Blocker
-        const originalWindowOpen = window.open;
-        function disablePopups() {
-            window.open = function() {
-                console.warn("Popup prevented!");
-                return null;
-            };
-        }
-
-        function restorePopups() {
-            window.open = originalWindowOpen;
-        }
+        // Global Popup & Redirect Blocker
+        window.open = function(url) {
+            console.warn("Blocked unwanted popup/redirect:", url);
+            return null;
+        };
 
         const fetchOptions = {
             method: 'GET',
@@ -1125,9 +1119,7 @@
             
             resetPlayerShield();
             videoFrame.removeAttribute('srcdoc');
-            videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation allow-modals');
-            restorePopups();
-
+            
             episodeGrid.innerHTML = '';
             
             if (episodes) {
@@ -1264,9 +1256,6 @@
             statusBadge.style.color = '#fbbf24';
             statusBadge.innerText = `📶 Connecting Server ${currentServerIndex + 1}...`;
 
-            videoFrame.removeAttribute('sandbox');
-            disablePopups();
-
             let srcUrl = '';
 
             if (currentMediaType === 'tv') {
@@ -1335,7 +1324,6 @@
             videoFrame.removeAttribute('srcdoc');
             omdbInfoSection.style.display = 'none';
             document.body.style.overflow = 'auto';
-            restorePopups();
         }
 
         function searchContent() {
