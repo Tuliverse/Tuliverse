@@ -441,6 +441,17 @@
             width: 100%; height: 100%;
             border: none;
         }
+        /* ওভারলে শিল্ড যা ব্যাকগ্রাউন্ড রিডাইরেক্ট ব্লক করবে */
+        .player-overlay-shield {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            background: transparent;
+            cursor: pointer;
+        }
 
         .episodes-section {
             padding: 14px;
@@ -643,7 +654,8 @@
                     </div>
                 </div>
 
-                <div class="iframe-container">
+                <div class="iframe-container" id="iframeContainer">
+                    <div class="player-overlay-shield" id="playerShield" onclick="handleShieldClick()"></div>
                     <iframe id="videoFrame" src="" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
                 </div>
 
@@ -706,6 +718,24 @@
         let currentSeason = 1;
         let currentEpisode = 1;
         let showSeasonsData = [];
+        let isShieldActive = true;
+
+        // Overlay Shield Click Handler
+        function handleShieldClick() {
+            const shield = document.getElementById('playerShield');
+            if (isShieldActive) {
+                shield.style.display = 'none';
+                isShieldActive = false;
+            }
+        }
+
+        function resetPlayerShield() {
+            const shield = document.getElementById('playerShield');
+            if (shield) {
+                shield.style.display = 'block';
+                isShieldActive = true;
+            }
+        }
 
         // JavaScript Level Popup & Redirect Blocker
         const originalWindowOpen = window.open;
@@ -988,7 +1018,7 @@
             seasonSelect.style.display = 'none';
             epControlsTitle.innerText = "Available Episode Links / Parts:";
             
-            // Firebase Show-এর জন্য Sandbox সক্রিয় থাকবে
+            resetPlayerShield();
             videoFrame.removeAttribute('srcdoc');
             videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation allow-modals');
             restorePopups();
@@ -1005,6 +1035,7 @@
                     btn.onclick = () => {
                         document.querySelectorAll('.ep-btn').forEach(b => b.classList.remove('active'));
                         btn.classList.add('active');
+                        resetPlayerShield();
                         videoFrame.src = ep.stream_link;
                     };
                     episodeGrid.appendChild(btn);
@@ -1044,6 +1075,7 @@
                 episodesSection.style.display = 'none';
             }
 
+            resetPlayerShield();
             loadVideoSource();
             playerModal.style.display = 'block';
             document.body.style.overflow = 'hidden';
@@ -1082,6 +1114,7 @@
             const epCount = seasonObj ? seasonObj.episode_count : 20;
             currentEpisode = 1;
             renderEpisodesGrid(epCount);
+            resetPlayerShield();
             loadVideoSource();
         }
 
@@ -1096,6 +1129,7 @@
                     currentEpisode = i;
                     document.querySelectorAll('.ep-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
+                    resetPlayerShield();
                     loadVideoSource();
                 };
                 episodeGrid.appendChild(btn);
@@ -1104,6 +1138,7 @@
 
         function userSelectServer(serverName) {
             currentServerIndex = serverList.indexOf(serverName);
+            resetPlayerShield();
             loadVideoSource();
         }
 
@@ -1124,7 +1159,6 @@
             statusBadge.style.color = '#fbbf24';
             statusBadge.innerText = `📶 Connecting Server ${currentServerIndex + 1}...`;
 
-            // কোনো সার্ভারে স্যান্ডবক্স রাখা হলো না, পপআপ ব্লক করা হলো
             videoFrame.removeAttribute('sandbox');
             disablePopups();
 
@@ -1155,12 +1189,12 @@
             videoFrame.removeAttribute('srcdoc');
             videoFrame.src = srcUrl;
 
-            // ৫ সেকেন্ডের মধ্যে সার্ভার রেসপন্স না করলে পরবর্তী সার্ভারে অটো সুইচ হবে
             fallbackTimer = setTimeout(() => {
                 if (currentServerIndex < serverList.length - 1) {
                     statusBadge.style.color = '#ef4444';
                     statusBadge.innerText = `📶 Server ${currentServerIndex + 1} Stalled! Switching...`;
                     currentServerIndex++;
+                    resetPlayerShield();
                     loadVideoSource();
                 } else {
                     statusBadge.style.color = '#10b981';
@@ -1174,15 +1208,15 @@
             const loadTime = Date.now() - loadStartTime;
             
             let signalText = "📶 Signal: Strong";
-            let signalColor = "#10b981"; // Green
+            let signalColor = "#10b981";
             
             if (loadTime > 3000) {
                 signalText = "📶 Signal: Moderate";
-                signalColor = "#fbbf24"; // Yellow
+                signalColor = "#fbbf24";
             }
             if (loadTime > 6000) {
                 signalText = "📶 Signal: Weak";
-                signalColor = "#ef4444"; // Red
+                signalColor = "#ef4444";
             }
 
             statusBadge.style.color = signalColor;
@@ -1219,12 +1253,10 @@
 
     <!-- CUSTOM ANTI-INSPECT & KICKOUT PROTECTION SCRIPT -->
     <script>
-        // 1. Right Click Disable
         document.addEventListener('contextmenu', function (e) {
             e.preventDefault();
         });
 
-        // 2. Disable Keyboard Shortcuts (F12, Ctrl+U, Ctrl+Shift+I/J/C)
         document.addEventListener('keydown', function (e) {
             if (
                 e.key === 'F12' ||
@@ -1237,13 +1269,11 @@
             }
         });
 
-        // 3. Trigger Custom Warning Alert & Kick Out to Google
         function triggerCustomWarning() {
             alert("Mother fucker leave my page");
             window.location.href = "https://www.google.com";
         }
 
-        // 4. DevTools Window Resize Detector
         const threshold = 160;
         setInterval(function() {
             const widthThreshold = window.outerWidth - window.innerWidth > threshold;
