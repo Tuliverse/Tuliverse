@@ -644,7 +644,7 @@
                 </div>
 
                 <div class="iframe-container">
-                    <iframe id="videoFrame" src="" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; encrypted-media; picture-in-picture" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-modals"></iframe>
+                    <iframe id="videoFrame" src="" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
                 </div>
 
                 <div class="episodes-section" id="episodesSection">
@@ -974,6 +974,9 @@
             seasonSelect.style.display = 'none';
             epControlsTitle.innerText = "Available Episode Links / Parts:";
             
+            // Firebase Show এর জন্য Sandbox সক্রিয় থাকবে
+            videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation allow-modals');
+
             episodeGrid.innerHTML = '';
             
             if (episodes) {
@@ -1104,8 +1107,12 @@
             statusBadge.style.color = '#fbbf24';
             statusBadge.innerText = `Connecting Server ${currentServerIndex + 1}...`;
 
-            // নিরাপদ এবং প্রয়োজনীয় স্যান্ডবক্স ফ্ল্যাগ সেট করা হলো
-            videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation allow-modals');
+            // Server 3 (vidcore) এর জন্য Sandbox থাকবে, বাকি Server গুলোর জন্য Sandbox রিমুভ করা হয়েছে
+            if (serverName === 'vidcore') {
+                videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation allow-modals');
+            } else {
+                videoFrame.removeAttribute('sandbox');
+            }
 
             let srcUrl = '';
 
