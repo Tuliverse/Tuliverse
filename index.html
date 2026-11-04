@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- SMART TV REFERRER FIX FOR TMDB IMAGES -->
     <meta name="referrer" content="no-referrer">
     
     <!-- GOOGLE SITE VERIFICATION META TAG -->
     <meta name="google-site-verification" content="google245f19f59d08c608" />
 
-    <!-- GOOGLE SEARCH ENGINE OPTIMIZATION (SEO) META TAGS -->
+    <!-- SEO META TAGS -->
     <title>Tuliverse - Stream Free Movies & Web Series Online</title>
     <meta name="description" content="Watch trending Hollywood, Bollywood, Tollywood, Hindi Dubbed movies, Asian Dramas and web series online for free on Tuliverse.">
     <meta name="keywords" content="Tuliverse, Stream Movies, Watch Web Series, Hindi Dubbed Movies, Korean Drama, Chinese Drama, Anime Movies">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://tuliverse.cyou/">
 
-    <!-- FAST GLOBAL DNS PREFETCH & PRECONNECT OPTIMIZATIONS -->
+    <!-- DNS PREFETCH & PRECONNECT OPTIMIZATIONS -->
     <link rel="dns-prefetch" href="//1.1.1.1">
     <link rel="dns-prefetch" href="//1.0.0.1">
     <link rel="dns-prefetch" href="//8.8.8.8">
@@ -31,13 +32,13 @@
     <link rel="preconnect" href="https://multiembed.mov" crossorigin>
     <link rel="preconnect" href="https://vidcore.org" crossorigin>
 
-    <!-- FAVICON LINKS FOR GOOGLE & ALL BROWSERS (CENTERED 'T') -->
+    <!-- FAVICON LINKS -->
     <link rel="icon" type="image/png" sizes="192x192" href="https://tuliverse.cyou/favicon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="https://tuliverse.cyou/favicon.png">
     <link rel="apple-touch-icon" href="https://tuliverse.cyou/favicon.png">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23111827'/><text x='50%25' y='52%25' dominant-baseline='central' text-anchor='middle' font-family='Times New Roman, serif' font-weight='900' font-size='72' fill='%23ffffff'>T</text></svg>">
 
-    <!-- CONDITIONAL POLYFILLS FOR OLD BROWSER/TV ONLY (Non-blocking) -->
+    <!-- CONDITIONAL POLYFILLS FOR OLD BROWSER/TV -->
     <script>
         if (!window.fetch || !window.Promise) {
             document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.12.1/polyfill.min.js"><\/script>');
@@ -233,7 +234,6 @@
             .modal-content { margin: 5px 0 !important; border-radius: 8px !important; }
             .iframe-container { padding-bottom: 62% !important; }
             
-            /* MOBILE STATUS BADGE POSITION FIX */
             .server-top-bar {
                 flex-direction: column;
                 position: relative;
@@ -284,6 +284,7 @@
             height: 145px; 
             object-fit: cover; 
             display: block; 
+            background-color: #111827;
         }
 
         @media (min-width: 480px) { .card img { height: 180px; } }
@@ -561,7 +562,7 @@
                 </div>
             </div>
 
-            <!-- WEB SERIES & REALITY SHOW DROPDOWN -->
+            <!-- WEB SERIES DROPDOWN -->
             <div class="dropdown">
                 <button class="cat-btn" id="btn-webseries">📺 Web Series ▾</button>
                 <div class="dropdown-content">
@@ -575,7 +576,7 @@
 
             <button class="cat-btn" id="btn-south_indian" onclick="setCategory('south_indian')">🍿 South Indian Dubbed</button>
 
-            <!-- Hot Series Dropdown -->
+            <!-- HOT SERIES DROPDOWN -->
             <div class="dropdown">
                 <button class="cat-btn" id="btn-hot_series">🔥 Hot Web Series ▾</button>
                 <div class="dropdown-content">
@@ -584,7 +585,7 @@
                 </div>
             </div>
 
-            <!-- All Years Filter Dropdown -->
+            <!-- ALL YEARS DROPDOWN -->
             <div class="dropdown">
                 <button class="year-dropdown-btn" id="yearSelectLabel">📅 All Years ▾</button>
                 <div class="dropdown-content">
@@ -659,7 +660,6 @@
     </div>
 
     <script>
-        const API_KEY = 'e64b892cb94d9ddd0616e9998422ed9a';
         const READ_ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNjRiODkyY2I5NGQ5ZGRkMDYxNmU5OTk4NDIyZWQ5YSIsIm5iZiI6MTc5MzAwNTc1MS40MjIwMDAyLCJzdWIiOiI2YWRmMThiNzA4OWFmMWY4ODFlMWUxM2QiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.AAGzkIhl_V950fMfxr35gfw3Cf9qdVZLOo9pwUAgqwo';
         const OMDB_API_KEY = '17fc936b';
         const FIREBASE_URL = "https://tuliverse-default-rtdb.firebaseio.com/shows";
@@ -691,7 +691,6 @@
         let currentMediaType = 'movie';
         let isFirebaseShow = false;
 
-        // Server list with vidcore back as Server 3
         const serverList = ['2embed', 'multiembed', 'vidcore', 'vidlink'];
         let currentServerIndex = 0;
         let fallbackTimer = null;
@@ -700,8 +699,10 @@
         let currentEpisode = 1;
         let showSeasonsData = [];
 
+        // OPTIMIZED FETCH OPTIONS FOR SMART TV COMPATIBILITY
         const fetchOptions = {
             method: 'GET',
+            mode: 'cors',
             headers: {
                 accept: 'application/json',
                 Authorization: `Bearer ${READ_ACCESS_TOKEN}`
@@ -712,34 +713,34 @@
             let url = '';
             
             if (currentCategory === 'bollywood') {
-                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=hi`;
+                url = `https://api.themoviedb.org/3/discover/movie?page=${page}&sort_by=popularity.desc&with_original_language=hi`;
             } else if (currentCategory === 'hollywood') {
-                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=en`;
+                url = `https://api.themoviedb.org/3/discover/movie?page=${page}&sort_by=popularity.desc&with_original_language=en`;
             } else if (currentCategory === 'bengali') {
-                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=bn`;
+                url = `https://api.themoviedb.org/3/discover/movie?page=${page}&sort_by=popularity.desc&with_original_language=bn`;
             } else if (currentCategory === 'hindi_dubbed_anime_movie') {
-                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=16&with_original_language=ja`;
+                url = `https://api.themoviedb.org/3/discover/movie?page=${page}&sort_by=popularity.desc&with_genres=16&with_original_language=ja`;
             } else if (currentCategory === 'hindi_dubbed_anime_series') {
-                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=16&with_original_language=ja`;
+                url = `https://api.themoviedb.org/3/discover/tv?page=${page}&sort_by=popularity.desc&with_genres=16&with_original_language=ja`;
             } else if (currentCategory === 'webseries') {
-                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc`;
+                url = `https://api.themoviedb.org/3/discover/tv?page=${page}&sort_by=popularity.desc`;
             } else if (currentCategory === 'indian_webseries') {
-                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=hi`;
+                url = `https://api.themoviedb.org/3/discover/tv?page=${page}&sort_by=popularity.desc&with_original_language=hi`;
             } else if (currentCategory === 'kdrama') {
-                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=ko`;
+                url = `https://api.themoviedb.org/3/discover/tv?page=${page}&sort_by=popularity.desc&with_original_language=ko`;
             } else if (currentCategory === 'cdrama') {
-                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=zh`;
+                url = `https://api.themoviedb.org/3/discover/tv?page=${page}&sort_by=popularity.desc&with_original_language=zh`;
             } else if (currentCategory === 'south_indian') {
-                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=te|ta|ml|kn`;
+                url = `https://api.themoviedb.org/3/discover/movie?page=${page}&sort_by=popularity.desc&with_original_language=te|ta|ml|kn`;
             } else if (currentCategory === 'hot_series') {
-                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=18,10749&include_adult=true`;
+                url = `https://api.themoviedb.org/3/discover/tv?page=${page}&sort_by=popularity.desc&with_genres=18,10749&include_adult=true`;
             } else if (currentCategory === 'indian_hot_series') {
-                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=18,10749&with_original_language=hi&include_adult=true`;
+                url = `https://api.themoviedb.org/3/discover/tv?page=${page}&sort_by=popularity.desc&with_genres=18,10749&with_original_language=hi&include_adult=true`;
             } else {
                 if (currentYear) {
-                    url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc`;
+                    url = `https://api.themoviedb.org/3/discover/movie?page=${page}&sort_by=popularity.desc`;
                 } else {
-                    url = `https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}&page=${page}`;
+                    url = `https://api.themoviedb.org/3/trending/all/week?page=${page}`;
                 }
             }
 
@@ -757,6 +758,7 @@
                 return;
             }
             paginationSection.style.display = 'flex';
+            movieGrid.innerHTML = '<p style="color: #fbbf24; grid-column: 1/-1; padding: 20px;">Loading content...</p>';
 
             try {
                 const apiPageStart = (currentPage - 1) * 2 + 1;
@@ -770,6 +772,7 @@
                 pageNumber.innerText = `Page ${currentPage}`;
             } catch (error) {
                 console.error("Error fetching content: ", error);
+                movieGrid.innerHTML = '<p style="color: #ef4444; grid-column: 1/-1; padding: 20px;">Failed to load movies. Please refresh or check connection.</p>';
             }
         }
 
@@ -813,7 +816,7 @@
                     card.setAttribute('tabindex', '0');
                     card.innerHTML = `
                         <span class="type-badge">Reality Show</span>
-                        <img src="${meta.poster}" alt="${meta.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/500x750?text=${meta.title}'">
+                        <img src="${meta.poster}" alt="${meta.title}" loading="lazy" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="this.src='https://via.placeholder.com/500x750?text=No+Image';">
                         <div class="card-info">
                             <div class="card-title">${meta.title}</div>
                             <div class="card-rating">⭐ Latest Episodes</div>
@@ -850,9 +853,16 @@
                 const card = document.createElement('div');
                 card.classList.add('card');
                 card.setAttribute('tabindex', '0');
+                
+                // ADDED CROSSORIGIN & REFERRERPOLICY FIX FOR SMART TV
                 card.innerHTML = `
                     <span class="type-badge">${type === 'tv' ? 'Series' : 'Movie'}</span>
-                    <img src="${IMG_PATH + poster_path}" alt="${itemTitle}" loading="lazy">
+                    <img src="${IMG_PATH + poster_path}" 
+                         alt="${itemTitle}" 
+                         loading="lazy" 
+                         crossorigin="anonymous" 
+                         referrerpolicy="no-referrer"
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/500x750?text=No+Poster';">
                     <div class="card-info">
                         <div class="card-title">${itemTitle}</div>
                         <div class="card-rating">⭐ ${vote_average ? vote_average.toFixed(1) : 'N/A'}</div>
@@ -947,7 +957,7 @@
 
         async function fetchImdbIdAndOmdb(id, type, title) {
             try {
-                const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}/external_ids?api_key=${API_KEY}`, fetchOptions);
+                const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}/external_ids`, fetchOptions);
                 const data = await res.json();
                 if (data && data.imdb_id) {
                     fetchOmdbDataByQuery(title, data.imdb_id);
@@ -1026,7 +1036,7 @@
 
         async function fetchTVDetails(tvId) {
             try {
-                const res = await fetch(`https://api.themoviedb.org/3/tv/${tvId}?api_key=${API_KEY}`, fetchOptions);
+                const res = await fetch(`https://api.themoviedb.org/3/tv/${tvId}`, fetchOptions);
                 const data = await res.json();
                 
                 showSeasonsData = data.seasons ? data.seasons.filter(s => s.season_number > 0) : [];
@@ -1098,7 +1108,6 @@
             statusBadge.style.color = '#fbbf24';
             statusBadge.innerText = `Connecting Server ${currentServerIndex + 1}...`;
 
-            // STRICT ANTI-POPUP SANDBOX FOR SERVER 3 (VIDCORE) TO ENSURE SMOOTH AD-FREE PLAYBACK
             if (serverName === 'vidcore') {
                 videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
             } else {
@@ -1131,7 +1140,6 @@
 
             videoFrame.src = srcUrl;
 
-            // Optimized 7-second fallback timeout for smooth loading without false offline errors
             fallbackTimer = setTimeout(() => {
                 if (currentServerIndex < serverList.length - 1) {
                     statusBadge.style.color = '#ef4444';
@@ -1162,7 +1170,7 @@
         function searchContent() {
             const query = document.getElementById('searchInput').value.trim();
             if(query.length > 2) {
-                const SEARCH_URL = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}`;
+                const SEARCH_URL = `https://api.themoviedb.org/3/search/multi?query=${encodeURIComponent(query)}`;
                 sectionTitle.innerText = `Search Results for "${query}"`;
                 
                 fetch(SEARCH_URL, fetchOptions)
