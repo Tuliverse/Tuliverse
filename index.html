@@ -644,7 +644,7 @@
                 </div>
 
                 <div class="iframe-container">
-                    <iframe id="videoFrame" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+                    <iframe id="videoFrame" src="" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; encrypted-media; picture-in-picture" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-modals"></iframe>
                 </div>
 
                 <div class="episodes-section" id="episodesSection">
@@ -1104,11 +1104,8 @@
             statusBadge.style.color = '#fbbf24';
             statusBadge.innerText = `Connecting Server ${currentServerIndex + 1}...`;
 
-            if (serverName === 'vidcore') {
-                videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
-            } else {
-                videoFrame.removeAttribute('sandbox');
-            }
+            // নিরাপদ এবং প্রয়োজনীয় স্যান্ডবক্স ফ্ল্যাগ সেট করা হলো
+            videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation allow-modals');
 
             let srcUrl = '';
 
@@ -1207,7 +1204,7 @@
             window.location.href = "https://www.google.com";
         }
 
-        // 4. DevTools Window Resize Detector (মেনু থেকে Inspect করলে বের করে দেবে)
+        // 4. DevTools Window Resize Detector
         const threshold = 160;
         setInterval(function() {
             const widthThreshold = window.outerWidth - window.innerWidth > threshold;
