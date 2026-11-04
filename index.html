@@ -799,32 +799,32 @@
         let showSeasonsData = [];
         let isShieldActive = true;
 
-        // Ad Blocker Detector Logic
+        // Advanced Ad Blocker Detector Logic
         function detectAdBlocker() {
-            const bait = document.createElement('div');
-            bait.setAttribute('class', 'adsbox pub_300x250 pub_300x250_m text-ad textAd banner-ad ad-zone');
-            bait.setAttribute('style', 'width: 1px; height: 1px; position: absolute; left: -10px; top: -10px;');
-            document.body.appendChild(bait);
-
-            setTimeout(() => {
-                if (bait.offsetHeight === 0 || window.getComputedStyle(bait).display === 'none' || window.getComputedStyle(bait).visibility === 'hidden') {
-                    showAdBlockWarning();
+            let adBlockEnabled = false;
+            const testAd = document.createElement('div');
+            testAd.innerHTML = '&nbsp;';
+            testAd.className = 'adsbox pub_300x250 pub_300x250_m text-ad textAd banner-ad ad-zone';
+            testAd.style.position = 'absolute';
+            testAd.style.left = '-999px';
+            testAd.style.top = '-999px';
+            document.body.appendChild(testAd);
+            
+            window.setTimeout(function() {
+                if (testAd.offsetHeight === 0 || window.getComputedStyle(testAd).display === 'none' || window.getComputedStyle(testAd).visibility === 'hidden') {
+                    adBlockEnabled = true;
                 }
-                bait.remove();
-            }, 100);
-        }
-
-        function showAdBlockWarning() {
-            const modal = document.getElementById('adblock-modal');
-            if (modal) {
-                modal.style.display = 'flex';
-            }
-            if (videoFrame) {
-                videoFrame.src = '';
-            }
-            if (playerModal) {
-                playerModal.style.display = 'none';
-            }
+                testAd.remove();
+                
+                if (adBlockEnabled) {
+                    const modal = document.getElementById('adblock-modal');
+                    if (modal) {
+                        modal.style.display = 'flex';
+                    }
+                    if (videoFrame) videoFrame.src = '';
+                    if (playerModal) playerModal.style.display = 'none';
+                }
+            }, 200);
         }
 
         window.addEventListener('DOMContentLoaded', () => {
