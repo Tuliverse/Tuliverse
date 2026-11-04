@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    
+    <!-- GOOGLE SITE VERIFICATION META TAG -->
+    <meta name="google-site-verification" content="google245f19f59d08c608" />
+
+    <!-- GOOGLE SEARCH ENGINE OPTIMIZATION (SEO) META TAGS -->
+    <title>Tuliverse - Stream Free Movies & Web Series Online</title>
+    <meta name="description" content="Watch trending Hollywood, Bollywood, Tollywood, Hindi Dubbed movies, Asian Dramas and web series online for free on Tuliverse.">
+    <meta name="keywords" content="Tuliverse, Stream Movies, Watch Web Series, Hindi Dubbed Movies, Korean Drama, Chinese Drama, Anime Movies">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://tuliverse.cyou/">
+
+    <!-- OPEN GRAPH / SOCIAL MEDIA META TAGS -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tuliverse.cyou/">
+    <meta property="og:title" content="Tuliverse - Stream Free Movies & Web Series Online">
+    <meta property="og:description" content="Watch trending Hollywood, Bollywood, Tollywood, and Asian Dramas online for free.">
+    <meta property="og:image" content="https://tuliverse.cyou/favicon.png">
+
+    <!-- FAST GLOBAL DNS PREFETCH & PRECONNECT OPTIMIZATIONS -->
+    <link rel="dns-prefetch" href="//1.1.1.1">
+    <link rel="dns-prefetch" href="//1.0.0.1">
+    <link rel="dns-prefetch" href="//8.8.8.8">
+    <link rel="dns-prefetch" href="//8.8.4.4">
+
+    <link rel="preconnect" href="https://1.1.1.1" crossorigin>
+    <link rel="preconnect" href="https://1.0.0.1" crossorigin>
+    <link rel="preconnect" href="https://api.themoviedb.org" crossorigin>
+    <link rel="preconnect" href="https://image.tmdb.org" crossorigin>
+    <link rel="preconnect" href="https://www.omdbapi.com" crossorigin>
+    <link rel="preconnect" href="https://www.2embed.cc" crossorigin>
+    <link rel="preconnect" href="https://vidlink.pro" crossorigin>
+    <link rel="preconnect" href="https://multiembed.mov" crossorigin>
+    <link rel="preconnect" href="https://vidcore.org" crossorigin>
+
+    <!-- FAVICON LINKS FOR GOOGLE & ALL BROWSERS (CENTERED 'T') -->
+    <link rel="icon" type="image/png" sizes="192x192" href="https://tuliverse.cyou/favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://tuliverse.cyou/favicon.png">
+    <link rel="apple-touch-icon" href="https://tuliverse.cyou/favicon.png">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23111827'/><text x='50%25' y='52%25' dominant-baseline='central' text-anchor='middle' font-family='Times New Roman, serif' font-weight='900' font-size='72' fill='%23ffffff'>T</text></svg>">
+
+    <!-- CONDITIONAL POLYFILLS FOR OLD BROWSER/TV ONLY (Non-blocking) -->
+    <script>
+        if (!window.fetch || !window.Promise) {
+            document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.12.1/polyfill.min.js"><\/script>');
+            document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/3.6.2/fetch.min.js"><\/script>');
+        }
+    </script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #0b0f19; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; min-height: 100vh; user-select: none; }
+        
+        header { 
+            background: rgba(17, 24, 39, 0.95); 
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #1f2937;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 16px 4%;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .logo { 
+            display: flex;
+            align-items: baseline;
+            cursor: pointer; 
+            user-select: none;
+        }
+        .logo .logo-big-t { 
+            font-size: 52px; 
+            font-weight: 900; 
+            font-family: 'Times New Roman', Times, serif;
+            color: #ffffff;
+            line-height: 0.8;
+            margin-right: 2px;
+            background: linear-gradient(180deg, #ffffff 0%, #9ca3af 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .logo .logo-text { 
+            font-size: 28px; 
+            font-weight: 800; 
+            letter-spacing: 1px;
+            color: #ffffff;
+        }
+        .logo .logo-text span {
+            color: #9ca3af;
+        }
+
+        .search-box { 
+            position: relative;
+            width: 100%; 
+            max-width: 320px; 
+        }
+        .search-box input { 
+            width: 100%;
+            padding: 12px 18px 12px 45px; 
+            border-radius: 30px; 
+            border: 1px solid #374151; 
+            background: #1f2937;
+            color: #fff;
+            outline: none; 
+            font-size: 15px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .search-box input:focus { 
+            border-color: #e11d48; 
+            box-shadow: 0 0 10px rgba(225, 29, 72, 0.4);
+        }
+        .search-box .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: #9ca3af;
+            pointer-events: none;
+        }
+
+        .filters-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap; 
+            padding-bottom: 4px;
+        }
+        
+        .cat-btn, .year-dropdown-btn {
+            background: #1f2937;
+            color: #f3f4f6;
+            border: 1px solid #374151;
+            padding: 10px 22px;
+            border-radius: 25px; 
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .cat-btn.active, .cat-btn:hover, .year-dropdown-btn:hover,
+        .cat-btn:focus, .year-dropdown-btn:focus {
+            background: #e11d48;
+            color: #ffffff;
+            border-color: #e11d48;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(225, 29, 72, 0.45);
+            outline: 2px solid #ffffff;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #1f2937;
+            min-width: 220px;
+            box-shadow: 0px 10px 25px 0px rgba(0,0,0,0.7);
+            border: 1px solid #374151;
+            border-radius: 14px;
+            z-index: 2000;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+        .dropdown-content button {
+            color: #e5e7eb;
+            padding: 12px 18px;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            text-align: left;
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .dropdown-content button:hover, .dropdown-content button:focus {
+            background-color: #e11d48;
+            color: #fff;
+            outline: none;
+        }
+        .dropdown:hover .dropdown-content, .dropdown:focus-within .dropdown-content {
+            display: block;
+        }
+
+        .container { padding: 15px 2%; flex: 1; }
+        h2 { font-size: 20px; margin-bottom: 16px; color: #f3f4f6; padding-left: 4px; font-weight: 700; }
+        
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+        }
+
+        @media (max-width: 480px) {
+            .grid { 
+                grid-template-columns: repeat(2, 1fr) !important; 
+                gap: 12px !important; 
+            }
+            .card img { 
+                height: 220px !important; 
+            }
+            .card-title { 
+                font-size: 13px !important; 
+            }
+            .logo .logo-big-t { font-size: 42px; }
+            .logo .logo-text { font-size: 22px; }
+            .cat-btn, .year-dropdown-btn { 
+                padding: 8px 16px; 
+                font-size: 13px; 
+            }
+            .modal { padding: 4px !important; }
+            .modal-content { margin: 5px 0 !important; border-radius: 8px !important; }
+            .iframe-container { padding-bottom: 62% !important; }
+            
+            .server-top-bar {
+                flex-direction: column;
+                position: relative;
+            }
+            .status-badge {
+                order: -1;
+                margin-left: 0 !important;
+                margin-bottom: 4px;
+                display: inline-block;
+                width: fit-content;
+                background: rgba(0, 0, 0, 0.4);
+                padding: 2px 8px;
+                border-radius: 4px;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 767px) {
+            .grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+            .card img { height: 210px; }
+        }
+
+        @media (min-width: 768px) {
+            header { padding: 18px 5%; }
+            .container { padding: 25px 4%; }
+            .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 18px; }
+        }
+
+        .card { 
+            background: #1f2937; 
+            border-radius: 8px; 
+            overflow: hidden; 
+            cursor: pointer; 
+            transition: transform 0.25s, box-shadow 0.25s, outline 0.2s; 
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            content-visibility: auto;
+            contain-intrinsic-size: 240px;
+        }
+        .card:hover, .card:focus { 
+            transform: translateY(-4px); 
+            box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+            outline: 3px solid #e11d48;
+        }
+        
+        .card img { 
+            width: 100%; 
+            height: 145px; 
+            object-fit: cover; 
+            display: block; 
+        }
+
+        @media (min-width: 480px) { .card img { height: 180px; } }
+        @media (min-width: 768px) { .card img { height: 230px; } }
+
+        .type-badge {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            background: rgba(225, 29, 72, 0.95);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .card-info { padding: 8px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-title { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #f9fafb; }
+        .card-rating { font-size: 11px; color: #fbbf24; margin-top: 3px; font-weight: 600; }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 30px 0 15px 0;
+        }
+        .page-btn {
+            background: #1f2937;
+            color: #fff;
+            border: 1px solid #374151;
+            padding: 10px 22px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .page-btn:hover, .page-btn:focus { background: #e11d48; border-color: #e11d48; outline: none; }
+        .page-info { font-size: 15px; font-weight: bold; color: #e11d48; }
+
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.93); 
+            z-index: 3000; 
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .modal-dialog {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100%;
+        }
+        .modal-content { 
+            position: relative; 
+            width: 100%; 
+            max-width: 920px; 
+            background: #0f172a; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            border: 1px solid #1e293b;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
+            margin: 15px 0;
+        }
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 18px;
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+        }
+        .player-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #f8fafc;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 85%;
+        }
+        .close-btn { 
+            color: #94a3b8; 
+            font-size: 28px; 
+            cursor: pointer; 
+            font-weight: bold;
+            line-height: 1;
+        }
+        .close-btn:hover { color: #e11d48; }
+
+        .server-top-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 10px 14px;
+            background: #111827;
+            border-bottom: 1px solid #1f2937;
+        }
+        .server-line {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .srv-btn {
+            background: #1f2937;
+            color: #d1d5db;
+            border: 1px solid #374151;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .srv-btn.active, .srv-btn:focus {
+            background: #e11d48;
+            color: #fff;
+            border-color: #e11d48;
+            outline: none;
+        }
+
+        .status-badge {
+            font-size: 12px;
+            color: #fbbf24;
+            margin-left: auto;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            background: #000;
+        }
+        .iframe-container iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: none;
+        }
+        /* ওভারলে শিল্ড যা ব্যাকগ্রাউন্ড রিডাইরেক্ট ব্লক করবে */
+        .player-overlay-shield {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .episodes-section {
+            padding: 14px;
+            background: #1e293b;
+            border-top: 1px solid #334155;
+            display: none;
+        }
+        .ep-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+        .season-select {
+            background: #0f172a;
+            color: #fff;
+            border: 1px solid #334155;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+        .episodes-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #f8fafc;
+        }
+        .episode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+            gap: 8px;
+            max-height: 160px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .ep-btn {
+            background: #0f172a;
+            color: #cbd5e1;
+            border: 1px solid #334155;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+        }
+        .ep-btn.active, .ep-btn:hover, .ep-btn:focus {
+            background: #e11d48;
+            color: #fff;
+            border-color: #e11d48;
+            outline: none;
+        }
+
+        .omdb-info-section {
+            padding: 18px;
+            background: #0f172a;
+            border-top: 1px solid #1e293b;
+            font-size: 13px;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+        .omdb-meta {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+            color: #fbbf24;
+            font-weight: 600;
+        }
+        .omdb-plot {
+            color: #e2e8f0;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background: #111827;
+            border-top: 1px solid #1f2937;
+            text-align: center;
+            padding: 18px;
+            font-size: 13px;
+            color: #9ca3af;
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+        footer a {
+            color: #e11d48;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <header id="mainHeader">
+        <div class="top-bar">
+            <div class="logo" onclick="setCategory('all')" tabindex="0">
+                <span class="logo-big-t">T</span>
+                <span class="logo-text">uli<span>verse</span></span>
+            </div>
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Search movies/series..." onkeyup="searchContent()">
+            </div>
+        </div>
+        
+        <div class="filters-container">
+            <button class="cat-btn active" id="btn-all" onclick="setCategory('all')">🏠 Home</button>
+            <button class="cat-btn" id="btn-bollywood" onclick="setCategory('bollywood')">🎭 Bollywood</button>
+            <button class="cat-btn" id="btn-hollywood" onclick="setCategory('hollywood')">🎬 Hollywood</button>
+            <button class="cat-btn" id="btn-bengali" onclick="setCategory('bengali')">🪕 Tollywood / Bengali</button>
+
+            <!-- HINDI DUBBED DROPDOWN -->
+            <div class="dropdown">
+                <button class="cat-btn" id="btn-hindi_dubbed">🎧 Hindi Dubbed ▾</button>
+                <div class="dropdown-content">
+                    <button onclick="setCategory('hindi_dubbed_anime_movie')">⛩️ Hindi Dubbed Anime Movies</button>
+                    <button onclick="setCategory('hindi_dubbed_anime_series')">⛩️ Hindi Dubbed Anime Series</button>
+                </div>
+            </div>
+
+            <!-- WEB SERIES & REALITY SHOW DROPDOWN -->
+            <div class="dropdown">
+                <button class="cat-btn" id="btn-webseries">📺 Web Series ▾</button>
+                <div class="dropdown-content">
+                    <button onclick="setCategory('webseries')">📺 All Web Series</button>
+                    <button onclick="setCategory('indian_webseries')">🇮🇳 Indian Web Series</button>
+                    <button onclick="setCategory('indian_reality_shows')">🎙️ Indian Reality Shows</button>
+                    <button onclick="setCategory('kdrama')">🇰🇷 Korean Drama (K-Drama)</button>
+                    <button onclick="setCategory('cdrama')">🇨🇳 Chinese Drama (C-Drama)</button>
+                </div>
+            </div>
+
+            <button class="cat-btn" id="btn-south_indian" onclick="setCategory('south_indian')">🍿 South Indian Dubbed</button>
+
+            <!-- Hot Series Dropdown -->
+            <div class="dropdown">
+                <button class="cat-btn" id="btn-hot_series">🔥 Hot Web Series ▾</button>
+                <div class="dropdown-content">
+                    <button onclick="setCategory('hot_series')">🔥 All Hot Web Series</button>
+                    <button onclick="setCategory('indian_hot_series')">🇮🇳 Indian Hot Series</button>
+                </div>
+            </div>
+
+            <!-- All Years Filter Dropdown -->
+            <div class="dropdown">
+                <button class="year-dropdown-btn" id="yearSelectLabel">📅 All Years ▾</button>
+                <div class="dropdown-content">
+                    <button onclick="setYear('', 'All Years')">All Years</button>
+                    <button onclick="setYear('2026', '2026')">2026</button>
+                    <button onclick="setYear('2025', '2025')">2025</button>
+                    <button onclick="setYear('2024', '2024')">2024</button>
+                    <button onclick="setYear('2023', '2023')">2023</button>
+                    <button onclick="setYear('2022', '2022')">2022</button>
+                    <button onclick="setYear('2021', '2021')">2021</button>
+                    <button onclick="setYear('2020', '2020')">2020</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2 id="sectionTitle">Trending Movies & Series</h2>
+        <div class="grid" id="movieGrid"></div>
+
+        <div class="pagination" id="paginationSection">
+            <button class="page-btn" onclick="changePage(-1)">❮ Prev</button>
+            <span class="page-info" id="pageNumber">Page 1</span>
+            <button class="page-btn" onclick="changePage(1)">Next ❯</button>
+        </div>
+    </div>
+
+    <footer>
+        <div>&copy; Tuliverse - All Rights Reserved</div>
+        <div><a href="dmca.html" target="_blank">DMCA Copyright Disclaimer</a></div>
+    </footer>
+
+    <div class="modal" id="playerModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="player-header">
+                    <div class="player-title" id="playerMediaTitle">Watch Online</div>
+                    <span class="close-btn" onclick="closePlayer()" tabindex="0">&times;</span>
+                </div>
+
+                <div class="server-top-bar" id="serverTopBar">
+                    <span class="status-badge" id="statusBadge">📶 Connecting...</span>
+                    <div class="server-line">
+                        <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 1 Fast</button>
+                        <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server 2 Fast</button>
+                    </div>
+                    <div class="server-line">
+                        <button class="srv-btn" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ Server 3 Multi Languages</button>
+                        <button class="srv-btn" id="btn-vidlink" onclick="userSelectServer('vidlink')">⚡ Server 4 Vidlink</button>
+                    </div>
+                </div>
+
+                <div class="iframe-container" id="iframeContainer">
+                    <div class="player-overlay-shield" id="playerShield" onclick="handleShieldClick()"></div>
+                    <iframe id="videoFrame" src="" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
+                </div>
+
+                <div class="episodes-section" id="episodesSection">
+                    <div class="ep-controls">
+                        <span class="episodes-title" id="epControlsTitle">Season:</span>
+                        <select class="season-select" id="seasonSelect" onchange="onSeasonChange()"></select>
+                    </div>
+                    <div class="episode-grid" id="episodeGrid"></div>
+                </div>
+
+                <div class="omdb-info-section" id="omdbInfoSection" style="display:none;">
+                    <div class="omdb-meta" id="omdbMeta"></div>
+                    <div class="omdb-plot" id="omdbPlot"></div>
+                    <div id="omdbCast"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP SCRIPT -->
+    <script>
+        const API_KEY = 'e64b892cb94d9ddd0616e9998422ed9a';
+        const READ_ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJlNjRiODkyY2I5NGQ5ZGRkMDYxNmU5OTk4NDIyZWQ5YSIsIm5iZiI6MTc5MzAwNTc1MS40MjIwMDAyLCJzdWIiOiI2YWRmMThiNzA4OWFmMWY4ODFlMWUxM2QiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.AAGzkIhl_V950fMfxr35gfw3Cf9qdVZLOo9pwUAgqwo';
+        const OMDB_API_KEY = '17fc936b';
+        const FIREBASE_URL = "https://tuliverse-default-rtdb.firebaseio.com/shows";
+        const IMG_PATH = 'https://image.tmdb.org/t/p/w500';
+
+        const movieGrid = document.getElementById('movieGrid');
+        const playerModal = document.getElementById('playerModal');
+        const videoFrame = document.getElementById('videoFrame');
+        const sectionTitle = document.getElementById('sectionTitle');
+        const pageNumber = document.getElementById('pageNumber');
+        const playerMediaTitle = document.getElementById('playerMediaTitle');
+        const episodesSection = document.getElementById('episodesSection');
+        const episodeGrid = document.getElementById('episodeGrid');
+        const seasonSelect = document.getElementById('seasonSelect');
+        const statusBadge = document.getElementById('statusBadge');
+        const paginationSection = document.getElementById('paginationSection');
+        const serverTopBar = document.getElementById('serverTopBar');
+        const epControlsTitle = document.getElementById('epControlsTitle');
+        
+        const omdbInfoSection = document.getElementById('omdbInfoSection');
+        const omdbMeta = document.getElementById('omdbMeta');
+        const omdbPlot = document.getElementById('omdbPlot');
+        const omdbCast = document.getElementById('omdbCast');
+
+        let currentPage = 1;
+        let currentCategory = 'all';
+        let currentYear = '';
+        let currentMediaId = null;
+        let currentMediaType = 'movie';
+        let isFirebaseShow = false;
+
+        const serverList = ['2embed', 'multiembed', 'vidcore', 'vidlink'];
+        let currentServerIndex = 0;
+        let fallbackTimer = null;
+        let loadStartTime = 0;
+        
+        let currentSeason = 1;
+        let currentEpisode = 1;
+        let showSeasonsData = [];
+        let isShieldActive = true;
+
+        // Overlay Shield Click Handler
+        function handleShieldClick() {
+            const shield = document.getElementById('playerShield');
+            if (isShieldActive) {
+                shield.style.display = 'none';
+                isShieldActive = false;
+            }
+        }
+
+        function resetPlayerShield() {
+            const shield = document.getElementById('playerShield');
+            if (shield) {
+                shield.style.display = 'block';
+                isShieldActive = true;
+            }
+        }
+
+        // JavaScript Level Popup & Redirect Blocker
+        const originalWindowOpen = window.open;
+        function disablePopups() {
+            window.open = function() {
+                console.warn("Popup prevented!");
+                return null;
+            };
+        }
+
+        function restorePopups() {
+            window.open = originalWindowOpen;
+        }
+
+        const fetchOptions = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${READ_ACCESS_TOKEN}`
+            }
+        };
+
+        function buildApiUrl(page) {
+            let url = '';
+            
+            if (currentCategory === 'bollywood') {
+                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=hi`;
+            } else if (currentCategory === 'hollywood') {
+                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=en`;
+            } else if (currentCategory === 'bengali') {
+                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=bn`;
+            } else if (currentCategory === 'hindi_dubbed_anime_movie') {
+                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=16&with_original_language=ja`;
+            } else if (currentCategory === 'hindi_dubbed_anime_series') {
+                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=16&with_original_language=ja`;
+            } else if (currentCategory === 'webseries') {
+                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc`;
+            } else if (currentCategory === 'indian_webseries') {
+                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=hi`;
+            } else if (currentCategory === 'kdrama') {
+                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=ko`;
+            } else if (currentCategory === 'cdrama') {
+                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=zh`;
+            } else if (currentCategory === 'south_indian') {
+                url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_original_language=te|ta|ml|kn`;
+            } else if (currentCategory === 'hot_series') {
+                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=18,10749&include_adult=true`;
+            } else if (currentCategory === 'indian_hot_series') {
+                url = `https://api.themoviedb.org/3/discover/tv?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc&with_genres=18,10749&with_original_language=hi&include_adult=true`;
+            } else {
+                if (currentYear) {
+                    url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&page=${page}&sort_by=popularity.desc`;
+                } else {
+                    url = `https://api.themoviedb.org/3/trending/all/week?api_key=${API_KEY}&page=${page}`;
+                }
+            }
+
+            if (currentYear) {
+                const isTvCategory = ['webseries', 'indian_webseries', 'kdrama', 'cdrama', 'hindi_dubbed_anime_series', 'hot_series', 'indian_hot_series'].includes(currentCategory);
+                url += isTvCategory ? `&first_air_date_year=${currentYear}` : `&primary_release_year=${currentYear}`;
+            }
+
+            return url;
+        }
+
+        async function getContent() {
+            if (currentCategory === 'indian_reality_shows') {
+                fetchFirebaseRealityShows();
+                return;
+            }
+            paginationSection.style.display = 'flex';
+
+            try {
+                const apiPageStart = (currentPage - 1) * 2 + 1;
+                const [d1, d2] = await Promise.all([
+                    fetch(buildApiUrl(apiPageStart), fetchOptions).then(r => r.json()),
+                    fetch(buildApiUrl(apiPageStart + 1), fetchOptions).then(r => r.json())
+                ]);
+
+                let combined = [...(d1.results || []), ...(d2.results || [])];
+                showContent(combined.slice(0, 50));
+                pageNumber.innerText = `Page ${currentPage}`;
+            } catch (error) {
+                console.error("Error fetching content: ", error);
+            }
+        }
+
+        async function fetchFirebaseRealityShows() {
+            movieGrid.innerHTML = '<p style="color: #fbbf24; grid-column: 1/-1; padding: 20px;">Loading Reality Shows from Database...</p>';
+            paginationSection.style.display = 'none';
+
+            try {
+                const res = await fetch(`${FIREBASE_URL}.json`);
+                const data = await res.json();
+                
+                movieGrid.innerHTML = '';
+                if (!data) {
+                    movieGrid.innerHTML = '<p style="color: #9ca3af; grid-column: 1/-1; padding: 20px;">No shows available right now.</p>';
+                    return;
+                }
+
+                const showMetadata = {
+                    "star_plus": { title: "Star Plus Shows", poster: "https://i.postimg.cc/8kwyZWcX/star-plus.jpg" },
+                    "colors_tv": { title: "Colors TV Shows", poster: "https://i.postimg.cc/152rdKQD/colours-tv.jpg" },
+                    "zee_tv": { title: "Zee TV Shows", poster: "https://i.postimg.cc/MT67BP7p/ztv.png" },
+                    "sony_tv": { title: "Sony TV Shows", poster: "https://i.postimg.cc/k59Kr1pr/sony.png" },
+                    "mtv_india": { title: "MTV India Shows", poster: "https://i.postimg.cc/63P8QYzb/MTv.png" },
+                    "netflix": { title: "Netflix Originals", poster: "https://i.postimg.cc/SQz6MM8P/netflix-2.png" },
+                    "prime_video": { title: "Prime Video Shows", poster: "https://i.postimg.cc/qB8trXyZ/primevideo.png" },
+                    
+                };
+
+                const fragment = document.createDocumentFragment();
+                Object.keys(data).forEach(showKey => {
+                    const showData = data[showKey];
+                    const meta = showMetadata[showKey] || { title: showKey.replace(/_/g, ' ').toUpperCase(), poster: 'https://via.placeholder.com/500x750?text=No+Poster' };
+
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    card.setAttribute('tabindex', '0');
+                    card.innerHTML = `
+                        <span class="type-badge">Reality Show</span>
+                        <img src="${meta.poster}" alt="${meta.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/500x750?text=${meta.title}'">
+                        <div class="card-info">
+                            <div class="card-title">${meta.title}</div>
+                            <div class="card-rating">⭐ Latest Episodes</div>
+                        </div>
+                    `;
+                    card.onclick = () => openFirebasePlayer(showKey, meta.title, showData.episodes);
+                    card.onkeydown = (e) => { if(e.key === 'Enter') openFirebasePlayer(showKey, meta.title, showData.episodes); };
+                    fragment.appendChild(card);
+                });
+                movieGrid.appendChild(fragment);
+
+            } catch (err) {
+                console.error("Firebase fetch error:", err);
+                movieGrid.innerHTML = '<p style="color: #ef4444; grid-column: 1/-1; padding: 20px;">Failed to load shows.</p>';
+            }
+        }
+
+        function showContent(items) {
+            movieGrid.innerHTML = '';
+            if(!items || items.length === 0) {
+                movieGrid.innerHTML = '<p style="color: #9ca3af; grid-column: 1/-1; padding: 20px;">No content found.</p>';
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+            items.forEach(item => {
+                const { id, title, name, poster_path, vote_average, media_type } = item;
+                
+                const itemTitle = title || name;
+                const isTvSeries = (media_type === 'tv') || ['webseries', 'indian_webseries', 'kdrama', 'cdrama', 'hindi_dubbed_anime_series', 'hot_series', 'indian_hot_series'].includes(currentCategory);
+                const type = isTvSeries ? 'tv' : 'movie';
+                const posterSrc = poster_path ? (IMG_PATH + poster_path) : 'https://via.placeholder.com/500x750?text=No+Poster';
+
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.setAttribute('tabindex', '0');
+                card.innerHTML = `
+                    <span class="type-badge">${type === 'tv' ? 'Series' : 'Movie'}</span>
+                    <img src="${posterSrc}" alt="${itemTitle}" loading="lazy">
+                    <div class="card-info">
+                        <div class="card-title">${itemTitle}</div>
+                        <div class="card-rating">⭐ ${vote_average ? vote_average.toFixed(1) : 'N/A'}</div>
+                    </div>
+                `;
+                card.onclick = () => openPlayer(id, type, itemTitle);
+                card.onkeydown = (e) => { if(e.key === 'Enter') openPlayer(id, type, itemTitle); };
+                fragment.appendChild(card);
+            });
+            movieGrid.appendChild(fragment);
+        }
+
+        function setCategory(category) {
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            
+            if(category === 'all') document.getElementById('btn-all')?.classList.add('active');
+            if(category === 'hollywood') document.getElementById('btn-hollywood')?.classList.add('active');
+            if(category === 'bollywood') document.getElementById('btn-bollywood')?.classList.add('active');
+            if(category === 'bengali') document.getElementById('btn-bengali')?.classList.add('active');
+            if(category.includes('webseries') || category.includes('reality_shows') || category === 'kdrama' || category === 'cdrama') document.getElementById('btn-webseries')?.classList.add('active');
+            if(category === 'south_indian') document.getElementById('btn-south_indian')?.classList.add('active');
+            if(category.includes('hot_series')) document.getElementById('btn-hot_series')?.classList.add('active');
+            if(category.startsWith('hindi_dubbed')) document.getElementById('btn-hindi_dubbed')?.classList.add('active');
+
+            const titleMap = {
+                'all': 'Trending Movies & Series',
+                'hollywood': '🎬 Hollywood Movies',
+                'bollywood': '🎭 Bollywood Movies',
+                'bengali': '🪕 Tollywood / Bengali Movies',
+                'webseries': '📺 All Web Series',
+                'indian_webseries': '🇮🇳 Indian Web Series',
+                'indian_reality_shows': '🎙️ Indian Reality Shows',
+                'kdrama': '🇰🇷 Korean Drama (K-Drama)',
+                'cdrama': '🇨🇳 Chinese Drama (C-Drama)',
+                'south_indian': '🍿 South Indian Dubbed Movies',
+                'hot_series': '🔥 Hot Web Series',
+                'indian_hot_series': '🇮🇳 Indian Hot Web Series',
+                'hindi_dubbed_anime_movie': '⛩️ Hindi Dubbed Anime Movies',
+                'hindi_dubbed_anime_series': '⛩️ Hindi Dubbed Anime Series'
+            };
+
+            sectionTitle.innerText = titleMap[category] || 'Explore Movies & Series';
+            currentCategory = category;
+            currentPage = 1;
+            getContent();
+        }
+
+        function setYear(year, label) {
+            currentYear = year;
+            document.getElementById('yearSelectLabel').innerText = `📅 ${label} ▾`;
+            currentPage = 1;
+            getContent();
+        }
+
+        function changePage(step) {
+            if (currentPage + step >= 1) {
+                currentPage += step;
+                getContent();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        async function fetchOmdbDataByQuery(title, imdbId = '') {
+            try {
+                let queryUrl = imdbId 
+                    ? `https://www.omdbapi.com/?i=${imdbId}&apikey=${OMDB_API_KEY}`
+                    : `https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${OMDB_API_KEY}`;
+                
+                const res = await fetch(queryUrl);
+                const data = await res.json();
+                
+                if (data.Response === "True") {
+                    omdbInfoSection.style.display = 'block';
+                    const rtRating = data.Ratings?.find(r => r.Source === "Rotten Tomatoes")?.Value || 'N/A';
+                    omdbMeta.innerHTML = `
+                        <span>⭐ IMDb: ${data.imdbRating || 'N/A'}</span>
+                        <span>🍅 Rotten Tomatoes: ${rtRating}</span>
+                        <span>📅 Released: ${data.Released || 'N/A'}</span>
+                        <span>⏱️ Runtime: ${data.Runtime || 'N/A'}</span>
+                        <span>🎭 Genre: ${data.Genre || 'N/A'}</span>
+                    `;
+                    omdbPlot.innerHTML = `<strong>Plot:</strong> ${data.Plot || 'N/A'}`;
+                    omdbCast.innerHTML = `<strong>Director:</strong> ${data.Director || 'N/A'} | <strong>Cast:</strong> ${data.Actors || 'N/A'}`;
+                } else {
+                    omdbInfoSection.style.display = 'none';
+                }
+            } catch (e) {
+                console.error("OMDb API error: ", e);
+                omdbInfoSection.style.display = 'none';
+            }
+        }
+
+        async function fetchImdbIdAndOmdb(id, type, title) {
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3/${type}/${id}/external_ids?api_key=${API_KEY}`, fetchOptions);
+                const data = await res.json();
+                if (data && data.imdb_id) {
+                    fetchOmdbDataByQuery(title, data.imdb_id);
+                } else {
+                    fetchOmdbDataByQuery(title);
+                }
+            } catch (e) {
+                console.error("External IDs fetch error: ", e);
+                fetchOmdbDataByQuery(title);
+            }
+        }
+
+        function openFirebasePlayer(showKey, title, episodes) {
+            isFirebaseShow = true;
+            serverTopBar.style.display = 'none';
+            playerMediaTitle.innerText = title;
+            episodesSection.style.display = 'block';
+            seasonSelect.style.display = 'none';
+            epControlsTitle.innerText = "Available Episode Links / Parts:";
+            
+            resetPlayerShield();
+            videoFrame.removeAttribute('srcdoc');
+            videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation allow-modals');
+            restorePopups();
+
+            episodeGrid.innerHTML = '';
+            
+            if (episodes) {
+                Object.keys(episodes).forEach((epKey, index) => {
+                    const ep = episodes[epKey];
+                    const btn = document.createElement('button');
+                    btn.classList.add('ep-btn');
+                    if (index === 0) btn.classList.add('active');
+                    btn.innerText = ep.title || `Link ${index + 1}`;
+                    btn.onclick = () => {
+                        document.querySelectorAll('.ep-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        resetPlayerShield();
+                        videoFrame.src = ep.stream_link;
+                    };
+                    episodeGrid.appendChild(btn);
+
+                    if (index === 0) {
+                        videoFrame.src = ep.stream_link;
+                    }
+                });
+            } else {
+                episodeGrid.innerText = "No episodes currently available.";
+            }
+
+            fetchOmdbDataByQuery(title);
+            playerModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        async function openPlayer(id, type, title) {
+            isFirebaseShow = false;
+            serverTopBar.style.display = 'flex';
+            seasonSelect.style.display = 'inline-block';
+            epControlsTitle.innerText = "Season:";
+
+            currentMediaId = id;
+            currentMediaType = type;
+            currentSeason = 1;
+            currentEpisode = 1;
+            currentServerIndex = 0;
+            playerMediaTitle.innerText = title ? `${title}` : "Watch Online";
+
+            fetchImdbIdAndOmdb(id, type, title);
+
+            if (type === 'tv') {
+                episodesSection.style.display = 'block';
+                await fetchTVDetails(id);
+            } else {
+                episodesSection.style.display = 'none';
+            }
+
+            resetPlayerShield();
+            loadVideoSource();
+            playerModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        async function fetchTVDetails(tvId) {
+            try {
+                const res = await fetch(`https://api.themoviedb.org/3/tv/${tvId}?api_key=${API_KEY}`, fetchOptions);
+                const data = await res.json();
+                
+                showSeasonsData = data.seasons ? data.seasons.filter(s => s.season_number > 0) : [];
+                seasonSelect.innerHTML = '';
+
+                if (showSeasonsData.length === 0) {
+                    showSeasonsData = [{ season_number: 1, episode_count: 20 }];
+                }
+
+                showSeasonsData.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s.season_number;
+                    opt.innerText = `Season ${s.season_number} (${s.episode_count} Eps)`;
+                    seasonSelect.appendChild(opt);
+                });
+
+                currentSeason = showSeasonsData[0].season_number;
+                renderEpisodesGrid(showSeasonsData[0].episode_count);
+            } catch (err) {
+                console.error("TV Metadata error: ", err);
+                renderEpisodesGrid(20);
+            }
+        }
+
+        function onSeasonChange() {
+            currentSeason = parseInt(seasonSelect.value);
+            const seasonObj = showSeasonsData.find(s => s.season_number === currentSeason);
+            const epCount = seasonObj ? seasonObj.episode_count : 20;
+            currentEpisode = 1;
+            renderEpisodesGrid(epCount);
+            resetPlayerShield();
+            loadVideoSource();
+        }
+
+        function renderEpisodesGrid(count) {
+            episodeGrid.innerHTML = '';
+            for (let i = 1; i <= count; i++) {
+                const btn = document.createElement('button');
+                btn.classList.add('ep-btn');
+                if (i === currentEpisode) btn.classList.add('active');
+                btn.innerText = `Ep ${i}`;
+                btn.onclick = () => {
+                    currentEpisode = i;
+                    document.querySelectorAll('.ep-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    resetPlayerShield();
+                    loadVideoSource();
+                };
+                episodeGrid.appendChild(btn);
+            }
+        }
+
+        function userSelectServer(serverName) {
+            currentServerIndex = serverList.indexOf(serverName);
+            resetPlayerShield();
+            loadVideoSource();
+        }
+
+        function updateServerUI(serverName) {
+            document.querySelectorAll('.srv-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById(`btn-${serverName}`);
+            if(activeBtn) activeBtn.classList.add('active');
+        }
+
+        function loadVideoSource() {
+            if (isFirebaseShow) return;
+            if (fallbackTimer) clearTimeout(fallbackTimer);
+            
+            const serverName = serverList[currentServerIndex];
+            updateServerUI(serverName);
+
+            loadStartTime = Date.now();
+            statusBadge.style.color = '#fbbf24';
+            statusBadge.innerText = `📶 Connecting Server ${currentServerIndex + 1}...`;
+
+            videoFrame.removeAttribute('sandbox');
+            disablePopups();
+
+            let srcUrl = '';
+
+            if (currentMediaType === 'tv') {
+                if (serverName === '2embed') {
+                    srcUrl = `https://www.2embed.cc/embedtv/${currentMediaId}&s=${currentSeason}&e=${currentEpisode}`;
+                } else if (serverName === 'multiembed') {
+                    srcUrl = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1&s=${currentSeason}&e=${currentEpisode}`;
+                } else if (serverName === 'vidcore') {
+                    srcUrl = `https://vidcore.org/embed/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
+                } else if (serverName === 'vidlink') {
+                    srcUrl = `https://vidlink.pro/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
+                }
+            } else {
+                if (serverName === '2embed') {
+                    srcUrl = `https://www.2embed.cc/embed/${currentMediaId}`;
+                } else if (serverName === 'multiembed') {
+                    srcUrl = `https://multiembed.mov/?video_id=${currentMediaId}&tmdb=1`;
+                } else if (serverName === 'vidcore') {
+                    srcUrl = `https://vidcore.org/embed/movie/${currentMediaId}`;
+                } else if (serverName === 'vidlink') {
+                    srcUrl = `https://vidlink.pro/movie/${currentMediaId}`;
+                }
+            }
+
+            videoFrame.removeAttribute('srcdoc');
+            videoFrame.src = srcUrl;
+
+            fallbackTimer = setTimeout(() => {
+                if (currentServerIndex < serverList.length - 1) {
+                    statusBadge.style.color = '#ef4444';
+                    statusBadge.innerText = `📶 Server ${currentServerIndex + 1} Stalled! Switching...`;
+                    currentServerIndex++;
+                    resetPlayerShield();
+                    loadVideoSource();
+                } else {
+                    statusBadge.style.color = '#10b981';
+                    statusBadge.innerText = `📶 Connected`;
+                }
+            }, 5000);
+        }
+
+        videoFrame.onload = function() {
+            if (fallbackTimer) clearTimeout(fallbackTimer);
+            const loadTime = Date.now() - loadStartTime;
+            
+            let signalText = "📶 Signal: Strong";
+            let signalColor = "#10b981";
+            
+            if (loadTime > 3000) {
+                signalText = "📶 Signal: Moderate";
+                signalColor = "#fbbf24";
+            }
+            if (loadTime > 6000) {
+                signalText = "📶 Signal: Weak";
+                signalColor = "#ef4444";
+            }
+
+            statusBadge.style.color = signalColor;
+            statusBadge.innerText = `${signalText} (${loadTime}ms)`;
+        };
+
+        function closePlayer() {
+            if (fallbackTimer) clearTimeout(fallbackTimer);
+            playerModal.style.display = 'none';
+            videoFrame.src = '';
+            videoFrame.removeAttribute('srcdoc');
+            omdbInfoSection.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            restorePopups();
+        }
+
+        function searchContent() {
+            const query = document.getElementById('searchInput').value.trim();
+            if(query.length > 2) {
+                const SEARCH_URL = `https://api.themoviedb.org/3/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}`;
+                sectionTitle.innerText = `Search Results for "${query}"`;
+                
+                fetch(SEARCH_URL, fetchOptions)
+                    .then(res => res.json())
+                    .then(data => showContent(data.results));
+            } else if(query.length === 0) {
+                sectionTitle.innerText = 'Trending Movies & Series';
+                getContent();
+            }
+        }
+
+        getContent();
+    </script>
+
+    <!-- CUSTOM ANTI-INSPECT & KICKOUT PROTECTION SCRIPT -->
+    <script>
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c'].includes(e.key)) ||
+                (e.ctrlKey && ['U', 'u', 'S', 's'].includes(e.key))
+            ) {
+                e.preventDefault();
+                triggerCustomWarning();
+                return false;
+            }
+        });
+
+        function triggerCustomWarning() {
+            alert("Mother fucker leave my page");
+            window.location.href = "https://www.google.com";
+        }
+
+        const threshold = 160;
+        setInterval(function() {
+            const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+            const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+            
+            if (widthThreshold || heightThreshold) {
+                triggerCustomWarning();
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
