@@ -282,7 +282,7 @@
             border-radius: 8px; 
             overflow: hidden; 
             cursor: pointer; 
-            transition: transform 0.25s, box-shadow 0.25s, outline 0.2s; 
+            transition: transform 0.25s, box-shadow 0.2s, outline 0.2s; 
             display: flex;
             flex-direction: column;
             position: relative;
@@ -459,7 +459,7 @@
             width: 100%; height: 100%;
             border: none;
         }
-        /* ওভারলে শিল্ড যা ব্যাকগ্রাউন্ড রিডাইরেক্ট ব্লক করবে */
+        /* ওভারলে শিল্ড যা শুধু ভিডিও প্লেয়ারের ওপর কাজ করবে এবং রিডাইরেক্ট ব্লক করবে */
         .player-overlay-shield {
             position: absolute;
             top: 0;
@@ -865,7 +865,6 @@
                     "mtv_india": { title: "MTV India Shows", poster: "https://i.postimg.cc/63P8QYzb/MTv.png" },
                     "netflix": { title: "Netflix Originals", poster: "https://i.postimg.cc/SQz6MM8P/netflix-2.png" },
                     "prime_video": { title: "Prime Video Shows", poster: "https://i.postimg.cc/qB8trXyZ/primevideo.png" },
-                    
                 };
 
                 const fragment = document.createDocumentFragment();
@@ -1035,6 +1034,7 @@
             
             resetPlayerShield();
             videoFrame.removeAttribute('srcdoc');
+            // শুধুমাত্র ফায়ারবেসের ক্ষেত্রে sandbox ব্যবহার করা হচ্ছে
             videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation allow-modals');
             restorePopups();
 
@@ -1174,6 +1174,7 @@
             statusBadge.style.color = '#fbbf24';
             statusBadge.innerText = `📶 Connecting Server ${currentServerIndex + 1}...`;
 
+            // থার্ড-পার্টি সার্ভারগুলোর জন্য sandbox রিমুভ রাখা হলো যাতে ভিডিও স্মুথ চলে (শিল্ড রিডাইরেক্ট আটকাবে)
             videoFrame.removeAttribute('sandbox');
             disablePopups();
 
