@@ -245,9 +245,9 @@
                 padding: 8px 16px; 
                 font-size: 13px; 
             }
-            .modal { padding: 4px !important; }
-            .modal-content { margin: 5px 0 !important; border-radius: 8px !important; }
-            .iframe-container { padding-bottom: 62% !important; }
+            .modal { padding: 0 !important; }
+            .modal-content { margin: 0 !important; border-radius: 0 !important; min-height: 100vh; display: flex; flex-direction: column; }
+            .iframe-container { padding-bottom: 75% !important; flex-grow: 1; }
             
             .server-top-bar {
                 flex-direction: column;
@@ -735,8 +735,8 @@
 
                 <div class="iframe-container" id="iframeContainer">
                     <div class="player-overlay-shield" id="playerShield" onclick="handleShieldClick()"></div>
-                    <!-- Safe sandbox attributes added to block popups/redirects without breaking video playback -->
-                    <iframe id="videoFrame" src="" allowfullscreen referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
+                    <!-- Safe sandbox attributes updated dynamically based on show type -->
+                    <iframe id="videoFrame" src="" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
                 </div>
 
                 <div class="episodes-section" id="episodesSection">
@@ -844,8 +844,13 @@
         function resetPlayerShield() {
             const shield = document.getElementById('playerShield');
             if (shield) {
-                shield.style.display = 'block';
-                isShieldActive = true;
+                if (isFirebaseShow) {
+                    shield.style.display = 'none';
+                    isShieldActive = false;
+                } else {
+                    shield.style.display = 'block';
+                    isShieldActive = true;
+                }
             }
         }
 
@@ -1117,8 +1122,9 @@
             seasonSelect.style.display = 'none';
             epControlsTitle.innerText = "Available Episode Links / Parts:";
             
+            // Set strict sandbox for Firebase player
+            videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation');
             resetPlayerShield();
-            videoFrame.removeAttribute('srcdoc');
             
             episodeGrid.innerHTML = '';
             
@@ -1155,6 +1161,9 @@
             serverTopBar.style.display = 'flex';
             seasonSelect.style.display = 'inline-block';
             epControlsTitle.innerText = "Season:";
+
+            // Set standard sandbox for external servers (allowing shield popup interception)
+            videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation');
 
             currentMediaId = id;
             currentMediaType = type;
@@ -1280,7 +1289,6 @@
                 }
             }
 
-            videoFrame.removeAttribute('srcdoc');
             videoFrame.src = srcUrl;
 
             fallbackTimer = setTimeout(() => {
@@ -1321,7 +1329,6 @@
             if (fallbackTimer) clearTimeout(fallbackTimer);
             playerModal.style.display = 'none';
             videoFrame.src = '';
-            videoFrame.removeAttribute('srcdoc');
             omdbInfoSection.style.display = 'none';
             document.body.style.overflow = 'auto';
         }
