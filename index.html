@@ -735,7 +735,7 @@
 
                 <div class="iframe-container" id="iframeContainer">
                     <div class="player-overlay-shield" id="playerShield" onclick="handleShieldClick()"></div>
-                    <!-- Safe sandbox attributes updated dynamically based on show type -->
+                    <!-- Play shield enabled for servers to block redirects/popups, sandbox kept strict for Firebase -->
                     <iframe id="videoFrame" src="" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
                 </div>
 
@@ -1122,7 +1122,7 @@
             seasonSelect.style.display = 'none';
             epControlsTitle.innerText = "Available Episode Links / Parts:";
             
-            // Set strict sandbox for Firebase player
+            // Set strict sandbox for Firebase player only
             videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation');
             resetPlayerShield();
             
@@ -1162,8 +1162,8 @@
             seasonSelect.style.display = 'inline-block';
             epControlsTitle.innerText = "Season:";
 
-            // Set standard sandbox for external servers (allowing shield popup interception)
-            videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation');
+            // Remove sandbox attribute for external servers so video loads correctly without blocking
+            videoFrame.removeAttribute('sandbox');
 
             currentMediaId = id;
             currentMediaType = type;
