@@ -470,6 +470,7 @@
             z-index: 10;
             background: transparent;
             cursor: pointer;
+            display: block;
         }
 
         .episodes-section {
@@ -735,7 +736,7 @@
 
                 <div class="iframe-container" id="iframeContainer">
                     <div class="player-overlay-shield" id="playerShield" onclick="handleShieldClick()"></div>
-                    <!-- Play shield enabled for servers to block redirects/popups, sandbox kept strict for Firebase -->
+                    <!-- Play shield active for servers to block redirects/popups, sandbox kept strict for Firebase -->
                     <iframe id="videoFrame" src="" allowfullscreen referrerpolicy="no-referrer" allow="autoplay; encrypted-media; picture-in-picture"></iframe>
                 </div>
 
@@ -832,7 +833,7 @@
             detectAdBlocker();
         });
 
-        // Overlay Shield Click Handler
+        // Overlay Shield Click Handler (প্রথম ক্লিকটি খেয়ে রিডাইরেক্ট ব্লক করবে, এরপর শিল্ড সরে যাবে)
         function handleShieldClick() {
             const shield = document.getElementById('playerShield');
             if (isShieldActive) {
@@ -1122,7 +1123,7 @@
             seasonSelect.style.display = 'none';
             epControlsTitle.innerText = "Available Episode Links / Parts:";
             
-            // Set strict sandbox for Firebase player only
+            // Firebase-এর জন্য স্ট্রং স্যান্ডবক্স
             videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation');
             resetPlayerShield();
             
@@ -1162,7 +1163,7 @@
             seasonSelect.style.display = 'inline-block';
             epControlsTitle.innerText = "Season:";
 
-            // Remove sandbox attribute for external servers so video loads correctly without blocking
+            // এক্সটার্নাল সার্ভারের জন্য স্যান্ডবক্স রিমুভ করা হলো যাতে ভিডিও চলে
             videoFrame.removeAttribute('sandbox');
 
             currentMediaId = id;
