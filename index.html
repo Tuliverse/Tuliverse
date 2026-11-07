@@ -37,6 +37,7 @@
     <link rel="preconnect" href="https://vidlink.pro" crossorigin>
     <link rel="preconnect" href="https://multiembed.mov" crossorigin>
     <link rel="preconnect" href="https://vidcore.org" crossorigin>
+    <link rel="preconnect" href="https://www.vidy.st" crossorigin>
 
     <!-- FAVICON LINKS FOR GOOGLE & ALL BROWSERS (CENTERED 'T') -->
     <link rel="icon" type="image/png" sizes="192x192" href="https://tuliverse.cyou/favicon.png">
@@ -727,10 +728,11 @@
                     <div class="server-line">
                         <button class="srv-btn active" id="btn-2embed" onclick="userSelectServer('2embed')">⚡ Server 1 Fast</button>
                         <button class="srv-btn" id="btn-multiembed" onclick="userSelectServer('multiembed')">⚡ Server 2 Fast</button>
+                        <button class="srv-btn" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ Server 3 Multi Languages</button>
                     </div>
                     <div class="server-line">
-                        <button class="srv-btn" id="btn-vidcore" onclick="userSelectServer('vidcore')">⚡ Server 3 Multi Languages</button>
                         <button class="srv-btn" id="btn-vidlink" onclick="userSelectServer('vidlink')">⚡ Server 4 Vidlink</button>
+                        <button class="srv-btn" id="btn-vidyst" onclick="userSelectServer('vidyst')">🔥 Server 5 Vidy</button>
                     </div>
                 </div>
 
@@ -791,7 +793,7 @@
         let currentMediaType = 'movie';
         let isFirebaseShow = false;
 
-        const serverList = ['2embed', 'multiembed', 'vidcore', 'vidlink'];
+        const serverList = ['2embed', 'multiembed', 'vidcore', 'vidlink', 'vidyst'];
         let currentServerIndex = 0;
         let fallbackTimer = null;
         let loadStartTime = 0;
@@ -833,7 +835,7 @@
             detectAdBlocker();
         });
 
-        // Overlay Shield Click Handler (প্রথম ক্লিকটি খেয়ে রিডাইরেক্ট ব্লক করবে, এরপর শিল্ড সরে যাবে)
+        // Overlay Shield Click Handler
         function handleShieldClick() {
             const shield = document.getElementById('playerShield');
             if (isShieldActive) {
@@ -1123,7 +1125,6 @@
             seasonSelect.style.display = 'none';
             epControlsTitle.innerText = "Available Episode Links / Parts:";
             
-            // Firebase-এর জন্য স্ট্রং স্যান্ডবক্স
             videoFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-presentation');
             resetPlayerShield();
             
@@ -1163,7 +1164,6 @@
             seasonSelect.style.display = 'inline-block';
             epControlsTitle.innerText = "Season:";
 
-            // এক্সটার্নাল সার্ভারের জন্য স্যান্ডবক্স রিমুভ করা হলো যাতে ভিডিও চলে
             videoFrame.removeAttribute('sandbox');
 
             currentMediaId = id;
@@ -1277,6 +1277,9 @@
                     srcUrl = `https://vidcore.org/embed/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
                 } else if (serverName === 'vidlink') {
                     srcUrl = `https://vidlink.pro/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
+                } else if (serverName === 'vidyst') {
+                    // Server 5 (Vidy.st) for TV Series
+                    srcUrl = `https://www.vidy.st/tv/${currentMediaId}/${currentSeason}/${currentEpisode}?color=DC2626&nextEpisode=true&episodeSelector=true&autoplayNextEpisode=true&autoplay=true`;
                 }
             } else {
                 if (serverName === '2embed') {
@@ -1287,6 +1290,9 @@
                     srcUrl = `https://vidcore.org/embed/movie/${currentMediaId}`;
                 } else if (serverName === 'vidlink') {
                     srcUrl = `https://vidlink.pro/movie/${currentMediaId}`;
+                } else if (serverName === 'vidyst') {
+                    // Server 5 (Vidy.st) for Movies
+                    srcUrl = `https://www.vidy.st/movie/${currentMediaId}?color=DC2626&autoplay=true`;
                 }
             }
 
