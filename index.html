@@ -1278,8 +1278,10 @@
                 } else if (serverName === 'vidlink') {
                     srcUrl = `https://vidlink.pro/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
                 } else if (serverName === 'vidyst') {
-                    // Server 5 (Vidy.st) for TV Series
-                    srcUrl = `https://www.vidy.st/tv/${currentMediaId}/${currentSeason}/${currentEpisode}?color=DC2626&nextEpisode=true&episodeSelector=true&autoplayNextEpisode=true&autoplay=true`;
+                    // Server 5 (Vidy.st) for TV Series / Anime
+                    let isAnime = currentCategory.includes('anime');
+                    let pathType = isAnime ? 'anime' : 'tv';
+                    srcUrl = `https://www.vidy.st/${pathType}/${currentMediaId}/${currentSeason}/${currentEpisode}?color=DC2626&nextEpisode=true&episodeSelector=true&autoplayNextEpisode=true&autoplay=true`;
                 }
             } else {
                 if (serverName === '2embed') {
