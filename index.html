@@ -1278,10 +1278,10 @@
                 } else if (serverName === 'vidlink') {
                     srcUrl = `https://vidlink.pro/tv/${currentMediaId}/${currentSeason}/${currentEpisode}`;
                 } else if (serverName === 'vidyst') {
-                    // Server 5 (Vidy.st) for TV Series / Anime
+                    // Server 5 (Vidy.st) ক্লিন লিঙ্ক ফরম্যাট (ব্ল্যাঙ্ক স্ক্রিন সমস্যা সমাধান)
                     let isAnime = currentCategory.includes('anime');
                     let pathType = isAnime ? 'anime' : 'tv';
-                    srcUrl = `https://www.vidy.st/${pathType}/${currentMediaId}/${currentSeason}/${currentEpisode}?color=DC2626&nextEpisode=true&episodeSelector=true&autoplayNextEpisode=true&autoplay=true`;
+                    srcUrl = `https://www.vidy.st/${pathType}/${currentMediaId}/${currentSeason}/${currentEpisode}?color=DC2626`;
                 }
             } else {
                 if (serverName === '2embed') {
@@ -1293,8 +1293,8 @@
                 } else if (serverName === 'vidlink') {
                     srcUrl = `https://vidlink.pro/movie/${currentMediaId}`;
                 } else if (serverName === 'vidyst') {
-                    // Server 5 (Vidy.st) for Movies
-                    srcUrl = `https://www.vidy.st/movie/${currentMediaId}?color=DC2626&autoplay=true`;
+                    // Server 5 (Vidy.st) মুভির জন্য ক্লিন লিঙ্ক ফরম্যাট
+                    srcUrl = `https://www.vidy.st/movie/${currentMediaId}?color=DC2626`;
                 }
             }
 
